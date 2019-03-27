@@ -246,28 +246,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 排课管理 course scheduling management
-  {
-    path: '/course-schedulingm',
-    component: Layout,
-    redirect: '/course-schedulingm',
-    name: 'CourseSchedulingManagement',
-    alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '排课管理',
-      icon: 'course-scheduling'
-    },
-    children: [
-      // 排课信息 course scheduling information
-      {
-        path: 'course-scheduling-info',
-        component: () => import('@/views/course-schedulingm/course-scheduling-info'),
-        name: 'CourseSchedulingInformation',
-        meta: { title: '排课信息', icon: 'course-scheduling-info' }
-      }
-    ]
-  },
   // 评测管理 evaluation management
   {
     path: '/evaluationm',
