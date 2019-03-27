@@ -385,49 +385,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 教师课程管理 teaching management
-  {
-    path: '/teachingm',
-    component: Layout,
-    redirect: '/teachingm',
-    name: 'TeachingManagement',
-    // alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '教师课程管理',
-      icon: 'teaching'
-    },
-    children: [
-      // 上课记录 teaching record
-      {
-        path: 'teaching-record',
-        component: () => import('@/views/teachingm/teaching-record'),
-        name: 'TeachingRecord',
-        meta: { title: '上课记录', icon: 'teaching-record' }
-      },
-      // 申请课程
-      {
-        path: 'course-apply-teaching',
-        component: () => import('@/views/teachingm/course-apply-teaching'),
-        name: 'CourseApplyTeaching',
-        meta: { title: '申请课程', icon: 'course-apply' }
-      },
-      // 课表信息 class schedule
-      {
-        path: 'class-schedule',
-        component: () => import('@/views/teachingm/class-schedule'),
-        name: 'ClassSchedule',
-        meta: { title: '课表信息', icon: 'class-schedule' }
-      },
-      // 课程信息
-      {
-        path: 'course-info',
-        component: () => import('@/views/teachingm/course-info'),
-        name: 'CourseInformation',
-        meta: { title: '课表信息', icon: 'course-info' }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
