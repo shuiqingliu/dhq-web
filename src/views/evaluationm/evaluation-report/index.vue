@@ -1,6 +1,6 @@
 <template>
   <div>
-    评测报告
+    评测报告！！！
   </div>
 </template>
 
