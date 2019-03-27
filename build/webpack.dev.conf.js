@@ -58,7 +58,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true,
       favicon: resolve('favicon.ico'),
       // title: 'vue-admin-template'
-      title: '学能通门店管理系统'
+      title: '学能通总部管理系统'
     })
   ]
 })
