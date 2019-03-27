@@ -43,32 +43,53 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-  // 人员管理 personnel management
+  // 系统管理 system management
   {
-    path: '/personnelm',
+    path: '/systemm',
     component: Layout,
-    redirect: '/personnelm',
-    name: 'PersonnelManagement',
+    redirect: '/system',
+    name: 'SystemManagement',
     // alwaysShow: true,
     // hidden: true,
     meta: {
-      title: '人员管理',
+      title: '系统管理!!',
       icon: 'person'
     },
     children: [
-      // 工作人员管理
+      // 角色管理
       {
-        path: 'stuff',
-        component: () => import('@/views/personnelm/stuff'),
-        name: 'Stuff',
-        meta: { title: '工作人员管理' }
+        path: 'role',
+        component: () => import('@/views/systemm/role'),
+        name: 'Role',
+        meta: { title: '角色管理' }
       },
-      // 门店客户管理
+      // 用户管理
       {
-        path: 'client',
-        component: () => import('@/views/personnelm/client'),
-        name: 'Client',
-        meta: { title: '门店客户管理' }
+        path: 'user',
+        component: () => import('@/views/systemm/user'),
+        name: 'User',
+        meta: { title: '用户管理' }
+      },
+      // 权限管理
+      {
+        path: 'permission',
+        component: () => import('@/views/systemm/permission'),
+        name: 'Permission',
+        meta: { title: '权限管理' }
+      },
+      // 机构管理
+      {
+        path: 'institution',
+        component: () => import('@/views/systemm/institution'),
+        name: 'Institution',
+        meta: { title: '机构管理' }
+      },
+      // 日志管理
+      {
+        path: 'log',
+        component: () => import('@/views/systemm/log'),
+        name: 'Log',
+        meta: { title: '日志管理' }
       }
     ]
   },

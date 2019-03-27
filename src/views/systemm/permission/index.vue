@@ -1,12 +1,12 @@
 <template>
   <div>
-    工作人员管理？？？？
+    权限管理
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Stuff',
+  name: 'Permission',
   data() {
     return {
 

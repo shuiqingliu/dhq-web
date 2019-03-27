@@ -1,12 +1,12 @@
 <template>
   <div>
-    门店客户管理娅娅娅娅
+    工作人员管理？？？？
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Client',
+  name: 'User',
   data() {
     return {
 
