@@ -341,28 +341,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 学习记录管理 learning record management
-  {
-    path: '/learning-recordm',
-    component: Layout,
-    redirect: '/learning-recordm',
-    name: 'LearningRecordManagement',
-    alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '学习记录管理',
-      icon: 'learning-record'
-    },
-    children: [
-      // 学习记录 learning record
-      {
-        path: 'learning-record',
-        component: () => import('@/views/learning-recordm/learning-record'),
-        name: 'LearningRecord',
-        meta: { title: '学习记录', icon: 'learning-record' }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
