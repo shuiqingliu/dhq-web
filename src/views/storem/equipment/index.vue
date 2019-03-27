@@ -1,6 +1,6 @@
 <template>
   <div>
-    学生评价
+    门店设备管理
   </div>
 </template>
 
