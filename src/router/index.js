@@ -363,28 +363,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 通知管理 notification management
-  {
-    path: '/notificationm',
-    component: Layout,
-    redirect: '/notificationm',
-    name: 'NotificationManagement',
-    alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '通知管理',
-      icon: 'notification'
-    },
-    children: [
-      // 通知列表 notification list
-      {
-        path: 'notification-list',
-        component: () => import('@/views/notificationm/notification-list'),
-        name: 'NotificationList',
-        meta: { title: '通知列表', icon: 'notification-list' }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
