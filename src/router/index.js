@@ -52,7 +52,7 @@ export const constantRouterMap = [
     // alwaysShow: true,
     // hidden: true,
     meta: {
-      title: '系统管理!!',
+      title: '系统管理',
       icon: 'person'
     },
     children: [
@@ -93,40 +93,54 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 反馈管理 feedback management
+  // 门店管理 store management
   {
-    path: '/feedbackm',
+    path: '/storem',
     component: Layout,
-    redirect: '/feedbackm',
-    name: 'FeedbackManagement',
+    redirect: '/storem',
+    name: 'StoreManagment',
     // alwaysShow: true,
     // hidden: true,
     meta: {
       // title: 'PersonnelManagement',
-      title: '反馈管理',
-      icon: 'feedback'
+      title: '门店管理',
+      icon: 'store'
     },
     children: [
-      // 教师评价 teacher evaluation
+      // 门店基本信息管理
       {
-        path: 'teacher-eval',
-        component: () => import('@/views/feedbackm/teacher-eval'),
-        name: 'TeacherEvaluation',
-        meta: { title: '教师评价', icon: 'teacher-eval' }
+        path: 'basic-info',
+        component: () => import('@/views/storem/basic-info'),
+        name: 'StoreBasicInformation',
+        meta: { title: '信息管理', icon: 'basic-info' }
       },
-      // 课程评价
+      // 门店设备管理
       {
-        path: 'course-eval',
-        component: () => import('@/views/feedbackm/course-eval'),
-        name: 'CourseEvaluation',
-        meta: { title: '课程评价', icon: 'course-eval' }
+        path: 'equipment',
+        component: () => import('@/views/storem/equipment'),
+        name: 'StoreEquipment',
+        meta: { title: '设备管理', icon: 'equipment' }
       },
-      // 学生评价
+      // 门店课程管理
       {
-        path: 'student-eval',
-        component: () => import('@/views/feedbackm/student-eval'),
-        name: 'StudentEvaluation',
-        meta: { title: '学生评价', icon: 'student-eval' }
+        path: 'course',
+        component: () => import('@/views/storem/course'),
+        name: 'StoreCourseManagement',
+        meta: { title: '课程管理', icon: 'course' }
+      },
+      // 门店财务管理
+      {
+        path: 'finance',
+        component: () => import('@/views/storem/finance'),
+        name: 'StoreFinanceManagement',
+        meta: { title: '统计管理', icon: 'finance' }
+      },
+      // 门店维修管理
+      {
+        path: 'repair',
+        component: () => import('@/views/storem/repair'),
+        name: 'StoreRepairManagement',
+        meta: { title: '维修管理', icon: 'repair' }
       }
     ]
   },
@@ -161,7 +175,7 @@ export const constantRouterMap = [
     alwaysShow: true,
     // hidden: true,
     meta: {
-      title: '新闻管理',
+      title: '内容管理',
       icon: 'news'
     },
     children: [

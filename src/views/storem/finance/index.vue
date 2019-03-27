@@ -1,12 +1,12 @@
 <template>
   <div>
-    教师评价
+    门店财务管理
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TeacherEvaluation',
+  name: 'StoreFinanceManagement',
   data() {
     return {
 

@@ -1,12 +1,12 @@
 <template>
   <div>
-    反馈管理
+    门店基本系统管理
   </div>
 </template>
 
 <script>
 export default {
-  name: 'FeedbackManagment',
+  name: 'StoreBasicInformation',
   data() {
     return {
 
