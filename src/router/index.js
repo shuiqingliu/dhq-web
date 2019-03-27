@@ -268,28 +268,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 班级管理 class management
-  {
-    path: '/classm',
-    component: Layout,
-    redirect: '/classm',
-    name: 'ClassManagement',
-    alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '班级管理',
-      icon: 'class'
-    },
-    children: [
-      // 班级信息 class information
-      {
-        path: 'class-info',
-        component: () => import('@/views/classm/class-info'),
-        name: 'ClassInformation',
-        meta: { title: '班级信息', icon: 'class-info' }
-      }
-    ]
-  },
   // 评测管理 evaluation management
   {
     path: '/evaluationm',
