@@ -319,28 +319,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // 订单管理 order management
-  {
-    path: '/orderm',
-    component: Layout,
-    redirect: '/orderm',
-    name: 'OrderManagement',
-    alwaysShow: true,
-    // hidden: true,
-    meta: {
-      title: '订单管理',
-      icon: 'order'
-    },
-    children: [
-      // 订单信息 class information
-      {
-        path: 'order-info',
-        component: () => import('@/views/orderm/order-info'),
-        name: 'OrderInformation',
-        meta: { title: '订单信息', icon: 'order-info' }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
