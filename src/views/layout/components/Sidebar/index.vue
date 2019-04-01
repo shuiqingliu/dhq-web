@@ -1,35 +1,32 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
+  <scroll-bar>
     <el-menu
+      mode="vertical"
+      :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
-      :background-color="variables.menuBg"
-      :text-color="variables.menuText"
-      :active-text-color="variables.menuActiveText"
-      :collapse-transition="false"
-      mode="vertical"
+      background-color="#304156"
+      text-color="#bfcbd9"
+      active-text-color="#409EFF"
     >
-      <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path"/>
+      <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
-  </el-scrollbar>
+  </scroll-bar>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import variables from '@/styles/variables.scss'
 import SidebarItem from './SidebarItem'
+import ScrollBar from '@/components/ScrollBar'
 
 export default {
-  components: { SidebarItem },
+  components: { SidebarItem, ScrollBar },
   computed: {
     ...mapGetters([
       'sidebar'
     ]),
     routes() {
       return this.$router.options.routes
-    },
-    variables() {
-      return variables
     },
     isCollapse() {
       return !this.sidebar.opened
