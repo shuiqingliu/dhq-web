@@ -1,5 +1,5 @@
 <template> 
-  <store-info-detail :is-edit='false'></store-info-detail>
+  <store-info-detail :is-edit='true'></store-info-detail>
 </template>
 <script>
   import StoreInfoDetail from './components/StoreInfoDetail'
