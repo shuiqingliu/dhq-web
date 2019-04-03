@@ -1,11 +1,11 @@
 <template> 
   <el-card class="form-container" shadow="never">
-    <el-form :model="storeInfo" ref="storeInfoForm" label-width="150px">
-      <el-form-item label="管理者ID：">
+    <el-form :model="storeInfo" :rules="rules" ref="storeInfoForm" label-width="150px">
+      <el-form-item label="管理者ID："  prop="managerId">
         <el-input v-model="storeInfo.managerId"></el-input>
       </el-form-item>
-       <el-form-item label="门店类型：">
-         <el-input v-model="storeInfo.shopType"></el-input>
+       <el-form-item label="门店类型："  prop="shopType">
+         <el-input v-model="storeInfo.shopType" ></el-input>
       </el-form-item>
       <el-form-item label="门店描述：">
          <el-input v-model="storeInfo.shopDesc"></el-input>
@@ -40,6 +40,7 @@
 </template>
 <script>
   import {createBrand, getBrand, updateBrand} from '@/api/brand'
+  //默认信息
   const defaultStoreInfo={
     shopId: 0,
     managerId: '2018140699',
@@ -55,7 +56,7 @@
     employeeNum: 222
   };
   export default {
-    name: 'BrandDetail',
+    name: 'StoreInfoDetail',
     props: {
       isEdit: {
         type: Boolean,
@@ -64,8 +65,16 @@
     },
     data() {
       return {
-        storeInfo:Object.assign({}, defaultStoreInfo)
-        //此处可以添加一些验证。
+        storeInfo:Object.assign({}, defaultStoreInfo),
+        rules: {
+          managerId: [
+            {required: true, message: '请输入管理者Id', trigger: 'blur'},
+            {min: 2, max: 140, message: '长度为10位', trigger: 'blur'}
+          ],
+          shopType: [
+            {required: true, message: '请输入门店类型', trigger: 'blur'}
+          ],
+        }
       }
     },
     created() {

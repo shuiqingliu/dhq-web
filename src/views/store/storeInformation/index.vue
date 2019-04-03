@@ -38,20 +38,42 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
+        <el-table-column label="门店编号" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.shopId}}</template>
         </el-table-column>
-        <el-table-column label="品牌名称" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="管理者编号" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.managerId}}</template>
         </el-table-column>
-        <el-table-column label="品牌首字母" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.firstLetter}}</template>
+        <el-table-column label="门店名字" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <el-table-column label="排序" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.sort}}</template>
+        <!-- <el-table-column label="门店描述" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.shopDesc}}</template>
+        </el-table-column> -->
+         <el-table-column label="省份" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.shopLocationProvince}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+         <el-table-column label="市" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.shopLocationCity}}</template>
+        </el-table-column>
+         <el-table-column label="区县" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.shopLocationDistrict}}</template>
+        </el-table-column>
+        <el-table-column label="门店大小" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.shopSize}}</template>
+        </el-table-column>
+         <!-- <el-table-column label="详细地址" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.shopLocationDetail}}</template>
+        </el-table-column>
+         <el-table-column label="员工数量"  align="center">
+          <template slot-scope="scope">{{scope.row.employeeNum}}</template>
+        </el-table-column> -->
+        <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleUpdate(scope.$index, scope.row)">详情
+            </el-button>
             <el-button
               size="mini"
               @click="handleUpdate(scope.$index, scope.row)">编辑
@@ -118,9 +140,22 @@
           pageNum: 1,
           pageSize: 5
         },
-        list: null,
+        list: [{
+          employeeNum: 23,
+          managerId: 110,
+          shopDesc: '北邮店' ,
+          shopId: 0,
+          shopLocationCity:  '北京市' ,
+          shopLocationDetail:  '北京邮电大学' ,
+          shopLocationDistrict:  '海淀区' ,
+          shopLocationProvince:  '北京市' ,
+          shopName:  '学能通' ,
+          shopPhone:  12589 ,
+          shopSize: 234,
+          shopType:  'math' 
+        }],
         total: null,
-        listLoading: true,
+        listLoading: false,//临时修改了一下
         multipleSelection: []
       }
     },
@@ -129,7 +164,8 @@
     },
     methods: {
       getList() {
-        this.listLoading = true;
+        //this.listLoading = true;
+        this.listLoading = false;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
