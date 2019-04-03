@@ -4,7 +4,7 @@
 <script>
   import BrandDetail from './components/BrandDetail'
   export default {
-    name: 'updateBrand',
+    name: 'updateStoreInfo',
     components: { BrandDetail }
   }
 </script>
