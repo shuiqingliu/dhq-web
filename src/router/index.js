@@ -71,13 +71,42 @@ export const constantRouterMap = [
       path: 'permissionAdmin',
       name: 'permissionAdmin',
       component: () => import('@/views/userAdmin/permission/index'),
-      meta: {title: '权限管理', icon: 'product-list'}
+      meta: {title: '用户管理', icon: 'product-list'}
     },{
       path:'roleAdmin',
       name:'roleAdmin',
       component: ()=>import('@/views/userAdmin/role/index'),
       meta: {title: '角色管理', icon: 'product-add'}
-    }]
+    },
+    {
+      path: 'updateUser',
+      name: 'updateUser',
+      component: ()=> import('@/views/userAdmin/permission/update'),
+      meta: {title: '修改用户'},
+      hidden: true
+    },
+    {
+      path: 'addUser',
+      name: 'addUser',
+      component: ()=> import('@/views/userAdmin/permission/add'),
+      meta: {title: '添加用户'},
+      hidden: true
+    },
+    {
+      path: 'updateRole',
+      name: 'updateRole',
+      component: ()=> import('@/views/userAdmin/role/update'),
+      meta: {title: '修改角色权限'},
+      hidden: true
+    },
+    {
+      path: 'addRole',
+      name: 'addRole',
+      component: ()=> import('@/views/userAdmin/role/add'),
+      meta: {title: '添加角色'},
+      hidden: true
+    }
+  ]
   },
   {
     path: '/equipment',

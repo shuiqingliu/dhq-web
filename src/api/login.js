@@ -1,8 +1,8 @@
 import request from '@/utils/request'
-
+var v = '/admin'
 export function login(username, password) {
   return request({
-    url: '/admin/login',
+    url: v+'/login',
     method: 'post',
     data: {
       username,
@@ -13,14 +13,14 @@ export function login(username, password) {
 
 export function getInfo() {
   return request({
-    url: '/admin/info',
+    url: v+'/info',
     method: 'get',
   })
 }
 
 export function logout() {
   return request({
-    url: '/admin/logout',
+    url: v+'/logout',
     method: 'post'
   })
 }
