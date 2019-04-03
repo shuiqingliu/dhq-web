@@ -5,11 +5,11 @@
         <el-input v-model="user.name"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="pwd">
-        <el-input v-model="user.pwd"></el-input>
+        <el-input v-model="user.pwd" show-password></el-input>
       </el-form-item>
 
       <el-form-item label="用户角色：">
-        <el-checkbox-group v-model="user.roles">
+        <el-checkbox-group v-model="user.roles" >
           <el-checkbox label="复选框 A"></el-checkbox>
           <el-checkbox label="复选框 B"></el-checkbox>
           <el-checkbox label="复选框 C"></el-checkbox>

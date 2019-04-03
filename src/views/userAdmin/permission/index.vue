@@ -32,7 +32,7 @@
     </el-card>
     <div class="table-container">
       <el-table ref="brandTable"
-                :data="list"
+                :data="lists"
                 style="width: 100%"
                 
                 v-loading="listLoading"
@@ -41,16 +41,12 @@
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="品牌名称" align="center">
+        <el-table-column label="用户名" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="品牌首字母" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.firstLetter}}</template>
+        <el-table-column label="所属角色" width="400" align="center">
+          <template slot-scope="scope"><el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item}}{{item.id}}</el-tag></template>
         </el-table-column>
-        <el-table-column label="排序" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.sort}}</template>
-        </el-table-column>
-        
       
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -89,7 +85,15 @@
     name: 'userlist',
     data() {
       return {
-        
+        lists:[{
+          id: 1,
+          name: 'admin',
+          roles: ['超级管理员']
+        },{
+          id: 2,
+          name: 'xialei',
+          roles: ['维修工', '管道工']
+        }],
         listQuery: {
           keyword: null,
           pageNum: 1,
