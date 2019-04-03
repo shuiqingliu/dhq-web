@@ -167,7 +167,7 @@
         //this.listLoading = true;
         this.listLoading = false;
         fetchList(this.listQuery).then(response => {
-          this.listLoading = false;
+          this.listLoading = true;
           this.list = response.data.list;
           this.total = response.data.total;
           this.totalPage = response.data.totalPage;
