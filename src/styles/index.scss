@@ -48,7 +48,9 @@ a:hover {
     height: 0;
   }
 }
-
+.ml10{
+  margin-left: 10px;
+}
 //main-container全局样式
 .app-main{
   min-height: 100%
@@ -88,6 +90,7 @@ a:hover {
   display: inline-block;
   float: right;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 //添加、更新表单样式
