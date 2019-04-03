@@ -38,15 +38,28 @@ export const constantRouterMap = [
     redirect: '/store',
     meta: {title: '门店管理', icon: 'product'},
     children: [{
-      path: 'store',
-      name: 'store',
+      path: 'storeInformation',
+      name: 'storeInformation',
       component: () => import('@/views/store/storeInformation/index'),
       meta: {title: '门店信息', icon: 'product-list'}
     },{
-      path:'addStore',
-      name:'addStore',
+      path:'storeEquipment',
+      name:'storeEquipment',
       component: ()=>import('@/views/store/storeEquipment/index'),
       meta: {title: '门店设备', icon: 'product-add'}
+    },{
+      path:'updateStoreInfo',
+      name:'updateStoreInfo',
+      component: ()=>import('@/views/store/storeInformation/update'),
+      meta: {title: '更新门店信息'},
+      hidden: true
+    }
+    ,{
+      path:'addStoreInfo',
+      name:'addStoreInfo',
+      component: ()=>import('@/views/store/storeInformation/add'),
+      meta: {title: '更新门店信息'},
+      hidden: true
     }]
   },
   {

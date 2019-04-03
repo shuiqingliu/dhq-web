@@ -143,7 +143,7 @@
       },
       //更新
       handleUpdate(index, row) {
-        this.$router.push({path: '/store/updateStoreInfo', query: {id: row.id}})
+        this.$router.push({path: '/pms/updateBrand', query: {id: row.id}})
       },
       //删除
       handleDelete(index, row) {
@@ -206,7 +206,7 @@
         }
       },
       addBrand() {
-        this.$router.push({path: '/store/addStoreInfo'})
+        this.$router.push({path: '/pms/addBrand'})
       }
     }
   }

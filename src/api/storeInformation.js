@@ -6,32 +6,24 @@ export function fetchList(params) {
     params:params
   })
 }
-export function createBrand(data) {
+export function createStoreInfo(data) {
   return request({
     url:'/storeinfo/create',
     method:'post',
     data:data
   })
 }
-export function updateShowStatus(data) {
+export function updateStoreInfo(data) {
   return request({
-    url:'/brand/update/showStatus',
+    url:'/storeinfo/update',
     method:'post',
     data:data
   })
 }
 
-export function updateFactoryStatus(data) {
+export function deleteStoreInfo(id) {
   return request({
-    url:'/brand/update/factoryStatus',
-    method:'post',
-    data:data
-  })
-}
-
-export function deleteBrand(id) {
-  return request({
-    url:'/brand/delete/'+id,
+    url:'/storeinfo/deleteByID/'+id,
     method:'get',
   })
 }
