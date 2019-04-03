@@ -78,8 +78,21 @@ export const constantRouterMap = [
       component: ()=> import('@/views/userAdmin/permission/add'),
       meta: {title: '添加用户'},
       hidden: true
+    },
+    {
+      path: 'updateRole',
+      name: 'updateRole',
+      component: ()=> import('@/views/userAdmin/role/update'),
+      meta: {title: '修改角色权限'},
+      hidden: true
+    },
+    {
+      path: 'addRole',
+      name: 'addRole',
+      component: ()=> import('@/views/userAdmin/role/add'),
+      meta: {title: '添加角色'},
+      hidden: true
     }
-
   ]
   },
   {
