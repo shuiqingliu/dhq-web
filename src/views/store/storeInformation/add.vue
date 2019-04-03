@@ -1,14 +1,12 @@
 <template> 
-  <brand-detail :is-edit='false'></brand-detail>
+  <store-info-detail :is-edit='false'></store-info-detail>
 </template>
 <script>
-  import BrandDetail from './components/BrandDetail'
+  import StoreInfoDetail from './components/StoreInfoDetail'
   export default {
     name: 'addStoreInfo',
-    components: { BrandDetail }
+    components: { StoreInfoDetail }
   }
 </script>
 <style>
 </style>
-
-
