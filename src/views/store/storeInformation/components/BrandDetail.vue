@@ -43,7 +43,7 @@
   const defaultStoreInfo={
     shopId: 0,
     managerId: '2018140699',
-    shopType: 'vip',
+    shopType: '',
     shopName: '学能通北邮分店',
     shopDesc: '我们去哪里呀',
     shopLocationProvince: '北京市',

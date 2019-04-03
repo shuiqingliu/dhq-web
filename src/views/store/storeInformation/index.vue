@@ -6,7 +6,7 @@
           <span>筛选搜索</span>
           <el-button
             style="float: right"
-            @click="searchBrandList()"
+            @click="searchStoreInfoList()"
             type="primary"
             size="small">
             查询结果
@@ -25,13 +25,13 @@
       <span>数据列表</span>
       <el-button
         class="btn-add"
-        @click="addBrand()"
+        @click="addStoreInfo()"
         size="mini">
         添加
       </el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="brandTable"
+      <el-table ref="storeInfoTable"
                 :data="list"
                 style="width: 100%"
                 @selection-change="handleSelectionChange"
@@ -173,7 +173,7 @@
         this.getList();
       },
       //查询
-      searchBrandList() {
+      searchStoreInfoList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
@@ -205,7 +205,7 @@
           });
         }
       },
-      addBrand() {
+      addStoreInfo() {
         this.$router.push({path: '/store/addStoreInfo'})
       }
     }
