@@ -40,13 +40,13 @@ export const constantRouterMap = [
     children: [{
       path: 'store',
       name: 'store',
-      component: () => import('@/views/store/index'),
-      meta: {title: '门店', icon: 'product-list'}
+      component: () => import('@/views/store/storeInformation/index'),
+      meta: {title: '门店信息', icon: 'product-list'}
     },{
       path:'addStore',
       name:'addStore',
-      component: ()=>import('@/views/store/addStore/index'),
-      meta: {title: '添加门店', icon: 'product-add'}
+      component: ()=>import('@/views/store/storeEquipment/index'),
+      meta: {title: '门店设备', icon: 'product-add'}
     }]
   },
   {
@@ -83,11 +83,29 @@ export const constantRouterMap = [
   ]
   },
   {
+    path: '/equipment',
+    component: Layout,
+    redirect: '/equipment',
+    meta: {title: '设备管理', icon: 'product'},
+    children: [{
+      path: 'instance',
+      name: 'instance',
+      component: () => import('@/views/equipment/instance/index'),
+      meta: {title: '设备实例管理', icon: 'product-add'}
+    },
+    {
+      path: 'type',
+      name: 'type',
+      component: () => import('@/views/equipment/type/index'),
+      meta: {title: '设备类型管理', icon: 'product-list'}
+    }]
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
     name: 'pms',
-    meta: {title: '门店管理', icon: 'product'},
+    meta: {title: 'TEST', icon: 'product'},
     children: [{
       path: 'product',
       name: 'product',
