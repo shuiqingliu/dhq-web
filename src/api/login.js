@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-var v = '/admin'
+var v = '/user'
 export function login(username, password) {
   return request({
     url: v+'/login',
