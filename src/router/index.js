@@ -124,6 +124,20 @@ export const constantRouterMap = [
       name: 'type',
       component: () => import('@/views/equipment/type/index'),
       meta: {title: '设备类型管理', icon: 'product-list'}
+    },
+    {
+      path: 'addEquipmentType',
+      name: 'addEquipmentType',
+      component: () => import('@/views/equipment/type/add'),
+      meta: {title: '添加设备类型', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'updateEquipmentType',
+      name: 'updateEquipmentType',
+      component: () => import('@/views/equipment/type/update'),
+      meta: {title: '修改设备类型', icon: 'product-list'},
+      hidden: true
     }]
   },
   {

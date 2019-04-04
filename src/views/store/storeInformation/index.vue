@@ -125,7 +125,7 @@
   import {fetchList, updateShowStatus, updateFactoryStatus, deleteBrand} from '@/api/brand'
 
   export default {
-    name: 'brandList',
+    name: 'storeInfoList',
     data() {
       return {
         operates: [
