@@ -7,8 +7,8 @@
        <el-form-item label="门店类型："  prop="shopType">
          <el-input v-model="storeInfo.shopType" ></el-input>
       </el-form-item>
-      <el-form-item label="门店描述：">
-         <el-input v-model="storeInfo.shopDesc"></el-input>
+      <el-form-item label="门店描述：" >
+         <el-input v-model="storeInfo.shopDesc" type="textarea" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="省份：">
          <el-input v-model="storeInfo.shopLocationProvince"></el-input>
@@ -39,7 +39,7 @@
   </el-card>
 </template>
 <script>
-  import {createBrand, getBrand, updateBrand} from '@/api/brand'
+  import {createStoreInfo, getStoreInfoById, updateStoreInfo} from '@/api/storeInformation'
   //默认信息
   const defaultStoreInfo={
     shopId: 0,
@@ -79,7 +79,7 @@
     },
     created() {
       if (this.isEdit) {
-        getBrand(this.$route.query.id).then(response => {
+        getStoreInfoById(this.$route.query.id).then(response => {
           this.storeInfo = response.data;
         });
       }else{
@@ -96,7 +96,7 @@
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                updateBrand(this.$route.query.id, this.storeInfo).then(response => {
+                updateStoreInfo(this.$route.query.id, this.storeInfo).then(response => {
                   this.$refs[formName].resetFields();
                   this.$message({
                     message: '修改成功',
@@ -106,7 +106,7 @@
                   this.$router.back();
                 });
               } else {
-                createBrand(this.storeInfo).then(response => {
+                createStoreInfo(this.storeInfo).then(response => {
                   this.$refs[formName].resetFields();
                   this.storeInfo = Object.assign({},defaultStoreInfo);
                   this.$message({

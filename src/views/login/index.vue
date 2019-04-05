@@ -70,7 +70,7 @@
       };
       return {
         loginForm: {
-          username: 'admin',
+          username: 'aoteman',
           password: '123456'
         },
         loginRules: {

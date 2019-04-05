@@ -2,15 +2,15 @@ import request from '@/utils/request'
 //获取门店信息列表
 export function fetchList(params) {
   return request({
-    url:'/storeinfo/list',
-    method:'get',
+    url:'/shopInfo/showAllShop',
+    method:'post',
     params:params
   })
 }
 //创建门店信息
 export function createStoreInfo(data) {
   return request({
-    url:'/storeinfo/create',
+    url:'/shopInfo/create',
     method:'post',
     data:data
   })
@@ -18,7 +18,7 @@ export function createStoreInfo(data) {
 //修改门店信息
 export function updateStoreInfo(data) {
   return request({
-    url:'/storeinfo/update',
+    url:'/shopInfo/update',
     method:'post',
     data:data
   })
@@ -26,14 +26,14 @@ export function updateStoreInfo(data) {
 //删除门店信息
 export function deleteStoreInfo(id) {
   return request({
-    url:'/storeinfo/deleteByID/'+id,
+    url:'/shopInfo/deleteByID?shopID='+id,
     method:'get',
   })
 }
 //根据id获取获取门店信息
-export function getStoreInfo(id) {
+export function getStoreInfoById(id) {
   return request({
-    url:'/brand/'+id,
+    url:'/shopInfo/getShopInfoById?shopId='+id,
     method:'get',
   })
 }
