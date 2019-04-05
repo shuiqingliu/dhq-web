@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.city" placeholder="品牌名称/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -47,6 +47,9 @@
         <el-table-column label="门店名字" width="150" align="center">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
+        <el-table-column label="门店类型" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.shopType}}</template>
+        </el-table-column>
         <!-- <el-table-column label="门店描述" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopDesc}}</template>
         </el-table-column> -->
@@ -59,9 +62,9 @@
          <el-table-column label="区县" width="150" align="center">
           <template slot-scope="scope">{{scope.row.shopLocationDistrict}}</template>
         </el-table-column>
-        <el-table-column label="门店大小" width="100" align="center">
+        <!-- <el-table-column label="门店大小" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopSize}}</template>
-        </el-table-column>
+        </el-table-column> -->
          <!-- <el-table-column label="详细地址" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopLocationDetail}}</template>
         </el-table-column>
@@ -72,7 +75,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleUpdate(scope.$index, scope.row)">详情
+              @click="getDatail(scope.$index, scope.row)">详情
             </el-button>
             <el-button
               size="mini"
@@ -87,7 +90,8 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="batch-operate-container">
+    <!-- 先将批量删除注释掉 -->
+    <!-- <div class="batch-operate-container">
       <el-select
         size="small"
         v-model="operateType" placeholder="批量操作666">
@@ -106,7 +110,7 @@
         size="small">
         确定
       </el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -122,7 +126,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, updateShowStatus, updateFactoryStatus, deleteBrand} from '@/api/brand'
+  import {fetchList, deleteStoreInfo} from '@/api/storeInformation'
 
   export default {
     name: 'storeInfoList',
@@ -131,12 +135,15 @@
         operates: [
           {
             label: "批量删除",
-            value: "0"
+            value: 0
           }
         ],
         operateType: null,
         listQuery: {
-          keyword: null,
+          shopName: null,
+          province:null,
+          city:null,
+          district:null,
           pageNum: 1,
           pageSize: 5
         },
@@ -164,10 +171,10 @@
     },
     methods: {
       getList() {
-        //this.listLoading = true;
-        this.listLoading = false;
+        this.listLoading = true;
+        //this.listLoading = false;
         fetchList(this.listQuery).then(response => {
-          this.listLoading = true;
+          this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;
           this.totalPage = response.data.totalPage;
@@ -177,9 +184,13 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      //获取一条记录的详情
+       getDatail(index, row) {
+        this.$router.push({path: '/store/getStoreInfoDetail', query: {id: row.shopId}})//!!!!!!!!注意（row.  后面跟具体的id）
+      },
       //更新
       handleUpdate(index, row) {
-        this.$router.push({path: '/store/updateStoreInfo', query: {id: row.id}})
+        this.$router.push({path: '/store/updateStoreInfo', query: {id: row.shopId}})//!!!!!!!!注意（row.  后面跟具体的id）
       },
       //删除
       handleDelete(index, row) {
@@ -188,7 +199,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteBrand(row.id).then(response => {
+          deleteStoreInfo(row.shopId).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
