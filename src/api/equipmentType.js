@@ -30,6 +30,13 @@ export function deleteEquipmentType(id) {
     method:'get',
   })
 }
+//批量删除设备类型
+export function batchDeleteEquipmentType(ids) {
+  return request({
+    url:'/deviceType/delete/batch?ids='+ids,
+    method:'post',
+  })
+}
 //根据id获取获取门店信息
 export function getEquipmentType(id) {
   return request({
