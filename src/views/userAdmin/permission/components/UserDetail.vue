@@ -1,20 +1,15 @@
 <template> 
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
-      <el-form-item label="用户名：" prop="name">
-        <el-input v-model="user.name"></el-input>
+      <el-form-item label="用户名：" prop="username">
+        <el-input v-model="user.username"></el-input>
       </el-form-item>
-      <el-form-item label="密码：" prop="pwd">
-        <el-input v-model="user.pwd"></el-input>
+      <el-form-item label="密码：" prop="password" v-if='!isEdit'>
+        <el-input v-model="user.password" show-password></el-input>
       </el-form-item>
-
       <el-form-item label="用户角色：">
-        <el-checkbox-group v-model="user.roles">
-          <el-checkbox label="复选框 A"></el-checkbox>
-          <el-checkbox label="复选框 B"></el-checkbox>
-          <el-checkbox label="复选框 C"></el-checkbox>
-          <el-checkbox label="复选框 d"></el-checkbox>
-          <el-checkbox label="复选框 e"></el-checkbox>
+        <el-checkbox-group v-model="user.roles" v-for="role in allrole" :key="role.id">
+          <el-checkbox :label="role.name"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
@@ -26,11 +21,11 @@
   </el-card>
 </template>
 <script>
-  import {createBrand, getBrand, updateBrand} from '@/api/brand'
-
+  import {createUser, getUser, updateUser} from '@/api/userAdmin'
+  import {getRoles} from '@/api/role'
   const defaultuser={    
-    name: '',
-    pwd: '',
+    username: '',
+    password: '',
     roles: []
   };
   export default {
@@ -38,33 +33,36 @@
     props: {
       isEdit: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
     data() {
       return {
         user: {
-          name:'',
-          pwd:'',
+          username:'fsass',
+          password:'',
           roles: []
         },
+        allrole:[],
         rules: {
-          name: [
+          username: [
             {required: true, message: '请输入品牌名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
-          pwd:[
+          password:[
             {required: true, message: '请输密码', trigger: 'blur'},
           ]
 
         },
-        
       }
     },
     
     created() {
+      getRoles().then(response=>{
+        this.allrole = response.data
+      })
       if (this.isEdit) {
-        getBrand(this.$route.query.id).then(response => {
+        getUser(this.$route.query.id).then(response => {
           this.user = response.data;
         });
       }else{
@@ -83,7 +81,7 @@
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                updateBrand(this.$route.query.id, this.user).then(response => {
+                updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.$message({
                     message: '修改成功',
@@ -93,7 +91,7 @@
                   this.$router.back();
                 });
               } else {
-                createBrand(this.user).then(response => {
+                createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
                   this.$message({
