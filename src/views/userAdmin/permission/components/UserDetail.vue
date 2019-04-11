@@ -7,12 +7,13 @@
       <el-form-item label="密码：" prop="password" v-if='!isEdit'>
         <el-input v-model="user.password" show-password></el-input>
       </el-form-item>
-      <el-form-item label="用户角色：">
-        <el-checkbox-group v-model="user.roles" v-for="role in allrole" :key="role.id">
-          <el-checkbox :label="role.name"></el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="手机号：">
+        <el-input v-model="user.phone"></el-input>
       </el-form-item>
-
+      <el-form-item label="用户地址：">
+        <el-input v-model="user.address"></el-input>
+      </el-form-item>
+        
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
@@ -22,7 +23,7 @@
 </template>
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
-  import {getRoles} from '@/api/role'
+  
   const defaultuser={    
     username: '',
     password: '',
@@ -41,7 +42,9 @@
         user: {
           username:'fsass',
           password:'',
-          roles: []
+          phone: '',
+          address: ''
+          
         },
         allrole:[],
         rules: {
@@ -56,14 +59,24 @@
         },
       }
     },
-    
+    watch:{
+      roles(newVal, oldVal){
+        this.user.roles = newVal;
+        console.log(...newVal)
+      }
+    },
     created() {
-      getRoles().then(response=>{
-        this.allrole = response.data
-      })
+      
       if (this.isEdit) {
         getUser(this.$route.query.id).then(response => {
           this.user = response.data;
+        });
+        //获取用户对应的角色，然后将对应的选项设置为checked
+        getUserRole(this.$route.query.id).then(response =>{
+          for(var role in response.data){
+            this.checkId.push(role.id)
+          }
+          console.log(...this.checkId)
         });
       }else{
         this.user = Object.assign({},defaultuser);
