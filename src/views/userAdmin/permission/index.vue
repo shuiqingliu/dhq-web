@@ -44,9 +44,13 @@
           <template slot-scope="scope">{{scope.row.username}}</template>
         </el-table-column>
         <el-table-column label="所属角色" width="400" align="center">
-          <template slot-scope="scope"><el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag></template>
+           <template slot-scope="scope">
+              <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag>
+              <el-button @click = "dialogTableVisible=true;userRole.userId=scope.row.id" type="text" class="flr">
+                修改角色
+              </el-button>
+          </template>
         </el-table-column>
-      
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button
@@ -61,6 +65,23 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog title="角色修改" 
+      :visible.sync="dialogTableVisible" 
+      width="30%"
+      :before-close="handleClose">
+        <el-form>
+          <el-form-item label="请选择角色：">
+            <el-checkbox-group v-model="roles" >
+              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type">{{role.name}}</el-checkbox>
+            </el-checkbox-group>
+            
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleAddRole">确定</el-button>
+            <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
     
     <div class="pagination-container">
@@ -79,11 +100,18 @@
 </template>
 <script>
   import {fetchList,  deleteUser} from '@/api/userAdmin'
-
+  import {getRoles,getUserRole,updateUserRole} from '@/api/role'
   export default {
     name: 'userlist',
     data() {
       return {
+        dialogTableVisible: false, 
+        userRole:{
+          userId: 1,
+          roleIds:''
+        },
+        roles:[],
+        allrole:[],
         lists:[{
           id: 1,
           name: 'admin',
@@ -104,16 +132,26 @@
         multipleSelection: []
       }
     },
+    watch:{
+      uid(ne, old){
+        console.log(ne)
+      }
+    },
     created() {
       this.getList();
+      getRoles().then(response=>{
+        this.allrole = response.data
+      })
     },
     methods: {
       getList() {
         this.listLoading = false;
         fetchList(this.listQuery).then(response => {
           this.listLoading = true;
+          
           this.list = response.data.list;
           this.total = response.data.total;
+          
           this.totalPage = response.data.totalPage;
           this.pageSize = response.data.pageSize;
         });
@@ -156,6 +194,24 @@
       
       addUser() {
         this.$router.push({path: '/userAdmin/addUser'})
+      },
+      handleClose(done) {
+        this.roles = [];
+        done();
+      },
+      handleAddRole(){
+        this.userRole.roleIds = this.roles.join(',');
+        console.log(this.userRole)
+        updateUserRole(this.userRole).then(response=>{
+          this.$message({
+            message: '角色修改成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.dialogTableVisible=false;
+          this.getList()
+          this.roles = []
+        })
       }
     }
   }
