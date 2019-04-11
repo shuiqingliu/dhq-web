@@ -2,8 +2,8 @@ import request from '@/utils/request'
 //获取门店信息列表
 export function fetchList(params) {
   return request({
-    url:'/shopInfo/showAllShop',
-    method:'post',
+    url:'/shopInfo/searchByMultiCondition',
+    method:'get',
     params:params
   })
 }
