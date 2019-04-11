@@ -142,7 +142,7 @@
         listQuery: {
           shopName: null,
           province:null,
-          city:null,
+          city:'北京市',
           district:null,
           pageNum: 1,
           pageSize: 5
@@ -171,10 +171,10 @@
     },
     methods: {
       getList() {
-        this.listLoading = true;
-        //this.listLoading = false;
+       // this.listLoading = true;
+        this.listLoading = false;
         fetchList(this.listQuery).then(response => {
-          this.listLoading = false;
+          this.listLoading = true;
           this.list = response.data.list;
           this.total = response.data.total;
           this.totalPage = response.data.totalPage;
