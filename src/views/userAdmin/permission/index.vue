@@ -6,7 +6,7 @@
           <span>筛选搜索</span>
           <el-button
             style="float: right"
-            @click="searchBrandList()"
+            @click="searchUserList()"
             type="primary"
             size="small">
             查询结果
@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.username" placeholder="品牌名称/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -25,27 +25,26 @@
       <span>数据列表</span>
       <el-button
         class="btn-add"
-        @click="addBrand()"
+        @click="addUser()"
         size="mini">
         添加
       </el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="brandTable"
-                :data="lists"
+      <el-table ref="userTable"
+                :data="list"
                 style="width: 100%"
-                
-                v-loading="listLoading"
+                v-loading="!listLoading"
                 border>
         
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="用户名" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.username}}</template>
         </el-table-column>
         <el-table-column label="所属角色" width="400" align="center">
-          <template slot-scope="scope"><el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item}}{{item.id}}</el-tag></template>
+          <template slot-scope="scope"><el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag></template>
         </el-table-column>
       
         <el-table-column label="操作" width="200" align="center">
@@ -79,7 +78,7 @@
   </div>
 </template>
 <script>
-  import {fetchList,  deleteBrand} from '@/api/brand'
+  import {fetchList,  deleteUser} from '@/api/userAdmin'
 
   export default {
     name: 'userlist',
@@ -95,7 +94,7 @@
           roles: ['维修工', '管道工']
         }],
         listQuery: {
-          keyword: null,
+          username: null,
           pageNum: 1,
           pageSize: 10
         },
@@ -118,10 +117,11 @@
           this.totalPage = response.data.totalPage;
           this.pageSize = response.data.pageSize;
         });
+        
       },
      
       handleUpdate(index, row) {
-        this.$router.push({path: '/userAdmin/updateUser', query: {id: row.id}})
+        this.$router.push({path:'/userAdmin/updateUser', query: {id: row.id}})
       },
       handleDelete(index, row) {
         this.$confirm('是否要删除该品牌', '提示', {
@@ -129,7 +129,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteBrand(row.id).then(response => {
+          deleteUser(row.id).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -149,12 +149,12 @@
         this.listQuery.pageNum = val;
         this.getList();
       },
-      searchBrandList() {
+      searchUserList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
       
-      addBrand() {
+      addUser() {
         this.$router.push({path: '/userAdmin/addUser'})
       }
     }
