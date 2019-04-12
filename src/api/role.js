@@ -6,6 +6,13 @@ export function getRoles() {
     })
 }
 
+export function getPermissions() {
+  return request({
+    url: '/permission/list',
+    method: 'get',
+  })
+}
+
 export function getUserRole(id) {
   return request({
     url: '/user/role/' + id,
@@ -20,3 +27,19 @@ export function updateUserRole(params) {
     params:params
   })
 }
+
+export function updateRolePermission(params) {
+  return request({
+    url: '/role/permission/update',
+    method: 'post',
+    params:params
+  })
+}
+export function fetchRole(params) {
+  return request({
+    url:'/role/list',
+    method:'get',
+    params:params
+  })
+}
+
