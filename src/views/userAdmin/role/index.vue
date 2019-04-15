@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.username" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.roleName" placeholder="品牌名称/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -99,8 +99,8 @@
   </div>
 </template>
 <script>
-  import {fetchList,  deleteUser} from '@/api/userAdmin'
-  import {updateUserRole,fetchRole,getPermissions,updateRolePermission} from '@/api/role'
+
+  import {updateUserRole,fetchRole,getPermissions,updateRolePermission, deleteRole} from '@/api/role'
   export default {
     name: 'userlist',
     data() {
@@ -167,7 +167,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteUser(row.id).then(response => {
+          var a = {ids:row.id}
+          deleteRole(a).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -200,8 +201,16 @@
         done();
       },
       handleAddRole(){
+        if(this.roles.length == 0){
+          this.$message({
+            message: '角色权限不能为空！',
+            type: 'error',
+            duration: 1000
+          });
+          return;
+        }
         this.userRole.permissionIds = this.roles.join(',');
-        console.log(11)
+        
         updateRolePermission(this.userRole).then(response=>{
           this.$message({
             message: '角色权限修改成功',
