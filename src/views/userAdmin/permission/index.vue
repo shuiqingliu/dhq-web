@@ -6,7 +6,7 @@
           <span>筛选搜索</span>
           <el-button
             style="float: right"
-            @click="searchBrandList()"
+            @click="searchUserList()"
             type="primary"
             size="small">
             查询结果
@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.username" placeholder="品牌名称/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -25,29 +25,32 @@
       <span>数据列表</span>
       <el-button
         class="btn-add"
-        @click="addBrand()"
+        @click="addUser()"
         size="mini">
         添加
       </el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="brandTable"
-                :data="lists"
+      <el-table ref="userTable"
+                :data="list"
                 style="width: 100%"
-                
-                v-loading="listLoading"
+                v-loading="!listLoading"
                 border>
         
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="用户名" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.username}}</template>
         </el-table-column>
         <el-table-column label="所属角色" width="400" align="center">
-          <template slot-scope="scope"><el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item}}{{item.id}}</el-tag></template>
+           <template slot-scope="scope">
+              <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag>
+              <el-button @click = "dialogTableVisible=true;userRole.userId=scope.row.id" type="text" class="flr">
+                修改角色
+              </el-button>
+          </template>
         </el-table-column>
-      
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button
@@ -62,6 +65,23 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog title="角色修改" 
+      :visible.sync="dialogTableVisible" 
+      width="30%"
+      :before-close="handleClose">
+        <el-form>
+          <el-form-item label="请选择角色：">
+            <el-checkbox-group v-model="roles" >
+              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type">{{role.name}}</el-checkbox>
+            </el-checkbox-group>
+            
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleAddRole">确定</el-button>
+            <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
     
     <div class="pagination-container">
@@ -79,12 +99,19 @@
   </div>
 </template>
 <script>
-  import {fetchList,  deleteBrand} from '@/api/brand'
-
+  import {fetchList,  deleteUser} from '@/api/userAdmin'
+  import {getRoles,getUserRole,updateUserRole} from '@/api/role'
   export default {
     name: 'userlist',
     data() {
       return {
+        dialogTableVisible: false, 
+        userRole:{
+          userId: 1,
+          roleIds:''
+        },
+        roles:[],
+        allrole:[],
         lists:[{
           id: 1,
           name: 'admin',
@@ -95,7 +122,7 @@
           roles: ['维修工', '管道工']
         }],
         listQuery: {
-          keyword: null,
+          username: null,
           pageNum: 1,
           pageSize: 10
         },
@@ -105,23 +132,34 @@
         multipleSelection: []
       }
     },
+    watch:{
+      uid(ne, old){
+        console.log(ne)
+      }
+    },
     created() {
       this.getList();
+      getRoles().then(response=>{
+        this.allrole = response.data
+      })
     },
     methods: {
       getList() {
         this.listLoading = false;
         fetchList(this.listQuery).then(response => {
           this.listLoading = true;
+          
           this.list = response.data.list;
           this.total = response.data.total;
+          
           this.totalPage = response.data.totalPage;
           this.pageSize = response.data.pageSize;
         });
+        
       },
      
       handleUpdate(index, row) {
-        this.$router.push({path: '/userAdmin/updateUser', query: {id: row.id}})
+        this.$router.push({path:'/userAdmin/updateUser', query: {id: row.id}})
       },
       handleDelete(index, row) {
         this.$confirm('是否要删除该品牌', '提示', {
@@ -129,7 +167,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteBrand(row.id).then(response => {
+          deleteUser(row.id).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -149,13 +187,31 @@
         this.listQuery.pageNum = val;
         this.getList();
       },
-      searchBrandList() {
+      searchUserList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
       
-      addBrand() {
+      addUser() {
         this.$router.push({path: '/userAdmin/addUser'})
+      },
+      handleClose(done) {
+        this.roles = [];
+        done();
+      },
+      handleAddRole(){
+        this.userRole.roleIds = this.roles.join(',');
+        console.log(this.userRole)
+        updateUserRole(this.userRole).then(response=>{
+          this.$message({
+            message: '角色修改成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.dialogTableVisible=false;
+          this.getList()
+          this.roles = []
+        })
       }
     }
   }
