@@ -33,7 +33,7 @@ export function deleteStoreInfo(id) {
 //根据id获取获取门店信息
 export function getStoreInfoById(id) {
   return request({
-    url:'/shopInfo/getShopInfoById?shopId='+id,
+    url:'/shopInfo/searchShopByID?id='+id,
     method:'get',
   })
 }
