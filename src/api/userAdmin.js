@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 export function fetchList(params) {
   return request({
-    url:'/userAdmin/list',
+    url:'/user/list',
     method:'get',
     params:params
   })
 }
 export function createUser(data) {
   return request({
-    url:'/userAdmin/create',
+    url:'/user/register',
     method:'post',
     data:data
   })
@@ -16,21 +16,21 @@ export function createUser(data) {
 
 export function deleteUser(id) {
   return request({
-    url:'/userAdmin/delete/'+id,
-    method:'get',
+    url:'/user/delete/'+id,
+    method:'post',
   })
 }
 
 export function getUser(id) {
   return request({
-    url:'/userAdmin/'+id,
+    url:'/user/'+id,
     method:'get',
   })
 }
 
 export function updateUser(id,data) {
   return request({
-    url:'/userAdmin/update/'+id,
+    url:'/user/update/'+id,
     method:'post',
     data:data
   })

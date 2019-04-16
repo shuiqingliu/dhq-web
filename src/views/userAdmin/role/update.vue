@@ -1,5 +1,5 @@
 <template> 
-  <detail :is-edit='false'></detail>
+  <detail :is-edit='true'></detail>
 </template>
 <script>
   import detail from './components/UserDetail'
