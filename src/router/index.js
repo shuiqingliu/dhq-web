@@ -149,6 +149,20 @@ export const constantRouterMap = [
       component: () => import('@/views/equipment/type/update'),
       meta: {title: '修改设备类型', icon: 'product-list'},
       hidden: true
+    },
+    {
+      path: 'addEquipmentInstance',
+      name: 'addEquipmentInstance',
+      component: () => import('@/views/equipment/instance/add'),
+      meta: {title: '添加设备实例', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'updateEquipmentInstance',
+      name: 'updateEquipmentInstance',
+      component: () => import('@/views/equipment/instance/update'),
+      meta: {title: '修改设备实例', icon: 'product-list'},
+      hidden: true
     }]
   },
   
