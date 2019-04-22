@@ -16,9 +16,9 @@ export function createStoreInfo(data) {
   })
 }
 //修改门店信息
-export function updateStoreInfo(data) {
+export function updateStoreInfo(id,data) {
   return request({
-    url:'/shopInfo/update',
+    url:'/shopInfo/update'+id,
     method:'post',
     data:data
   })
@@ -26,8 +26,8 @@ export function updateStoreInfo(data) {
 //删除门店信息
 export function deleteStoreInfo(id) {
   return request({
-    url:'/shopInfo/deleteByID?shopID='+id,
-    method:'get',
+    url:'/shopInfo/deleteByID?shopID=' + id,
+    method:'get'
   })
 }
 //根据id获取获取门店信息

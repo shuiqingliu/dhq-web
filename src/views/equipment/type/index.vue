@@ -238,7 +238,8 @@ export default {
         //删除
         // this.deleteHomeAdvertise(ids);
         //在这里重新写一个函数
-        this.batchDeleteEquipmentType(ids);
+         //this.userRole.roleIds = this.roles.join(',');
+        this.batchDeleteEquipmentType(ids.join('%2C'));
       } else {
         this.$message({
           message: "请选择批量操作类型",

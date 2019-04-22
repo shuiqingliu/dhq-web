@@ -6,7 +6,7 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right"
-          @click="searchEquipmentInstanceList()"
+          @click="searchCourseTypeList()"
           type="primary"
           size="small"
         >查询结果</el-button>
@@ -17,18 +17,18 @@
               <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
           </el-form-item>-->
           <el-form-item label="一级类别：">
-            <el-select v-model="listQuery.keyword1" placeholder="请选择类别" clearable @change="selectFirstCategory()">
+            <el-select v-model="listQuery.firstType" placeholder="请选择类别" clearable @change="selectFirstCategory()">
               <el-option
                 v-for="item in firstCategoryOptions"
-                :key="item.first_category"
+                :key="item.value"
                 :label="item.label"
-                :value="item.first_category"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="二级类别：">
-            <el-select v-model="listQuery.keyword2" placeholder="请选择类别" clearable @change="selectSecondCategory()">
+            <el-select v-model="listQuery.secondType" placeholder="请选择类别" clearable @change="selectSecondCategory()">
               <el-option
                 v-for="item in secondCategoryOptions"
                 :key="item.value"
@@ -39,7 +39,7 @@
           </el-form-item>
 
           <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.keyword3" placeholder="请选择类别" clearable>
+            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" clearable>
               <el-option
                 v-for="item in thirdCategoryOptions"
                 :key="item.value"
@@ -54,11 +54,11 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" @click="addEquipmentInstance()" size="mini">添加</el-button>
+      <el-button class="btn-add" @click="addCourseType()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
-        ref="equipmentTable"
+        ref="courseTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -66,26 +66,17 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" align="center" width="100">
+        <el-table-column label="编号" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="设备名" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="一级类别" align="center">
+          <template slot-scope="scope">{{scope.row.firstType}}</template>
         </el-table-column>
-        <el-table-column label="单价" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.price}}</template>
+        <el-table-column label="二级类别" align="center">
+          <template slot-scope="scope">{{scope.row.secondType}}</template>
         </el-table-column>
-        <el-table-column label="生产日期" align="center">
-          <template slot-scope="scope">{{scope.row.produceDate}}</template>
-        </el-table-column>
-        <el-table-column label="使用年限" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.useYear}}</template>
-        </el-table-column>
-         <el-table-column label="设备类别" align="center">
-          <template slot-scope="scope">{{scope.row.firstCategory}}--{{scope.row.secondCategory}}--{{scope.row.thirdCategory}}</template>
-        </el-table-column>
-        <el-table-column label="备注" align="center">
-          <template slot-scope="scope">{{scope.row.describtion}}</template>
+        <el-table-column label="三级类别" align="center">
+          <template slot-scope="scope">{{scope.row.thirdType}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -129,16 +120,16 @@
 <script>
 import {
   fetchList,
-  deleteEquipmentInstance,
-  batchDeleteEquipmentInstance,
-  getFirstCategory,
-  getSecondCategory,
-  getThirdCategory
-} from "@/api/equipmentInstance";
+  deleteCourseType,
+  batchDeleteCourseType,
+  //getFirstCategory,
+  // getSecondCategory,
+  // getThirdCategory
+} from "@/api/courseType";
 
-import {fetchList as getListByCategory} from "@/api/equipmentType"
+import {fetchList as getListByCategory} from "@/api/courseType"
 export default {
-  name: "equipmentInstanceList",
+  name: "courseTypeList",
   data() {
     return {
       operates: [
@@ -149,9 +140,9 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        keyword1: null,
-        keyword2: null,
-        keyword3: null,
+        firstType: null,
+        secondType: null,
+        thirdType: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -185,13 +176,13 @@ export default {
       this.multipleSelection = val;
     },
     //添加
-    addEquipmentInstance() {
-      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+    addCourseType() {
+      this.$router.push({ path: "/course/addCourseType" });
     },
     //更新
     handleUpdate(index, row) {
       this.$router.push({
-        path: "/equipment/updateEquipmentInstance",
+        path: "/course/updateCourseType",
         query: { id: row.id }
       });
     },
@@ -202,7 +193,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteEquipmentInstance(row.id).then(response => {
+        deleteCourseType(row.id).then(response => {
           this.$message({
             message: "删除成功",
             type: "success",
@@ -223,10 +214,7 @@ export default {
       this.getList();
     },
     //查询
-    searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1)
-      alert(this.listQuery.keyword2)
-      alert(this.listQuery.keyword3)
+    searchCourseTypeList() {
       this.listQuery.pageNum = 1;
       this.getList();
     },
@@ -252,7 +240,7 @@ export default {
         //删除
         // this.deleteHomeAdvertise(ids);
         //在这里重新写一个函数
-        this.batchDeleteEquipmentInstance(ids);
+        this.batchDeleteCourseType(ids.join('%2C'));
       } else {
         this.$message({
           message: "请选择批量操作类型",
@@ -261,7 +249,7 @@ export default {
         });
       }
     },
-    batchDeleteEquipmentInstance(ids) {
+    batchDeleteCourseType(ids) {
       this.$confirm("是否要删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -269,7 +257,7 @@ export default {
       }).then(() => {
         //let params = new URLSearchParams();
         //params.append("ids", ids);
-        batchDeleteEquipmentInstance(ids).then(response => {
+        batchDeleteCourseType(ids).then(response => {
           this.getList();
           this.$message({
             type: "success",
@@ -278,23 +266,31 @@ export default {
         });
       });
     },
-    getFirstCategoryList() {
-      getFirstCategory().then(
-        response => {
-          this.firstCategoryOptions = response.data;
+   getFirstCategoryList() {
+      getListByCategory({ pageNum: 1, pageSize: 100 }).then(response => {
+        this.firstCategoryOptions = [];
+        let firstCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < firstCategoryList.length; i++) {
+          arr.push(firstCategoryList[i].firstType);
         }
-      )
+        //去重
+        arr = [...new Set(arr)];
+        for (let i = 0; i < arr.length; i++) {
+          this.firstCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
     },
     //选择一级列表以后
     selectFirstCategory(){
       this.secondCategoryOptions = [];
         //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:null,keyword3:null,pageSize:100}).then(response => {
+        getListByCategory({firstType : this.listQuery.firstType,secondType:null,thirdType:null,pageSize:100}).then(response => {
          // this.firstCategoryOptions = [];
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
+          arr.push(secondCategoryList[i].secondType);
         }
         //去重
         arr = [...new Set(arr)];
@@ -303,18 +299,19 @@ export default {
           this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
         }
         })
-        this.listQuery.keyword2 = null;//将上一次二级分类选中的结果置为空。
+        this.listQuery.secondType = null;//将上一次二级分类选中的结果置为空。
+        this.listQuery.thirdType = null;//将上一次二级分类选中的结果置为空。
     },
     //选择二级列表以后
     selectSecondCategory(){
       this.thirdCategoryOptions = [];
         //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:this.listQuery.keyword2,keyword3:null,pageSize:100}).then(response => {
+        getListByCategory({firstType : this.listQuery.firstType,secondType:this.listQuery.secondType,thirdType:null,pageSize:100}).then(response => {
          // this.firstCategoryOptions = [];
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdCategory);
+          arr.push(thirdCategoryList[i].thirdType);
         }
         //去重
         arr = [...new Set(arr)];
@@ -322,23 +319,8 @@ export default {
           this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
         }
         })
-        this.listQuery.keyword3 = null;//将上一次三级分类选中的结果置为空。
+        this.listQuery.thirdType = null;//将上一次三级分类选中的结果置为空。
     },
-    getSecondCategoryList() {
-      fetchCategoryList({ pageNum: 1, pageSize: 100 }).then(response => {
-        this.secondCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-      });
-    }
   }
 };
 </script>

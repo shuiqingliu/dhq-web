@@ -304,6 +304,7 @@ export default {
         }
         })
         this.listQuery.keyword2 = null;//将上一次二级分类选中的结果置为空。
+        this.listQuery.keyword3 = null;//将上一次三级分类选中的结果置为空。
     },
     //选择二级列表以后
     selectSecondCategory(){
