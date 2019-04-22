@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import store from '@/store'
 Vue.use(Router)
 
 /* Layout */
@@ -18,6 +18,7 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
+// var a = [true,false,false]
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
@@ -36,7 +37,9 @@ export const constantRouterMap = [
     path: '/store',
     component: Layout,
     redirect: '/store',
+    
     meta: {title: '门店管理', icon: 'product'},
+    
     children: [{
       path: 'storeInformation',
       name: 'storeInformation',
@@ -73,6 +76,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/userAdmin',
     meta: {title: '用户管理', icon: 'product'},
+    // hidden:a[1],
     children: [{
       path: 'permissionAdmin',
       name: 'permissionAdmin',
@@ -119,6 +123,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/equipment',
     meta: {title: '设备管理', icon: 'product'},
+    // hidden:a[2],
     children: [{
       path: 'instance',
       name: 'instance',

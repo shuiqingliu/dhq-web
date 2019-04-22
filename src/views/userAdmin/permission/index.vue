@@ -202,7 +202,7 @@
       },
       handleAddRole(){
         this.userRole.roleIds = this.roles.join(',');
-        console.log(this.userRole)
+        
         updateUserRole(this.userRole).then(response=>{
           this.$message({
             message: '角色修改成功',
