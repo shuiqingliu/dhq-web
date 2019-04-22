@@ -112,7 +112,7 @@
                     type: 'success',
                     duration:1000
                   });
-                });
+                })
               }
             });
 
