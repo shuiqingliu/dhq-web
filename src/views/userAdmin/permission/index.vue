@@ -129,7 +129,7 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: []
+        multipleSelection: [],
       }
     },
     watch:{

@@ -4,8 +4,13 @@
       <el-form-item label="管理者ID：" prop="managerId">
         <el-input v-model="storeInfo.managerId"></el-input>
       </el-form-item>
+      
       <el-form-item label="门店类型：" prop="shopType">
         <el-input v-model="storeInfo.shopType"></el-input>
+      </el-form-item>
+
+      <el-form-item label="门店名字：" prop="shopType">
+        <el-input v-model="storeInfo.shopName"></el-input>
       </el-form-item>
       <el-form-item label="门店描述：">
         <el-input v-model="storeInfo.shopDesc" type="textarea" placeholder="请输入内容"></el-input>
@@ -18,7 +23,7 @@
           @change="handleChange"
         ></el-cascader>
       </el-form-item>
-      <el-form-item label="省份：">
+      <!-- <el-form-item label="省份：">
         <el-input v-model="storeInfo.shopLocationProvince"></el-input>
       </el-form-item>
       <el-form-item label="城市：">
@@ -26,7 +31,7 @@
       </el-form-item>
       <el-form-item label="区县：">
         <el-input v-model="storeInfo.shopLocationDistrict"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="详细地址：">
         <el-input v-model="storeInfo.shopLocationDetail"></el-input>
       </el-form-item>
@@ -134,6 +139,10 @@ export default {
                 }
               );
             } else {
+              
+              this.storeInfo.shopLocationProvince = CodeToText[this.selectedOptions[0]];
+              this.storeInfo.shopLocationCity = CodeToText[this.selectedOptions[1]];
+              this.storeInfo.shopLocationDistrict = CodeToText[this.selectedOptions[2]];
               createStoreInfo(this.storeInfo).then(response => {
                 this.$refs[formName].resetFields();
                 this.storeInfo = Object.assign({}, defaultStoreInfo);

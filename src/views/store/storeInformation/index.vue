@@ -25,7 +25,7 @@
           <el-form-item label="输入店名：">
             <el-input
               style="width: 203px"
-              v-model="listQuery.city"
+              v-model="listQuery.shopName"
               placeholder="品牌名称/关键字"
               size="medium"
             ></el-input>
@@ -227,9 +227,7 @@ export default {
     },
     //查询
     searchStoreInfoList() {
-      alert("adf" == "adf");
       let length = this.selectedOptions.length;
-      alert(this.selectedOptions.length);
       this.listQuery.province = CodeToText[this.selectedOptions[0]];
       //alert(this.listQuery.province)
       if (length === 2) {
@@ -281,9 +279,6 @@ export default {
     },
     addStoreInfo() {
       this.$router.push({ path: "/store/addStoreInfo" });
-    },
-    handleChange() {
-      alert(this.selectedOptions);
     }
   }
 };
