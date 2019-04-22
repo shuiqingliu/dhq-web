@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import store from '@/store'
 Vue.use(Router)
 
 /* Layout */
@@ -39,7 +39,7 @@ export const constantRouterMap = [
     redirect: '/store',
     
     meta: {title: '门店管理', icon: 'product'},
-    // hidden: a[0],
+    
     children: [{
       path: 'storeInformation',
       name: 'storeInformation',

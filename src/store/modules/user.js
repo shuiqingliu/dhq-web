@@ -6,7 +6,8 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    permis:[]
   },
 
   mutations: {
@@ -21,6 +22,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_PERMIS: (state, permis) =>{
+      state.permis = permis
     }
   },
 
@@ -46,10 +50,20 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
+          var permis = [false,false,false,false]
+          for(var i = 0; i < data.roles.length; i++){
+            if(data.roles[i].name == "ROLE_manager"){
+              permis[1] = true;
+            }else if(data.roles[i].name == "ROLE_admin"){
+              permis[2] = true;
+            }
+          }
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
+            commit('SET_PERMIS', permis)
+           
           } else {
-            console.log(1)
+            
             // reject('getInfo: roles must be a non-null array !')
           }
           commit('SET_NAME', data.username)
