@@ -22,7 +22,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>用户列表</span>
       <el-button
         class="btn-add"
         @click="addUser()"
@@ -45,8 +45,8 @@
         </el-table-column>
         <el-table-column label="所属角色" width="400" align="center">
            <template slot-scope="scope">
-              <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag>
-              <el-button @click = "dialogTableVisible=true;userRole.userId=scope.row.id" type="text" class="flr">
+              <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.description}}</el-tag>
+              <el-button @click = "handleChangeRole(scope.row)" type="text" class="flr">
                 修改角色
               </el-button>
           </template>
@@ -71,8 +71,8 @@
       :before-close="handleClose">
         <el-form>
           <el-form-item label="请选择角色：">
-            <el-checkbox-group v-model="roles" >
-              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type">{{role.name}}</el-checkbox>
+            <el-checkbox-group v-model="roles">
+              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type" >{{role.description}}</el-checkbox>
             </el-checkbox-group>
             
           </el-form-item>
@@ -135,6 +135,9 @@
     watch:{
       uid(ne, old){
         console.log(ne)
+      },
+      roles(ne,old){
+        console.log(ne)
       }
     },
     created() {
@@ -157,7 +160,16 @@
         });
         
       },
-     
+      
+      handleChangeRole(row){
+        this.dialogTableVisible=true;
+        this.userRole.userId=row.id;
+        this.roles = [];
+        for(var i = 0; i < row.roles.length;i++){
+          this.roles.push(row.roles[i].id)
+        }
+        
+      },
       handleUpdate(index, row) {
         this.$router.push({path:'/userAdmin/updateUser', query: {id: row.id}})
       },
