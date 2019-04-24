@@ -82,7 +82,16 @@
           <template slot-scope="scope">{{scope.row.useYear}}</template>
         </el-table-column>
          <el-table-column label="设备类别" align="center">
-          <template slot-scope="scope">{{scope.row.firstCategory}}--{{scope.row.secondCategory}}--{{scope.row.thirdCategory}}</template>
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>一级分类: {{ scope.row.firstCategory }}</p>
+              <p>二级分类: {{ scope.row.secondCategory }}</p>
+              <p>三级分类: {{ scope.row.thirdCategory }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text" >查看</el-button>
+              </div>
+            </el-popover>
+          </template>
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">{{scope.row.describtion}}</template>
