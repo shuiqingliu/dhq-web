@@ -63,16 +63,23 @@
         <!-- <el-table-column label="门店描述" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopDesc}}</template>
         </el-table-column>-->
-        <el-table-column label="门店大小" width="60" align="center">
+        <el-table-column label="门店大小" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopSize}}</template>
         </el-table-column>
-        <el-table-column label="员工数量" width="60" align="center">
+        <el-table-column label="员工数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.employeeNum}}</template>
         </el-table-column>
-        <el-table-column label="省市区" width="200" align="center">
-          <template
-            slot-scope="scope"
-          >{{scope.row.shopLocationProvince}}--{{scope.row.shopLocationCity}}--{{scope.row.shopLocationDistrict}}</template>
+        <el-table-column label="省市区" width="100" align="center">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>省: {{ scope.row.shopLocationProvince }}</p>
+              <p>市: {{ scope.row.shopLocationCity }}</p>
+              <p>区: {{ scope.row.shopLocationDistrict }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text">{{ scope.row.shopLocationProvince }}</el-button>
+              </div>
+            </el-popover>
+          </template>
         </el-table-column>
         <el-table-column label="详细地址" align="center">
           <template slot-scope="scope">{{scope.row.shopLocationDetail}}</template>
