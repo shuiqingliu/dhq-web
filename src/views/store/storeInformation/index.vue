@@ -18,7 +18,6 @@
               size="medium"
               :options="options"
               v-model="selectedOptions"
-              @change="handleChange()"
               clearable
             ></el-cascader>
           </el-form-item>
@@ -26,7 +25,7 @@
             <el-input
               style="width: 203px"
               v-model="listQuery.shopName"
-              placeholder="品牌名称/关键字"
+              placeholder="门店名字"
               size="medium"
             ></el-input>
           </el-form-item>
@@ -35,7 +34,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>门店列表</span>
       <el-button class="btn-add" @click="addStoreInfo()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
@@ -49,9 +48,9 @@
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="门店编号" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.shopId}}</template>
+          <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="管理者编号" width="100" align="center">
+        <el-table-column label="负责人" width="100" align="center">
           <template slot-scope="scope">{{scope.row.managerId}}</template>
         </el-table-column>
         <el-table-column label="门店名字" width="170" align="center">
@@ -63,19 +62,35 @@
         <!-- <el-table-column label="门店描述" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopDesc}}</template>
         </el-table-column>-->
-        <el-table-column label="门店大小" width="60" align="center">
+        <el-table-column label="门店大小" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopSize}}</template>
         </el-table-column>
-        <el-table-column label="员工数量" width="60" align="center">
+        <el-table-column label="员工数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.employeeNum}}</template>
         </el-table-column>
-        <el-table-column label="省市区" width="200" align="center">
-          <template
-            slot-scope="scope"
-          >{{scope.row.shopLocationProvince}}--{{scope.row.shopLocationCity}}--{{scope.row.shopLocationDistrict}}</template>
+        <el-table-column label="省市区" width="100" align="center">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>省: {{ scope.row.shopLocationProvince }}</p>
+              <p>市: {{ scope.row.shopLocationCity }}</p>
+              <p>区: {{ scope.row.shopLocationDistrict }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text">{{ scope.row.shopLocationProvince }}</el-button>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="电话" width="120" align="center">
+          <template slot-scope="scope">{{scope.row.shopPhone}}</template>
         </el-table-column>
         <el-table-column label="详细地址" align="center">
           <template slot-scope="scope">{{scope.row.shopLocationDetail}}</template>
+        </el-table-column>
+         <el-table-column label="备注" align="center" width="80">
+          <!-- <template slot-scope="scope">{{scope.row.description}}</template> -->
+          <template slot-scope="scope">
+            <el-button type="text" @click="description=scope.row.shopDesc;open()">详情</el-button>
+          </template>
         </el-table-column>
         <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
@@ -85,6 +100,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog title="备注详情" :visible.sync="dialogVisible" width="30%">
+        <span>
+          <el-input type="textarea" v-model="this.description"></el-input>
+        </span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">返 回</el-button>
+        </span>
+      </el-dialog>
     </div>
     <!-- 先将批量删除注释掉 -->
     <!-- <div class="batch-operate-container">
@@ -163,7 +186,9 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       options: regionDataPlus, //全国的地理信息
-      selectedOptions: []
+      selectedOptions: [],
+      dialogVisible: false,
+      description:null
     };
   },
   created() {
@@ -188,14 +213,14 @@ export default {
     getDatail(index, row) {
       this.$router.push({
         path: "/store/getStoreInfoDetail",
-        query: { id: row.shopId }
+        query: { id: row.id }
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     },
     //更新
     handleUpdate(index, row) {
       this.$router.push({
         path: "/store/updateStoreInfo",
-        query: { id: row.shopId }
+        query: { id: row.id}
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     },
     //删除
@@ -205,7 +230,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteStoreInfo(row.shopId).then(response => {
+        deleteStoreInfo(row.id).then(response => {
           this.$message({
             message: "删除成功",
             type: "success",
@@ -279,6 +304,9 @@ export default {
     },
     addStoreInfo() {
       this.$router.push({ path: "/store/addStoreInfo" });
+    },
+    open() {
+      this.$alert(this.description, "备注详情");
     }
   }
 };
