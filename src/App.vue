@@ -12,7 +12,7 @@
       // router.addRoutes(notFound);
     }
   }
-</script>
 
+</script>
 <style>
 </style>

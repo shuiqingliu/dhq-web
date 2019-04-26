@@ -1,103 +1,302 @@
 <template>
   <div class="app-container">
-   {{res}}
+    <el-card class="filter-container" shadow="never">
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right"
+          @click="searchStoreEquipmentList()"
+          type="primary"
+          size="small"
+        >查询结果</el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="请输入地区信息">
+            <el-cascader
+              size="medium"
+              :options="options"
+              v-model="selectedOptions"
+              clearable
+            ></el-cascader>
+          </el-form-item>
+          <el-form-item label="输入店名：">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.shopName"
+              placeholder="门店名字"
+              size="medium"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
+    <el-card class="operate-container" shadow="never">
+      <i class="el-icon-tickets"></i>
+      <span>门店设备列表</span>
+    </el-card>
+    <div class="table-container">
+      <el-table
+        ref="equipmentTable"
+        :data="list"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        v-loading="listLoading"
+        border
+      >
+        <el-table-column type="selection" width="60" align="center"></el-table-column>
+        <el-table-column label="编号" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.id}}</template>
+        </el-table-column>
+        <el-table-column label="门店名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
+        </el-table-column>
+        <el-table-column label="设备申请Id" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.applyDeviceId}}</template>
+        </el-table-column>
+        <el-table-column label="设备Id" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceId}}</template>
+        </el-table-column>
+        <el-table-column label="设备名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceName}}</template>
+        </el-table-column>
+        <el-table-column label="设备型号" align="center">
+          <template slot-scope="scope">{{scope.row.modelNum}}</template>
+        </el-table-column>
+        <el-table-column label="批准时间" align="center">
+          <template slot-scope="scope">{{scope.row.agreeTimes}}</template>
+        </el-table-column>
+        <el-table-column label="备注" align="center">
+          <template slot-scope="scope">{{scope.row.remark}}</template>
+        </el-table-column>
+        <el-table-column label="是否收货" align="center">
+          <template slot-scope="scope">{{scope.row.ifReceive}}</template>
+        </el-table-column>
+        <!-- <el-table-column label="操作" width="200" align="center">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column> -->
+      </el-table>
+    </div>
+    <div class="pagination-container">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total, sizes,prev, pager, next,jumper"
+        :page-size="listQuery.pageSize"
+        :page-sizes="[5,10,15]"
+        :current-page.sync="listQuery.pageNum"
+        :total="total"
+      ></el-pagination>
+    </div>
   </div>
 </template>
-
 <script>
-  export default {
-    name: 'addStore',
-    data(){
-      return {
-        res: '这是添加门店的界面'
+import {
+  fetchList,
+  getStoreEquipmentById,
+  // deleteEquipmentInstance,
+  // batchDeleteEquipmentInstance,
+  // getFirstCategory,
+  // getSecondCategory,
+  // getThirdCategory
+} from "@/api/storeEquipment";
+
+import {fetchList as getListByCategory} from "@/api/equipmentType";
+import { regionDataPlus, CodeToText } from "element-china-area-data";
+export default {
+  name: "equipmentInstanceList",
+  data() {
+    return {
+      operates: [
+        {
+          label: "批量删除",
+          value: 0
+        }
+      ],
+      operateType: null,
+      listQuery: {
+        province: null,
+        city: null,
+        district: null,
+        shopName:null,
+        pageNum: 1,
+        pageSize: 5
+      },
+      list: [],
+      firstCategoryOptions: [],
+      secondCategoryOptions: [],
+      thirdCategoryOptions: [],
+      total: null,
+      listLoading: false, //临时修改了一下
+      multipleSelection: [],
+      options: regionDataPlus, //全国的地理信息
+      selectedOptions: [],
+    };
+  },
+  created() {
+    //this.getList();
+    //this.getFirstCategoryList();
+    // this.getSecondCategoryList();
+  },
+  methods: {
+    getList() {
+      this.listLoading = true;
+      //this.listLoading = false;
+      fetchList(this.listQuery).then(response => {
+        this.listLoading = false;
+        this.list = response.data.list;
+        this.total = response.data.total;
+        this.totalPage = response.data.totalPage;
+        this.pageSize = response.data.pageSize;
+      });
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    //添加
+    addEquipmentInstance() {
+      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+    },
+    //更新
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: "/equipment/updateEquipmentInstance",
+        query: { id: row.id }
+      });
+    },
+    //删除
+    handleDelete(index, row) {
+      this.$confirm("是否要删除", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        deleteEquipmentInstance(row.id).then(response => {
+          this.$message({
+            message: "删除成功",
+            type: "success",
+            duration: 1000
+          });
+          this.getList();
+        });
+      });
+    },
+    //处理改变分页
+    handleSizeChange(val) {
+      this.listQuery.pageNum = 1;
+      this.listQuery.pageSize = val;
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val;
+      this.getList();
+    },
+    //查询
+    searchEquipmentInstanceList() {
+      alert(this.listQuery.keyword1)
+      alert(this.listQuery.keyword2)
+      alert(this.listQuery.keyword3)
+      this.listQuery.pageNum = 1;
+      this.getList();
+    },
+    //处理批量操作
+    handleBatchOperate() {
+      console.log(this.multipleSelection);
+      console.log("娅娅");
+      if (this.multipleSelection < 1) {
+        this.$message({
+          message: "请选择一条记录",
+          type: "warning",
+          duration: 1000
+        });
+        return;
       }
+      //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
+      let ids = [];
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        ids.push(this.multipleSelection[i].id);
+      }
+      console.log(ids)
+      if (this.operateType === 0) {
+        //删除
+        // this.deleteHomeAdvertise(ids);
+        //在这里重新写一个函数
+        this.batchDeleteEquipmentInstance(ids);
+      } else {
+        this.$message({
+          message: "请选择批量操作类型",
+          type: "warning",
+          duration: 1000
+        });
+      }
+    },
+    batchDeleteEquipmentInstance(ids) {
+      this.$confirm("是否要删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        //let params = new URLSearchParams();
+        //params.append("ids", ids);
+        batchDeleteEquipmentInstance(ids).then(response => {
+          this.getList();
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        });
+      });
+    },
+    getFirstCategoryList() {
+      getFirstCategory().then(
+        response => {
+          this.firstCategoryOptions = response.data;
+        }
+      )
+    },
+    //查询
+    searchStoreEquipmentList() {
+      let length = this.selectedOptions.length;
+      this.listQuery.province = CodeToText[this.selectedOptions[0]];
+      //alert(this.listQuery.province)
+      if (length === 2) {
+        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+        this.listQuery.city = null;
+        this.listQuery.district = null;
+      }
+      if (length === 3) {
+        this.listQuery.city = CodeToText[this.selectedOptions[1]];
+        if (this.selectedOptions[2] == "") {
+          this.listQuery.district = null;
+        } else {
+          this.listQuery.district = CodeToText[this.selectedOptions[2]];
+        }
+      }
+      //alert(this.listQuery.city)
+      //alert(this.listQuery.district)
+      this.listQuery.pageNum = 1;
+      this.getListById();
+
+    },
+    getListById() {
+      this.listLoading = true;
+      //this.listLoading = false;
+      getStoreEquipmentById(this.listQuery).then(response => {
+        this.listLoading = false;
+        this.list = response.data.list;
+        this.total = response.data.total;
+        this.totalPage = response.data.totalPage;
+        this.pageSize = response.data.pageSize;
+      });
     }
   }
+};
 </script>
-
-<style scoped>
-  .app-container {
-    margin-top: 40px;
-    margin-left: 120px;
-    margin-right: 120px;
-  }
-
-  .address-layout {
-  }
-
-  .total-layout {
-    margin-top: 20px;
-  }
-
-  .total-frame {
-    border: 1px solid #DCDFE6;
-    padding: 20px;
-    height: 100px;
-  }
-
-  .total-icon {
-    color: #409EFF;
-    width: 60px;
-    height: 60px;
-  }
-
-  .total-title {
-    position: relative;
-    font-size: 16px;
-    color: #909399;
-    left: 70px;
-    top: -50px;
-  }
-
-  .total-value {
-    position: relative;
-    font-size: 18px;
-    color: #606266;
-    left: 70px;
-    top: -40px;
-  }
-
-  .un-handle-layout {
-    margin-top: 20px;
-    border: 1px solid #DCDFE6;
-  }
-
-  .layout-title {
-    color: #606266;
-    padding: 15px 20px;
-    background: #F2F6FC;
-    font-weight: bold;
-  }
-
-  .un-handle-content {
-    padding: 20px 40px;
-  }
-
-  .un-handle-item {
-    border-bottom: 1px solid #EBEEF5;
-    padding: 10px;
-  }
-
-  .overview-layout {
-    margin-top: 20px;
-  }
-
-  .overview-item-value {
-    font-size: 24px;
-    text-align: center;
-  }
-
-  .overview-item-title {
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .out-border {
-    border: 1px solid #DCDFE6;
-  }
-
-  .statistics-layout {
-    margin-top: 20px;
-    border: 1px solid #DCDFE6;
-  }
+<style rel="stylesheet/scss" lang="scss" scoped>
 </style>
