@@ -1,12 +1,33 @@
 import request from '@/utils/request'
-//获取设备列表
+//获取设备申请列别
 export function fetchList(params) {
   return request({
-    url:'/device/getAll',
+    url:'/deviceApply/listAll',
     method:'get',
     params:params
   })
 }
+
+//拒绝申请
+// export function rejectDeviceApply(applyID,rejectDes) {
+//   return request({
+//     url:'/deviceApply/reject?applyID='+applyID+'&'+'rejectDes=' + rejectDes,
+//     method:'get',
+//   })
+// }
+//拒绝申请
+export function rejectDeviceApply(applyID,data) {
+  return request({
+    url:'/deviceApply/reject?applyID=' + applyID,
+    method:'post',
+    data:data,
+    headers:{
+      'Content-Type':'application/json'
+    }
+  })
+}
+
+
 //创建设备
 export function createEquipmentInstance(data) {
   return request({
@@ -45,14 +66,6 @@ export function getEquipmentInstance(id) {
   })
 }
 
-//根据typeId获取获取设备信息
-export function getEquipmentInstanceByTypeId(params) {
-  return request({
-    url:'/device/getDevicesByTypeId',
-    method:'get',
-    params:params
-  })
-}
 //获取一级列表
 export function getFirstCategory(){
   return request({

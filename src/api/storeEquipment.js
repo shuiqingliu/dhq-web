@@ -1,20 +1,21 @@
 import request from '@/utils/request'
-//获取门店信息列表
+//获取门店设备列表。
 export function fetchList(params) {
   return request({
-    url:'/shopInfo/searchByMultiCondition',
+    url:'/shopDevice/showAllShopDevice',
     method:'get',
     params:params
   })
 }
-//创建门店信息
-export function createStoreInfo(data) {
+//按条件查询门店设备信息
+export function getStoreEquipmentById(params) {
   return request({
-    url:'/shopInfo/create',
-    method:'post',
-    data:data
+    url:'/shopDevice/searchByShopID',
+    method:'get',
+    params:params
   })
 }
+
 //修改门店信息
 export function updateStoreInfo(id,data) {
   return request({
