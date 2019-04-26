@@ -6,7 +6,11 @@
 
 <script>
   export default {
-    name: 'App'
+    name: 'App',
+    created(){
+      // var notFound = [{path: '*', redirect: '/404', hidden: true}];
+      // router.addRoutes(notFound);
+    }
   }
 </script>
 

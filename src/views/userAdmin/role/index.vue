@@ -75,7 +75,6 @@
             <el-checkbox-group v-model="roles" >
               <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type">{{role.name}}</el-checkbox>
             </el-checkbox-group>
-            
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleAddRole">确定</el-button>
@@ -113,15 +112,7 @@
         },
         roles:[],
         allrole:[],
-        lists:[{
-          id: 1,
-          name: 'admin',
-          roles: ['超级管理员']
-        },{
-          id: 2,
-          name: 'xialei',
-          roles: ['维修工', '管道工']
-        }],
+        
         listQuery: {
           roleName: null,
           pageNum: 1,
@@ -140,9 +131,7 @@
     },
     created() {
       this.getRoleList();
-      getPermissions().then(response=>{
-        this.allrole = response.data
-      })
+      
     },
     methods: {
       getRoleList() {

@@ -13,6 +13,22 @@
       <el-form-item label="用户地址：">
         <el-input v-model="user.address"></el-input>
       </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="value"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请选择用户角色">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
         
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
@@ -39,6 +55,17 @@
     },
     data() {
       return {
+        value:[],
+        options: [
+          {
+            value: '系统管理员',
+            label: '系统管理员'
+          },
+          {
+            value: '维修人员',
+            label: '维修人员'
+          }
+        ],
         user: {
           username:'fsass',
           password:'',

@@ -7,10 +7,14 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permis:[]
+    permis:[],
+    routes:[]
   },
 
   mutations: {
+    initMenu(state, menus){
+      state.routes = menus;
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -50,17 +54,17 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
-          var permis = [true,false,false,true,true]
-          for(var i = 0; i < data.roles.length; i++){
-            if(data.roles[i].name == "ROLE_manager"){
-              permis[3] = true;
-            }else if(data.roles[i].name == "ROLE_admin"){
-              permis[4] = true;
-            }
-          }
+          // var permis = [true,false,false,true,true]
+          // for(var i = 0; i < data.roles.length; i++){
+          //   if(data.roles[i].name == "ROLE_manager"){
+          //     permis[3] = true;
+          //   }else if(data.roles[i].name == "ROLE_admin"){
+          //     permis[4] = true;
+          //   }
+          // }
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
-            commit('SET_PERMIS', permis)
+            // commit('SET_PERMIS', permis)
            
           } else {
             
