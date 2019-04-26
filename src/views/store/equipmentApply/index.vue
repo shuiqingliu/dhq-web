@@ -17,7 +17,12 @@
               <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
           </el-form-item>-->
           <el-form-item label="一级类别：">
-            <el-select v-model="listQuery.keyword1" placeholder="请选择类别" clearable @change="selectFirstCategory()">
+            <el-select
+              v-model="listQuery.keyword1"
+              placeholder="请选择类别"
+              clearable
+              @change="selectFirstCategory()"
+            >
               <el-option
                 v-for="item in firstCategoryOptions"
                 :key="item.first_category"
@@ -28,7 +33,12 @@
           </el-form-item>
 
           <el-form-item label="二级类别：">
-            <el-select v-model="listQuery.keyword2" placeholder="请选择类别" clearable @change="selectSecondCategory()">
+            <el-select
+              v-model="listQuery.keyword2"
+              placeholder="请选择类别"
+              clearable
+              @change="selectSecondCategory()"
+            >
               <el-option
                 v-for="item in secondCategoryOptions"
                 :key="item.value"
@@ -53,8 +63,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
-      <el-button class="btn-add" @click="addEquipmentInstance()" size="mini">添加</el-button>
+      <span>申请列表</span>
     </el-card>
     <div class="table-container">
       <el-table
@@ -66,69 +75,50 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="设备编号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
+        <el-table-column label="编号" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="设备名" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="门店ID" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.shopId}}</template>
         </el-table-column>
-        <el-table-column label="设备型号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
+        <el-table-column label="设备类型ID" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
         </el-table-column>
-        <el-table-column label="图片" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.picture}}</template>
+        <el-table-column label="申请数量" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.applyNum}}</template>
         </el-table-column>
-        <el-table-column label="单价" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.price}}</template>
+        <el-table-column label="申请原因" align="center" width="200">
+          <template slot-scope="scope">{{scope.row.applyReason}}</template>
         </el-table-column>
-        <el-table-column label="生产日期" align="center">
-          <template slot-scope="scope">{{scope.row.produceDate}}</template>
+
+        <el-table-column label="申请状态" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.applyStatus}}</template>
         </el-table-column>
-        <el-table-column label="使用年限" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.useYear}}</template>
+        <el-table-column label="申请时间" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
-         <el-table-column label="类别ID" align="center">
+        <el-table-column label="拒绝理由" align="center" >
+          <template slot-scope="scope">{{scope.row.resultDes}}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>一级分类: {{ scope.row.deviceType.firstCategory }}</p>
-              <p>二级分类: {{ scope.row.deviceType.secondCategory }}</p>
-              <p>三级分类: {{ scope.row.deviceType.thirdCategory }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-button type="text" >{{ scope.row.deviceType.id}}</el-button>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="是否分配" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.deviceUseState}}</template>
-        </el-table-column>
-        <el-table-column label="备注" align="center">
-          <template slot-scope="scope">{{scope.row.describtion}}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
+            <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="batch-operate-container">
-      <el-select size="small" v-model="operateType" placeholder="批量操作">
-        <el-option
-          v-for="item in operates"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-button
-        style="margin-left: 20px"
-        class="search-button"
-        @click="handleBatchOperate()"
-        type="primary"
-        size="small"
-      >确定</el-button>
+
+      <el-dialog title="拒绝原因" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <el-form>
+          <el-form-item label-width="120">
+            <el-input v-model="reason" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm(),dialogVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -147,14 +137,25 @@
 <script>
 import {
   fetchList,
-  deleteEquipmentInstance,
-  batchDeleteEquipmentInstance,
-  getFirstCategory,
-  getSecondCategory,
-  getThirdCategory
-} from "@/api/equipmentInstance";
+  rejectDeviceApply
+  // deleteEquipmentInstance,
+  // batchDeleteEquipmentInstance,
+  // getFirstCategory,
+  // getSecondCategory,
+  // getThirdCategory
+} from "@/api/equipmentApply";
 
-import {fetchList as getListByCategory} from "@/api/equipmentType"
+import { fetchList as getListByCategory } from "@/api/equipmentType";
+const defaultApply = {
+  id: null,
+  shopId: null,
+  deviceTypeId: null,
+  applyNum: null,
+  applyReason: null,
+  applyStatus: null,
+  applyTime: null,
+  resultDes: null
+};
 export default {
   name: "equipmentInstanceList",
   data() {
@@ -179,12 +180,14 @@ export default {
       thirdCategoryOptions: [],
       total: null,
       listLoading: false, //临时修改了一下
-      multipleSelection: []
+      multipleSelection: [],
+      dialogVisible: false,
+      reason: null,
+      applyId: null
     };
   },
   created() {
     this.getList();
-    this.getFirstCategoryList();
     // this.getSecondCategoryList();
   },
   methods: {
@@ -202,27 +205,25 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    //添加
-    addEquipmentInstance() {
-      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+    //拒绝申请
+    rejectApply(index, row) {
+      this.dialogVisible = true;
+      this.isEdit = true;
+      this.reason = row.resultDes;
+      this.applyId = row.id;
     },
-    //更新
-    handleUpdate(index, row) {
-      this.$router.push({
-        path: "/equipment/updateEquipmentInstance",
-        query: { id: row.id }
-      });
-    },
-    //删除
-    handleDelete(index, row) {
-      this.$confirm("是否要删除", "提示", {
+
+    //确认
+    handleDialogConfirm() {
+      this.$confirm("确定要拒绝吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteEquipmentInstance(row.id).then(response => {
+        // rejectDeviceApply(this.applyId,this.reason).then(
+        rejectDeviceApply(this.applyId, this.reason).then(response => {
           this.$message({
-            message: "删除成功",
+            message: "已拒绝",
             type: "success",
             duration: 1000
           });
@@ -230,6 +231,21 @@ export default {
         });
       });
     },
+    //处理申请
+    handleApply(index,row){
+      this.$router.push({
+        path: "/store/handleEquipmentApply",
+      
+        query: { shopId: row.shopId,applyId:row.id,deviceTypeId : row.deviceTypeId}
+      });
+    },
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
     //处理改变分页
     handleSizeChange(val) {
       this.listQuery.pageNum = 1;
@@ -242,42 +258,11 @@ export default {
     },
     //查询
     searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1)
-      alert(this.listQuery.keyword2)
-      alert(this.listQuery.keyword3)
+      alert(this.listQuery.keyword1);
+      alert(this.listQuery.keyword2);
+      alert(this.listQuery.keyword3);
       this.listQuery.pageNum = 1;
       this.getList();
-    },
-    //处理批量操作
-    handleBatchOperate() {
-      console.log(this.multipleSelection);
-      console.log("娅娅");
-      if (this.multipleSelection < 1) {
-        this.$message({
-          message: "请选择一条记录",
-          type: "warning",
-          duration: 1000
-        });
-        return;
-      }
-      //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
-      let ids = [];
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        ids.push(this.multipleSelection[i].id);
-      }
-      console.log(ids)
-      if (this.operateType === 0) {
-        //删除
-        // this.deleteHomeAdvertise(ids);
-        //在这里重新写一个函数
-        this.batchDeleteEquipmentInstance(ids);
-      } else {
-        this.$message({
-          message: "请选择批量操作类型",
-          type: "warning",
-          duration: 1000
-        });
-      }
     },
     batchDeleteEquipmentInstance(ids) {
       this.$confirm("是否要删除?", "提示", {
@@ -296,19 +281,17 @@ export default {
         });
       });
     },
-    getFirstCategoryList() {
-      getFirstCategory().then(
-        response => {
-          this.firstCategoryOptions = response.data;
-        }
-      )
-    },
     //选择一级列表以后
-    selectFirstCategory(){
+    selectFirstCategory() {
       this.secondCategoryOptions = [];
-        //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:null,keyword3:null,pageSize:100}).then(response => {
-         // this.firstCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        keyword1: this.listQuery.keyword1,
+        keyword2: null,
+        keyword3: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
@@ -320,16 +303,21 @@ export default {
         for (let i = 0; i < arr.length; i++) {
           this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
         }
-        })
-        this.listQuery.keyword2 = null;//将上一次二级分类选中的结果置为空。
-        this.listQuery.keyword3 = null;//将上一次三级分类选中的结果置为空。
+      });
+      this.listQuery.keyword2 = null; //将上一次二级分类选中的结果置为空。
+      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
     },
     //选择二级列表以后
-    selectSecondCategory(){
+    selectSecondCategory() {
       this.thirdCategoryOptions = [];
-        //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:this.listQuery.keyword2,keyword3:null,pageSize:100}).then(response => {
-         // this.firstCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        keyword1: this.listQuery.keyword1,
+        keyword2: this.listQuery.keyword2,
+        keyword3: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
@@ -340,8 +328,8 @@ export default {
         for (let i = 0; i < arr.length; i++) {
           this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
         }
-        })
-        this.listQuery.keyword3 = null;//将上一次三级分类选中的结果置为空。
+      });
+      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
     },
     getSecondCategoryList() {
       fetchCategoryList({ pageNum: 1, pageSize: 100 }).then(response => {
