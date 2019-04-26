@@ -23,7 +23,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>角色列表</span>
       <el-button
         class="btn-add"
         @click="addUser()"
@@ -42,7 +42,7 @@
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="角色名" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.description}}</template>
         </el-table-column>
         <el-table-column label="权限" width="400" align="center">
            <template slot-scope="scope">

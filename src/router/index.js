@@ -51,6 +51,18 @@ export const constantRouterMap = [
       component: ()=>import('@/views/store/storeEquipment/index'),
       meta: {title: '门店设备', icon: 'product-add'}
     },{
+      path:'equipmentApply',
+      name:'equipmentApply',
+      component: ()=>import('@/views/store/equipmentApply/index'),
+      meta: {title: '设备申请', icon: 'product-add'}
+    },
+    {
+      path:'handleEquipmentApply',
+      name:'handleEquipmentApply',
+      component: ()=>import('@/views/store/equipmentApply/applyDetail'),
+      meta: {title: '处理申请', icon: 'product-add'},
+      hidden:true
+    },{
       path:'updateStoreInfo',
       name:'updateStoreInfo',
       component: ()=>import('@/views/store/storeInformation/update'),
@@ -162,6 +174,53 @@ export const constantRouterMap = [
       name: 'updateEquipmentInstance',
       component: () => import('@/views/equipment/instance/update'),
       meta: {title: '修改设备实例', icon: 'product-list'},
+      hidden: true
+    }]
+  },
+  //课程管理
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course',
+    meta: {title: '课程管理', icon: 'product'},
+    children: [{
+      path: 'instance',
+      name: 'instance',
+      component: () => import('@/views/course/instance/index'),
+      meta: {title: '课程实例管理', icon: 'product-add'}
+    },
+    {
+      path: 'type',
+      name: 'type',
+      component: () => import('@/views/course/type/index'),
+      meta: {title: '课程类型管理', icon: 'product-list'}
+    },
+    {
+      path: 'addCourseType',
+      name: 'addCourseType',
+      component: () => import('@/views/course/type/add'),
+      meta: {title: '添加课程类型', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'updateCourseType',
+      name: 'updateCourseType',
+      component: () => import('@/views/course/type/update'),
+      meta: {title: '修改课程类型', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'addCourseInstance',
+      name: 'addCourseInstance',
+      component: () => import('@/views/course/instance/add'),
+      meta: {title: '添加课程实例', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'updateCourseInstance',
+      name: 'updateCourseInstance',
+      component: () => import('@/views/course/instance/update'),
+      meta: {title: '修改课程实例', icon: 'product-list'},
       hidden: true
     }]
   },

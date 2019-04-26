@@ -26,15 +26,15 @@ export function updateEquipmentType(id,data) {
 //删除设备类型
 export function deleteEquipmentType(id) {
   return request({
-    url:'/deviceType/delete?id='+id,
+    url:'/deviceType/delete'+id,
     method:'get',
   })
 }
 //批量删除设备类型
 export function batchDeleteEquipmentType(ids) {
   return request({
-    url:'/deviceType/delete/batch?ids='+ids,
-    method:'post',
+    url:'/deviceType/delete/batch?ids=' + ids,
+    method:'get'
   })
 }
 //根据id获取获取门店信息
