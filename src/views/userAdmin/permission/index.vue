@@ -129,7 +129,7 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: []
+        multipleSelection: [],
       }
     },
     watch:{
@@ -185,6 +185,7 @@
               type: 'success',
               duration: 1000
             });
+            this.listQuery.pageNum = 1;
             this.getList();
           });
         });
