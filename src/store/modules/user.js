@@ -63,7 +63,6 @@ const user = {
             commit('SET_PERMIS', permis)
            
           } else {
-            
             // reject('getInfo: roles must be a non-null array !')
           }
           commit('SET_NAME', data.username)

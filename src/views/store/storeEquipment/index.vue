@@ -6,55 +6,35 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right"
-          @click="searchEquipmentInstanceList()"
+          @click="searchStoreEquipmentList()"
           type="primary"
           size="small"
         >查询结果</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
-          <el-form-item label="一级类别：">
-            <el-select v-model="listQuery.keyword1" placeholder="请选择类别" clearable @change="selectFirstCategory()">
-              <el-option
-                v-for="item in firstCategoryOptions"
-                :key="item.first_category"
-                :label="item.label"
-                :value="item.first_category"
-              ></el-option>
-            </el-select>
+          <el-form-item label="请输入地区信息">
+            <el-cascader
+              size="medium"
+              :options="options"
+              v-model="selectedOptions"
+              clearable
+            ></el-cascader>
           </el-form-item>
-
-          <el-form-item label="二级类别：">
-            <el-select v-model="listQuery.keyword2" placeholder="请选择类别" clearable @change="selectSecondCategory()">
-              <el-option
-                v-for="item in secondCategoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.keyword3" placeholder="请选择类别" clearable>
-              <el-option
-                v-for="item in thirdCategoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <el-form-item label="输入店名：">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.shopName"
+              placeholder="门店名字"
+              size="medium"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
-      <el-button class="btn-add" @click="addEquipmentInstance()" size="mini">添加</el-button>
+      <span>门店设备列表</span>
     </el-card>
     <div class="table-container">
       <el-table
@@ -69,48 +49,37 @@
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="设备名" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="门店名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <el-table-column label="单价" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.price}}</template>
+        <el-table-column label="设备申请Id" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.applyDeviceId}}</template>
         </el-table-column>
-        <el-table-column label="生产日期" align="center">
-          <template slot-scope="scope">{{scope.row.produceDate}}</template>
+        <el-table-column label="设备Id" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceId}}</template>
         </el-table-column>
-        <el-table-column label="使用年限" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.useYear}}</template>
+        <el-table-column label="设备名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceName}}</template>
         </el-table-column>
-         <el-table-column label="设备类别" align="center">
-          <template slot-scope="scope">{{scope.row.firstCategory}}--{{scope.row.secondCategory}}--{{scope.row.thirdCategory}}</template>
+        <el-table-column label="设备型号" align="center">
+          <template slot-scope="scope">{{scope.row.modelNum}}</template>
+        </el-table-column>
+        <el-table-column label="批准时间" align="center">
+          <template slot-scope="scope">{{scope.row.agreeTimes}}</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
-          <template slot-scope="scope">{{scope.row.describtion}}</template>
+          <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="是否收货" align="center">
+          <template slot-scope="scope">{{scope.row.ifReceive}}</template>
+        </el-table-column>
+        <!-- <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
-    </div>
-    <div class="batch-operate-container">
-      <el-select size="small" v-model="operateType" placeholder="批量操作">
-        <el-option
-          v-for="item in operates"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-button
-        style="margin-left: 20px"
-        class="search-button"
-        @click="handleBatchOperate()"
-        type="primary"
-        size="small"
-      >确定</el-button>
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -129,14 +98,16 @@
 <script>
 import {
   fetchList,
-  deleteEquipmentInstance,
-  batchDeleteEquipmentInstance,
-  getFirstCategory,
-  getSecondCategory,
-  getThirdCategory
-} from "@/api/equipmentInstance";
+  getStoreEquipmentById,
+  // deleteEquipmentInstance,
+  // batchDeleteEquipmentInstance,
+  // getFirstCategory,
+  // getSecondCategory,
+  // getThirdCategory
+} from "@/api/storeEquipment";
 
-import {fetchList as getListByCategory} from "@/api/equipmentType"
+import {fetchList as getListByCategory} from "@/api/equipmentType";
+import { regionDataPlus, CodeToText } from "element-china-area-data";
 export default {
   name: "equipmentInstanceList",
   data() {
@@ -149,9 +120,10 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        keyword1: null,
-        keyword2: null,
-        keyword3: null,
+        province: null,
+        city: null,
+        district: null,
+        shopName:null,
         pageNum: 1,
         pageSize: 5
       },
@@ -161,12 +133,14 @@ export default {
       thirdCategoryOptions: [],
       total: null,
       listLoading: false, //临时修改了一下
-      multipleSelection: []
+      multipleSelection: [],
+      options: regionDataPlus, //全国的地理信息
+      selectedOptions: [],
     };
   },
   created() {
-    this.getList();
-    this.getFirstCategoryList();
+    //this.getList();
+    //this.getFirstCategoryList();
     // this.getSecondCategoryList();
   },
   methods: {
@@ -285,58 +259,40 @@ export default {
         }
       )
     },
-    //选择一级列表以后
-    selectFirstCategory(){
-      this.secondCategoryOptions = [];
-        //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:null,keyword3:null,pageSize:100}).then(response => {
-         // this.firstCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
+    //查询
+    searchStoreEquipmentList() {
+      let length = this.selectedOptions.length;
+      this.listQuery.province = CodeToText[this.selectedOptions[0]];
+      //alert(this.listQuery.province)
+      if (length === 2) {
+        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+        this.listQuery.city = null;
+        this.listQuery.district = null;
+      }
+      if (length === 3) {
+        this.listQuery.city = CodeToText[this.selectedOptions[1]];
+        if (this.selectedOptions[2] == "") {
+          this.listQuery.district = null;
+        } else {
+          this.listQuery.district = CodeToText[this.selectedOptions[2]];
         }
-        //去重
-        arr = [...new Set(arr)];
-        //赋值
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-        })
-        this.listQuery.keyword2 = null;//将上一次二级分类选中的结果置为空。
+      }
+      //alert(this.listQuery.city)
+      //alert(this.listQuery.district)
+      this.listQuery.pageNum = 1;
+      this.getListById();
+
     },
-    //选择二级列表以后
-    selectSecondCategory(){
-      this.thirdCategoryOptions = [];
-        //加载二级列表
-        getListByCategory({keyword1 : this.listQuery.keyword1,keyword2:this.listQuery.keyword2,keyword3:null,pageSize:100}).then(response => {
-         // this.firstCategoryOptions = [];
-        let thirdCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-        })
-        this.listQuery.keyword3 = null;//将上一次三级分类选中的结果置为空。
-    },
-    getSecondCategoryList() {
-      fetchCategoryList({ pageNum: 1, pageSize: 100 }).then(response => {
-        this.secondCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
+    getListById() {
+      this.listLoading = true;
+      //this.listLoading = false;
+      getStoreEquipmentById(this.listQuery).then(response => {
+        this.listLoading = false;
+        this.list = response.data.list;
+        this.total = response.data.total;
+        this.totalPage = response.data.totalPage;
+        this.pageSize = response.data.pageSize;
       });
     }
   }

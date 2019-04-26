@@ -51,6 +51,18 @@ export const constantRouterMap = [
       component: ()=>import('@/views/store/storeEquipment/index'),
       meta: {title: '门店设备', icon: 'product-add'}
     },{
+      path:'equipmentApply',
+      name:'equipmentApply',
+      component: ()=>import('@/views/store/equipmentApply/index'),
+      meta: {title: '设备申请', icon: 'product-add'}
+    },
+    {
+      path:'handleEquipmentApply',
+      name:'handleEquipmentApply',
+      component: ()=>import('@/views/store/equipmentApply/applyDetail'),
+      meta: {title: '处理申请', icon: 'product-add'},
+      hidden:true
+    },{
       path:'updateStoreInfo',
       name:'updateStoreInfo',
       component: ()=>import('@/views/store/storeInformation/update'),
