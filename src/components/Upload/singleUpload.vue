@@ -1,7 +1,7 @@
 <template> 
   <div>
     <el-upload
-      action="http://localhost:8082/upload/img"
+      action="http://localhost:8080/upload/pic"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
@@ -71,7 +71,7 @@
         this.showFileList = true;
         this.fileList.pop();
         alert(res.data.url)
-        this.fileList.push({name: file.name, url: "http://" + res.data.url});
+        this.fileList.push({name: file.name, url: "http://" + res.data});
         this.emitInput(this.fileList[0].url);
       }
     }

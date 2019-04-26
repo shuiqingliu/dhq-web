@@ -1,27 +1,23 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="storeInfo" :rules="rules" ref="storeInfoForm" label-width="150px">
-      <el-form-item label="管理者ID：" prop="managerId">
+      <el-form-item label="管理者：" prop="managerId">
         <el-input v-model="storeInfo.managerId"></el-input>
-      </el-form-item>
-      
-      <el-form-item label="门店类型：" prop="shopType">
-        <el-input v-model="storeInfo.shopType"></el-input>
       </el-form-item>
 
       <el-form-item label="门店名字：" prop="shopType">
         <el-input v-model="storeInfo.shopName"></el-input>
       </el-form-item>
+
+      <el-form-item label="门店类型：" prop="shopType">
+        <el-input v-model="storeInfo.shopType"></el-input>
+      </el-form-item>
+
       <el-form-item label="门店描述：">
         <el-input v-model="storeInfo.shopDesc" type="textarea" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="省市区">
-        <el-cascader
-          size="large"
-          :options="options"
-          v-model="selectedOptions"
-          @change="handleChange"
-        ></el-cascader>
+        <el-cascader size="large" :options="options" v-model="selectedOptions"></el-cascader>
       </el-form-item>
       <!-- <el-form-item label="省份：">
         <el-input v-model="storeInfo.shopLocationProvince"></el-input>
@@ -31,7 +27,7 @@
       </el-form-item>
       <el-form-item label="区县：">
         <el-input v-model="storeInfo.shopLocationDistrict"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="详细地址：">
         <el-input v-model="storeInfo.shopLocationDetail"></el-input>
       </el-form-item>
@@ -64,18 +60,18 @@ import {
 } from "element-china-area-data";
 //默认信息
 const defaultStoreInfo = {
-  shopId: 0,
-  managerId: "2018140699",
-  shopType: "",
-  shopName: "学能通北邮分店",
-  shopDesc: "我们去哪里呀",
+  id: 1,
+  managerId: "信爷",
+  shopName: "北邮店",
+  shopType: "学校",
+  shopDesc: "北邮天下第一",
   shopLocationProvince: "北京市",
-  shopLocationCity: "北京市",
-  shopLocationDistrict: "海淀区",
-  shopLocationDetail: "北京邮电大学",
-  shopPhone: "010-8686886",
-  shopSize: 6666,
-  employeeNum: 222
+  shopLocationCity: "海淀区",
+  shopLocationDistrict: "北太平庄",
+  shopLocationDetail: "学院路10号院",
+  shopPhone: "13340248013",
+  shopSize: 1233,
+  employeeNum: 20
 };
 export default {
   name: "StoreInfoDetail",
@@ -106,8 +102,12 @@ export default {
       getStoreInfoById(this.$route.query.id).then(response => {
         this.selectedOptions.push(
           TextToCode[response.data.shopLocationProvince].code,
-          TextToCode[response.data.shopLocationProvince][response.data.shopLocationCity].code,
-          TextToCode[response.data.shopLocationProvince][response.data.shopLocationCity][response.data.shopLocationDistrict].code
+          TextToCode[response.data.shopLocationProvince][
+            response.data.shopLocationCity
+          ].code,
+          TextToCode[response.data.shopLocationProvince][
+            response.data.shopLocationCity
+          ][response.data.shopLocationDistrict].code
         );
         // alert(TextToCode["山东省"].code);
         // alert(TextToCode["菏泽市"].code);
@@ -139,10 +139,12 @@ export default {
                 }
               );
             } else {
-              
-              this.storeInfo.shopLocationProvince = CodeToText[this.selectedOptions[0]];
-              this.storeInfo.shopLocationCity = CodeToText[this.selectedOptions[1]];
-              this.storeInfo.shopLocationDistrict = CodeToText[this.selectedOptions[2]];
+              this.storeInfo.shopLocationProvince =
+                CodeToText[this.selectedOptions[0]];
+              this.storeInfo.shopLocationCity =
+                CodeToText[this.selectedOptions[1]];
+              this.storeInfo.shopLocationDistrict =
+                CodeToText[this.selectedOptions[2]];
               createStoreInfo(this.storeInfo).then(response => {
                 this.$refs[formName].resetFields();
                 this.storeInfo = Object.assign({}, defaultStoreInfo);

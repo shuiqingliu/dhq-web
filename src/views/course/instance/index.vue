@@ -413,9 +413,7 @@ export default {
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
-    open() {
-      this.$alert(this.description, "备注详情");
-    }
+    
   }
 };
 </script>
