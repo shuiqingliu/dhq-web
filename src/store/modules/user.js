@@ -50,12 +50,12 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
-          var permis = [false,false,false,false]
+          var permis = [true,false,false,true,true]
           for(var i = 0; i < data.roles.length; i++){
             if(data.roles[i].name == "ROLE_manager"){
-              permis[1] = true;
+              permis[3] = true;
             }else if(data.roles[i].name == "ROLE_admin"){
-              permis[2] = true;
+              permis[4] = true;
             }
           }
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
