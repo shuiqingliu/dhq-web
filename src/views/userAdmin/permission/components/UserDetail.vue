@@ -14,9 +14,13 @@
         <el-input v-model="user.address"></el-input>
       </el-form-item>
       <el-form-item label="用户状态：">
-        <el-input v-model="user.status"></el-input>
+        <el-radio-group v-model="user.status">
+          <el-radio :label="0">0</el-radio>
+          <el-radio :label="1">1</el-radio>
+          
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户角色：">
+      <el-form-item label="用户角色：" v-if="isEdit">
         <el-select
           v-model="checkedIds"
           multiple
@@ -43,7 +47,7 @@
 </template>
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
-  import {getRoles} from '@/api/role'
+  import {getRoles,addUserRole,updateUserRole} from '@/api/role'
   import {fmtRoles} from '@/utils/utils'
   const defaultuser={    
     username: '',
@@ -71,6 +75,10 @@
             label: '维修人员'
           }
         ],
+        userRole:{
+          userId: 1,
+          roleIds:''
+        },
         user: {
           username:'fsass',
           password:'',
@@ -95,6 +103,7 @@
     },
     
     created() {
+      this.userRole.userId = this.$route.query.id
       getRoles().then(response => {
         this.options = fmtRoles(response.data)
       })
@@ -127,6 +136,8 @@
               if (this.isEdit) {
                 updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
+                  this.userRole.roleIds = this.checkedIds.join(',');
+                  updateUserRole(this.userRole);
                   this.$message({
                     message: '修改成功',
                     type: 'success',
@@ -134,10 +145,13 @@
                   });
                   this.$router.back();
                 });
+
               } else {
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
+                  // this.userRole.roleIds = this.checkedIds.join(',');
+                  // updateUserRole(this.userRole);
                   this.$message({
                     message: '提交成功',
                     type: 'success',

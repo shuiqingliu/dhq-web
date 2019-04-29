@@ -68,6 +68,7 @@
       :before-close="handleClose">
         <el-form>
           <el-form-item label="请选择角色：">
+            <br/>
             <el-checkbox-group v-model="roles">
               <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type" >{{role.description}}</el-checkbox>
             </el-checkbox-group>

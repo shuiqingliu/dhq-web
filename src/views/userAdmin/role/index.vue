@@ -16,7 +16,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.roleName" placeholder="角色名/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.roleDescription" placeholder="角色名/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -49,7 +49,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click = "dialogTableVisible=true;userRole.roleId=scope.row.id" type="text">
+            <el-button @click = "handleUpdatePermissions(scope.row)" type="text">
+            <!-- <el-button @click = "dialogTableVisible=true;userRole.roleId=scope.row.id" type="text"> -->
                 修改权限
               </el-button>
             <el-button
@@ -84,7 +85,7 @@
         <el-form>
         <el-form-item class="mt20">
             <el-button type="primary" @click="handleAddRole">确定</el-button>
-            <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
+            <el-button @click="dialogTableVisible=false;roles=[];permissionIDs=[]">取消</el-button>
           </el-form-item>
         </el-form>
           
@@ -108,7 +109,7 @@
 </template>
 <script>
 
-  import {updateUserRole,fetchRole,getPermissions,updateRolePermission, deleteRole, getPermisisonTree} from '@/api/role'
+  import {updateUserRole,fetchRole,getPermissions,updateRolePermission, deleteRole, getPermisisonTree,getRolePermission} from '@/api/role'
   import {fmtTree} from '@/utils/utils' 
   export default {
     name: 'userlist',
@@ -120,12 +121,13 @@
           roleId: 1,
           permissionIds:''
         },
+        checkedIDs:[],
         //roles存储用户的权限数据(id)，例子：[1,3,4,1]
         roles:[],
         allrole:[],
         
         listQuery: {
-          roleName: null,
+          roleDescription: null,
           pageNum: 1,
           pageSize: 10
         },
@@ -159,7 +161,6 @@
       getPermisisonTree().then((resp)=>{
           var data = resp.data
           //console.log(resp.data)
-          
           this.permisisonTree = fmtTree(data);
           // alert(1)
           console.log( this.permisisonTree)
@@ -181,7 +182,14 @@
         });
         
       },
-     
+     handleUpdatePermissions(row){
+      this.dialogTableVisible=true
+      this.userRole.roleId=row.id
+      getRolePermission(row.id).then( resp => {
+        var data = resp.data
+        this.$refs.tree.setCheckedNodes(fmtTree(data))
+      })
+     },
       handleUpdate(index, row) {
         this.$router.push({path:'/userAdmin/updateRole', query: {id: row.id}})
       },
