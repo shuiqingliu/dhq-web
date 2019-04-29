@@ -8,22 +8,21 @@ import {initMenu} from '@/utils/utils'
 const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
-   //var routes = sessionStorage.getItem('routes')
-  // console.log(JSON.parse(routes))
-   //router.options.routes = JSON.parse(routes);
-  // if(routes){
-  //   router.options.routes = routes;
-  // }
+  // console.log(router)
+  
   if (getToken()) {
-    
+    // if(sessionStorage.getItem('routes')){
+    //   router.options.routes = JSON.parse(sessionStorage.getItem('routes'))
+    // }
     // var routes = localStorage.getItem('routes')
     // router.options.routes = JSON.parse(routes);
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      initMenu(router, store)
+      
       if (store.getters.roles.length === 0) {
+        initMenu(router, store)
         store.dispatch('GetInfo').then(res => { // 拉取用户信
           next()
         }).catch((err) => {
@@ -33,6 +32,8 @@ router.beforeEach((to, from, next) => {
           })
         })
       }else{
+        
+        
         
         next()
       }

@@ -1,11 +1,11 @@
 <template> 
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
-      <el-form-item label="角色名：" prop="name">
-        <el-input v-model="user.name"></el-input>
+      <el-form-item label="角色名：" prop="description">
+        <el-input v-model="user.description"></el-input>
       </el-form-item>
       <el-form-item label="角色描述：">
-        <el-input v-model="user.description"></el-input>
+        <el-input v-model="user.name"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
@@ -38,7 +38,7 @@
           id: 0
         },
         rules: {
-          name: [
+          description: [
             {required: true, message: '请输入角色描述', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],

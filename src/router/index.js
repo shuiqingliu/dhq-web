@@ -83,100 +83,100 @@ export const constantRouterMap = [
   //     hidden: true
   //   }]
   // },
-  {
-    path: '/userAdmin',
-    component: Layout,
-    redirect: '/userAdmin',
-    meta: {title: '用户管理', icon: 'product'},
-    // hidden:a[1],
-    children: [{
-      path: 'permissionAdmin',
-      name: 'permissionAdmin',
-      component: () => import('@/views/userAdmin/permission/index'),
-      meta: {title: '用户管理', icon: 'product-list'}
-    },{
-      path:'roleAdmin',
-      name:'roleAdmin',
-      component: ()=>import('@/views/userAdmin/role/index'),
-      meta: {title: '角色管理', icon: 'product-add'}
-    },
-    {
-      path: 'updateUser',
-      name: 'updateUser',
-      component: ()=> import('@/views/userAdmin/permission/update'),
-      meta: {title: '修改用户'},
-      hidden: true
-    },
-    {
-      path: 'addUser',
-      name: 'addUser',
-      component: ()=> import('@/views/userAdmin/permission/add'),
-      meta: {title: '添加用户'},
-      hidden: true
-    },
-    {
-      path: 'updateRole',
-      name: 'updateRole',
-      component: ()=> import('@/views/userAdmin/role/update'),
-      meta: {title: '修改角色权限'},
-      hidden: true
-    },
-    {
-      path: 'addRole',
-      name: 'addRole',
-      component: ()=> import('@/views/userAdmin/role/add'),
-      meta: {title: '添加角色'},
-      hidden: true
-    }
-  ]
-  },
-  {
-    path: '/equipment',
-    component: Layout,
-    redirect: '/equipment',
-    meta: {title: '设备管理', icon: 'product'},
-    // hidden:a[2],
-    children: [{
-      path: 'instance',
-      name: 'instance',
-      component: () => import('@/views/equipment/instance/index'),
-      meta: {title: '设备实例管理', icon: 'product-add'}
-    },
-    {
-      path: 'type',
-      name: 'type',
-      component: () => import('@/views/equipment/type/index'),
-      meta: {title: '设备类型管理', icon: 'product-list'}
-    },
-    {
-      path: 'addEquipmentType',
-      name: 'addEquipmentType',
-      component: () => import('@/views/equipment/type/add'),
-      meta: {title: '添加设备类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateEquipmentType',
-      name: 'updateEquipmentType',
-      component: () => import('@/views/equipment/type/update'),
-      meta: {title: '修改设备类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'addEquipmentInstance',
-      name: 'addEquipmentInstance',
-      component: () => import('@/views/equipment/instance/add'),
-      meta: {title: '添加设备实例', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateEquipmentInstance',
-      name: 'updateEquipmentInstance',
-      component: () => import('@/views/equipment/instance/update'),
-      meta: {title: '修改设备实例', icon: 'product-list'},
-      hidden: true
-    }]
-  },
+  // {
+  //   path: '/userAdmin',
+  //   component: Layout,
+  //   redirect: '/userAdmin',
+  //   meta: {title: '用户管理', icon: 'product'},
+  //   // hidden:a[1],
+  //   children: [{
+  //     path: 'permissionAdmin',
+  //     name: 'permissionAdmin',
+  //     component: () => import('@/views/userAdmin/permission/index'),
+  //     meta: {title: '用户管理', icon: 'product-list'}
+  //   },{
+  //     path:'roleAdmin',
+  //     name:'roleAdmin',
+  //     component: ()=>import('@/views/userAdmin/role/index'),
+  //     meta: {title: '角色管理', icon: 'product-add'}
+  //   },
+  //   {
+  //     path: 'updateUser',
+  //     name: 'updateUser',
+  //     component: ()=> import('@/views/userAdmin/permission/update'),
+  //     meta: {title: '修改用户'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addUser',
+  //     name: 'addUser',
+  //     component: ()=> import('@/views/userAdmin/permission/add'),
+  //     meta: {title: '添加用户'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateRole',
+  //     name: 'updateRole',
+  //     component: ()=> import('@/views/userAdmin/role/update'),
+  //     meta: {title: '修改角色权限'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addRole',
+  //     name: 'addRole',
+  //     component: ()=> import('@/views/userAdmin/role/add'),
+  //     meta: {title: '添加角色'},
+  //     hidden: true
+  //   }
+  // ]
+  // },
+  // {
+  //   path: '/equipment',
+  //   component: Layout,
+  //   redirect: '/equipment',
+  //   meta: {title: '设备管理', icon: 'product'},
+  //   // hidden:a[2],
+  //   children: [{
+  //     path: 'instance',
+  //     name: 'instance',
+  //     component: () => import('@/views/equipment/instance/index'),
+  //     meta: {title: '设备实例管理', icon: 'product-add'}
+  //   },
+  //   {
+  //     path: 'type',
+  //     name: 'type',
+  //     component: () => import('@/views/equipment/type/index'),
+  //     meta: {title: '设备类型管理', icon: 'product-list'}
+  //   },
+  //   {
+  //     path: 'addEquipmentType',
+  //     name: 'addEquipmentType',
+  //     component: () => import('@/views/equipment/type/add'),
+  //     meta: {title: '添加设备类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateEquipmentType',
+  //     name: 'updateEquipmentType',
+  //     component: () => import('@/views/equipment/type/update'),
+  //     meta: {title: '修改设备类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addEquipmentInstance',
+  //     name: 'addEquipmentInstance',
+  //     component: () => import('@/views/equipment/instance/add'),
+  //     meta: {title: '添加设备实例', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateEquipmentInstance',
+  //     name: 'updateEquipmentInstance',
+  //     component: () => import('@/views/equipment/instance/update'),
+  //     meta: {title: '修改设备实例', icon: 'product-list'},
+  //     hidden: true
+  //   }]
+  // },
   // //课程管理
   // {
   //   path: '/course',
