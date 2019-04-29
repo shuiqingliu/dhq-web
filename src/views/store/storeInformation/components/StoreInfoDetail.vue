@@ -43,8 +43,16 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit('storeInfoForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('storeInfoForm')">重置</el-button>
+        <el-button @click="dialogVisible = true">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <span><font color="#FF0000">您确定要返回门店信息列表吗?  您填写的内容将不会被保存</font></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="returnToStoreInformation(),dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
@@ -61,7 +69,7 @@ import {
 //默认信息
 const defaultStoreInfo = {
   id: 1,
-  managerId: "信爷",
+  managerId: "刘召信",
   shopName: "北邮店",
   shopType: "学校",
   shopDesc: "北邮天下第一",
@@ -94,7 +102,8 @@ export default {
         ]
       },
       options: regionDataPlus,
-      selectedOptions: []
+      selectedOptions: [],
+      dialogVisible: false
     };
   },
   created() {
@@ -169,6 +178,9 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.storeInfo = Object.assign({}, defaultStoreInfo);
+    },
+    returnToStoreInformation(){
+      this.$router.push({ path: "/store/storeInformation" });
     }
   }
 };
