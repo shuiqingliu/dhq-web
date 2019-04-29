@@ -16,7 +16,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.roleName" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.roleName" placeholder="角色名/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -38,22 +38,20 @@
                 v-loading="!listLoading"
                 border>
         
-        <el-table-column label="编号" width="100" align="center">
+        <!-- <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="角色名" align="center">
           <template slot-scope="scope">{{scope.row.description}}</template>
         </el-table-column>
-        <el-table-column label="权限" width="400" align="center">
-           <template slot-scope="scope">
-              <el-tag v-for="item in scope.row.permissions" :key="item.id" type="success" class="ml10">{{item.name}}</el-tag>
-              <el-button @click = "dialogTableVisible=true;userRole.roleId=scope.row.id" type="text" class="flr">
+        <el-table-column label="角色描述" align="center">
+          <template slot-scope="scope">{{scope.row.name}}</template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button @click = "dialogTableVisible=true;userRole.roleId=scope.row.id" type="text">
                 修改权限
               </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
-          <template slot-scope="scope">
             <el-button
               size="mini"
               @click="handleUpdate(scope.$index, scope.row)">编辑
@@ -66,22 +64,31 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog title="角色修改" 
+      <el-dialog title="权限修改" 
       :visible.sync="dialogTableVisible" 
-      width="30%"
-      :before-close="handleClose">
+      :before-close="handleClose"
+      width="25%">
+        
+            <el-tree
+              :data="permisisonTree"
+              show-checkbox
+              node-key="id"
+              :default-expanded-keys="[]"
+              :default-checked-keys="[]"
+              :props="defaultProps"
+              v-model="permissionIDs"
+              center=true
+              ref="tree"
+              >
+            </el-tree>
         <el-form>
-          <el-form-item label="请选择角色：">
-            <el-checkbox-group v-model="roles" >
-              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type">{{role.name}}</el-checkbox>
-            </el-checkbox-group>
-            
-          </el-form-item>
-          <el-form-item>
+        <el-form-item class="mt20">
             <el-button type="primary" @click="handleAddRole">确定</el-button>
             <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
           </el-form-item>
         </el-form>
+          
+
       </el-dialog>
     </div>
     
@@ -101,27 +108,22 @@
 </template>
 <script>
 
-  import {updateUserRole,fetchRole,getPermissions,updateRolePermission, deleteRole} from '@/api/role'
+  import {updateUserRole,fetchRole,getPermissions,updateRolePermission, deleteRole, getPermisisonTree} from '@/api/role'
+  import {fmtTree} from '@/utils/utils' 
   export default {
     name: 'userlist',
     data() {
       return {
+        permissionIDs: [],
         dialogTableVisible: false, 
         userRole:{
           roleId: 1,
           permissionIds:''
         },
+        //roles存储用户的权限数据(id)，例子：[1,3,4,1]
         roles:[],
         allrole:[],
-        lists:[{
-          id: 1,
-          name: 'admin',
-          roles: ['超级管理员']
-        },{
-          id: 2,
-          name: 'xialei',
-          roles: ['维修工', '管道工']
-        }],
+        
         listQuery: {
           roleName: null,
           pageNum: 1,
@@ -130,21 +132,42 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: []
+        multipleSelection: [],
+        permisisonTree: [
+          {
+            id:0,
+            label: 1,
+            children: []
+          }
+        ],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
       }
     },
     watch:{
       uid(ne, old){
         console.log(ne)
+      },
+      permisisonTree(ne, old){
+        console.log(ne)
       }
     },
     created() {
       this.getRoleList();
-      getPermissions().then(response=>{
-        this.allrole = response.data
+      getPermisisonTree().then((resp)=>{
+          var data = resp.data
+          //console.log(resp.data)
+          
+          this.permisisonTree = fmtTree(data);
+          // alert(1)
+          console.log( this.permisisonTree)
+
       })
     },
     methods: {
+      
       getRoleList() {
         this.listLoading = false;
         fetchRole(this.listQuery).then(response => {
@@ -163,7 +186,7 @@
         this.$router.push({path:'/userAdmin/updateRole', query: {id: row.id}})
       },
       handleDelete(index, row) {
-        this.$confirm('是否要删除该品牌', '提示', {
+        this.$confirm('是否要删除该角色？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -202,6 +225,8 @@
         done();
       },
       handleAddRole(){
+        console.log(this.$refs.tree.getCheckedKeys())
+        this.roles = this.$refs.tree.getCheckedKeys()
         if(this.roles.length == 0){
           this.$message({
             message: '角色权限不能为空！',
@@ -223,12 +248,15 @@
           this.roles = []
         })
       }
+      
     }
   }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 
-
+.mt20{
+  margin-top: 40px
+}
 </style>
 
 
