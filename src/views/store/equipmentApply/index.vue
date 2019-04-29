@@ -133,15 +133,15 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        status:'申请中',
+        status:'待审核',
         pageNum: 1,
         pageSize: 5
       },
       list: [],
       firstCategoryOptions: [
         {
-          value: "申请中",
-          label: "申请中"
+          value: "待审核",
+          label: "待审核"
         },
         {
           value: "已同意",
