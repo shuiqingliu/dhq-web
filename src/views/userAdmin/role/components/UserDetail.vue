@@ -10,6 +10,7 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
+        <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -98,6 +99,9 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.user = Object.assign({},defaultuser);
+      },
+      onCancel(){
+        this.$router.back();
       }
     }
   }

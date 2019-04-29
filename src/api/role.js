@@ -80,3 +80,10 @@ export function getPermisisonTree(){
     method: 'get'
   })
 }
+
+export function getRolePermission(id){
+  return request({
+    url: '/role/permission/' + id,
+    method: 'get'
+  })
+}
