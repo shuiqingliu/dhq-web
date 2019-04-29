@@ -4,31 +4,26 @@ export const initMenu = (router, store)=> {
   if (store.state.user.routes.length > 0) {
     return;
   }
+  // console.log(router)
   getMenuList().then(resp=> {
     if (resp && resp.code == 200) {
-    //   alert(11)
-      if(!sessionStorage.getItem('routes') && router){
+      if(router.options.routes.length <= 3){
         var fmtRoutes = formatRoutes(resp.data);
-        console.log(fmtRoutes)
         var notFound = [{path: '*', redirect: '/404', hidden: true}];
-
-        if(router != undefined){
-          router.addRoutes(fmtRoutes);
-          router.addRoutes(notFound);
-        }
-        
-        for(var router in fmtRoutes){
-          router.options.routes.push(router)
+       // console.log(router.options.routes)
+        router.addRoutes(fmtRoutes);
+        router.addRoutes(notFound);
+        //console.log(router.options.routes)
+        for(var route in fmtRoutes){
+          router.options.routes.push(fmtRoutes[route])
         }
         router.options.routes.push(notFound)
-        sessionStorage.setItem('routes',JSON.stringify(router.options.routes))
-        console.log(router.options.routes)
-        }
-      
-      
+        
+        //sessionStorage.setItem('routes',JSON.stringify(router.options.routes))
+      }
+       
+        // console.log(router.options.routes)
     }
-     
-    
   })
 }
 //格式化routes
@@ -65,4 +60,43 @@ export const formatRoutes = (routes)=> {
     fmRoutes.push(fmRouter);
   })
   return fmRoutes;
+}
+
+
+export const fmtTree = (data)=> {
+  let fmData = [];
+  data.forEach( d => {
+    let {
+      id,
+      children,
+      meta
+    } = d;
+    if (children && children instanceof Array) {
+      children = fmtTree(children);
+    }
+    let fmD = {
+      id:id,
+      label: meta == null? '首页': meta['title'],
+     // disabled: meta == null || meta['title'] == '首页'? true: false,
+      children:children,
+    };
+    fmData.push(fmD);
+  })
+  return fmData;
+}
+export const fmtRoles = (data)=> {
+  let fmData = [];
+  data.forEach( d => {
+    let {
+      id,
+      description
+    } = d;
+    let fmD = {
+      label: description,
+      value: id
+     // disabled: meta == null || meta['title'] == '首页'? true: false, 
+    };
+    fmData.push(fmD);
+  })
+  return fmData;
 }
