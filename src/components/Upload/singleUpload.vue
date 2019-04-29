@@ -5,7 +5,6 @@
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
-      :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
@@ -70,7 +69,7 @@
         alert("哈哈哈")
         this.showFileList = true;
         this.fileList.pop();
-        alert(res.data.url)
+        alert(res.data)
         this.fileList.push({name: file.name, url: "http://" + res.data});
         this.emitInput(this.fileList[0].url);
       }
