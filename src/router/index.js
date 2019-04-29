@@ -84,13 +84,7 @@ export const constantRouterMap = [
       component: ()=>import('@/views/store/storeInformation/add'),
       meta: {title: '添加门店信息'},
       hidden: true
-    },{
-      path:'getStoreInfoDetail',
-      name:'getStoreInfoDetail',
-      component: ()=>import('@/views/store/storeInformation/detail'),
-      meta: {title: '获取门店详细信息'},
-      hidden: true
-    }]
+    },]
   },
   {
     path: '/userAdmin',
