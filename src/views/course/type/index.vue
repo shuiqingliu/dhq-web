@@ -10,6 +10,12 @@
           type="primary"
           size="small"
         >查询结果</el-button>
+        <el-button
+          style="float: right;margin-right: 15px"
+          @click="resetSearchConditions()"
+          size="small">
+          重置
+        </el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -17,7 +23,7 @@
               <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
           </el-form-item>-->
           <el-form-item label="一级类别：">
-            <el-select v-model="listQuery.firstType" placeholder="请选择类别" clearable @change="selectFirstCategory()">
+            <el-select v-model="listQuery.firstType" placeholder="请选择类别"  @change="selectFirstCategory()">
               <el-option
                 v-for="item in firstCategoryOptions"
                 :key="item.value"
@@ -28,7 +34,7 @@
           </el-form-item>
 
           <el-form-item label="二级类别：">
-            <el-select v-model="listQuery.secondType" placeholder="请选择类别" clearable @change="selectSecondCategory()">
+            <el-select v-model="listQuery.secondType" placeholder="请选择类别"  @change="selectSecondCategory()">
               <el-option
                 v-for="item in secondCategoryOptions"
                 :key="item.value"
@@ -39,7 +45,7 @@
           </el-form-item>
 
           <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" clearable>
+            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" >
               <el-option
                 v-for="item in thirdCategoryOptions"
                 :key="item.value"
@@ -321,6 +327,11 @@ export default {
         })
         this.listQuery.thirdType = null;//将上一次三级分类选中的结果置为空。
     },
+    resetSearchConditions(){
+      this.listQuery.firstType=null
+      this.listQuery.secondType=null
+      this.listQuery.thirdType=null
+    }
   }
 };
 </script>
