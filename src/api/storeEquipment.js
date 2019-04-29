@@ -15,30 +15,3 @@ export function getStoreEquipmentById(params) {
     params:params
   })
 }
-
-//修改门店信息
-export function updateStoreInfo(id,data) {
-  return request({
-    url:'/shopInfo/update'+id,
-    method:'post',
-    data:data
-  })
-}
-//删除门店信息
-export function deleteStoreInfo(data) {
-  return request({
-    url:'/shopInfo/deleteByID',
-    method:'post',
-    data:data,
-    headers:{
-      'Content-Type':'application/json'
-    }
-  })
-}
-//根据id获取获取门店信息
-export function getStoreInfoById(id) {
-  return request({
-    url:'/shopInfo/searchShopByID?id='+id,
-    method:'get',
-  })
-}

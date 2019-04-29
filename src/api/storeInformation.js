@@ -34,6 +34,14 @@ export function deleteStoreInfo(data) {
     }
   })
 }
+//批量删除门店信息
+export function batchDeleteStoreInfo(ids) {
+  return request({
+    url:'/shopInfo/deleteByExamples?ids='+ids,
+    method:'get'
+  })
+}
+
 //根据id获取获取门店信息
 export function getStoreInfoById(id) {
   return request({

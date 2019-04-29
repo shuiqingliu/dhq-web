@@ -57,6 +57,18 @@ export const constantRouterMap = [
   //     meta: {title: '设备申请', icon: 'product-add'}
   //   },
   //   {
+  //     path:'storeCourse',
+  //     name:'storeCourse',
+  //     component: ()=>import('@/views/store/storeCourse/index'),
+  //     meta: {title: '门店课程', icon: 'product-add'}
+  //   },
+  //   {
+  //     path:'courseApply',
+  //     name:'courseApply',
+  //     component: ()=>import('@/views/store/courseApply/index'),
+  //     meta: {title: '课程申请', icon: 'product-add'}
+  //   },
+  //   {
   //     path:'handleEquipmentApply',
   //     name:'handleEquipmentApply',
   //     component: ()=>import('@/views/store/equipmentApply/applyDetail'),
@@ -83,6 +95,7 @@ export const constantRouterMap = [
   //     hidden: true
   //   }]
   // },
+
   // {
   //   path: '/userAdmin',
   //   component: Layout,
@@ -177,7 +190,7 @@ export const constantRouterMap = [
   //     hidden: true
   //   }]
   // },
-  // //课程管理
+  //课程管理
   // {
   //   path: '/course',
   //   component: Layout,
