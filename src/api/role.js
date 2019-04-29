@@ -30,7 +30,7 @@ export function updateUserRole(params) {
 
 export function updateRolePermission(params) {
   return request({
-    url: '/role/permission/update',
+    url: '/role/permission/add',
     method: 'post',
     params:params
   })
@@ -70,5 +70,13 @@ export function deleteRole(params) {
     url:'/role/delete',
     method:'post',
     params:params
+  })
+}
+
+//获取树形权限列表
+export function getPermisisonTree(){
+  return request({
+    url: '/permission/treelist',
+    method: 'get'
   })
 }

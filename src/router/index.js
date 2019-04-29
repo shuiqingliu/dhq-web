@@ -33,213 +33,214 @@ export const constantRouterMap = [
       meta: {title: '首页', icon: 'home'}
     }]
   },
-  {
-    path: '/store',
-    component: Layout,
-    redirect: '/store',
+  // {
+  //   path: '/store',
+  //   component: Layout,
+  //   redirect: '/store',
     
-    meta: {title: '门店管理', icon: 'product'},
+  //   meta: {title: '门店管理', icon: 'product'},
     
-    children: [{
-      path: 'storeInformation',
-      name: 'storeInformation',
-      component: () => import('@/views/store/storeInformation/index'),
-      meta: {title: '门店信息', icon: 'product-list'}
-    },{
-      path:'storeEquipment',
-      name:'storeEquipment',
-      component: ()=>import('@/views/store/storeEquipment/index'),
-      meta: {title: '门店设备', icon: 'product-add'}
-    },{
-      path:'equipmentApply',
-      name:'equipmentApply',
-      component: ()=>import('@/views/store/equipmentApply/index'),
-      meta: {title: '设备申请', icon: 'product-add'}
-    },
-    {
-      path:'storeCourse',
-      name:'storeCourse',
-      component: ()=>import('@/views/store/storeCourse/index'),
-      meta: {title: '门店课程', icon: 'product-add'}
-    },
-    {
-      path:'courseApply',
-      name:'courseApply',
-      component: ()=>import('@/views/store/courseApply/index'),
-      meta: {title: '课程申请', icon: 'product-add'}
-    },
-    {
-      path:'handleEquipmentApply',
-      name:'handleEquipmentApply',
-      component: ()=>import('@/views/store/equipmentApply/applyDetail'),
-      meta: {title: '处理申请', icon: 'product-add'},
-      hidden:true
-    },{
-      path:'updateStoreInfo',
-      name:'updateStoreInfo',
-      component: ()=>import('@/views/store/storeInformation/update'),
-      meta: {title: '更新门店信息'},
-      hidden: true
-    }
-    ,{
-      path:'addStoreInfo',
-      name:'addStoreInfo',
-      component: ()=>import('@/views/store/storeInformation/add'),
-      meta: {title: '添加门店信息'},
-      hidden: true
-    },{
-      path:'getStoreInfoDetail',
-      name:'getStoreInfoDetail',
-      component: ()=>import('@/views/store/storeInformation/detail'),
-      meta: {title: '获取门店详细信息'},
-      hidden: true
-    }]
-  },
-  {
-    path: '/userAdmin',
-    component: Layout,
-    redirect: '/userAdmin',
-    meta: {title: '用户管理', icon: 'product'},
-    // hidden:a[1],
-    children: [{
-      path: 'permissionAdmin',
-      name: 'permissionAdmin',
-      component: () => import('@/views/userAdmin/permission/index'),
-      meta: {title: '用户管理', icon: 'product-list'}
-    },{
-      path:'roleAdmin',
-      name:'roleAdmin',
-      component: ()=>import('@/views/userAdmin/role/index'),
-      meta: {title: '角色管理', icon: 'product-add'}
-    },
-    {
-      path: 'updateUser',
-      name: 'updateUser',
-      component: ()=> import('@/views/userAdmin/permission/update'),
-      meta: {title: '修改用户'},
-      hidden: true
-    },
-    {
-      path: 'addUser',
-      name: 'addUser',
-      component: ()=> import('@/views/userAdmin/permission/add'),
-      meta: {title: '添加用户'},
-      hidden: true
-    },
-    {
-      path: 'updateRole',
-      name: 'updateRole',
-      component: ()=> import('@/views/userAdmin/role/update'),
-      meta: {title: '修改角色权限'},
-      hidden: true
-    },
-    {
-      path: 'addRole',
-      name: 'addRole',
-      component: ()=> import('@/views/userAdmin/role/add'),
-      meta: {title: '添加角色'},
-      hidden: true
-    }
-  ]
-  },
-  {
-    path: '/equipment',
-    component: Layout,
-    redirect: '/equipment',
-    meta: {title: '设备管理', icon: 'product'},
-    // hidden:a[2],
-    children: [{
-      path: 'instance',
-      name: 'instance',
-      component: () => import('@/views/equipment/instance/index'),
-      meta: {title: '设备实例管理', icon: 'product-add'}
-    },
-    {
-      path: 'type',
-      name: 'type',
-      component: () => import('@/views/equipment/type/index'),
-      meta: {title: '设备类型管理', icon: 'product-list'}
-    },
-    {
-      path: 'addEquipmentType',
-      name: 'addEquipmentType',
-      component: () => import('@/views/equipment/type/add'),
-      meta: {title: '添加设备类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateEquipmentType',
-      name: 'updateEquipmentType',
-      component: () => import('@/views/equipment/type/update'),
-      meta: {title: '修改设备类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'addEquipmentInstance',
-      name: 'addEquipmentInstance',
-      component: () => import('@/views/equipment/instance/add'),
-      meta: {title: '添加设备实例', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateEquipmentInstance',
-      name: 'updateEquipmentInstance',
-      component: () => import('@/views/equipment/instance/update'),
-      meta: {title: '修改设备实例', icon: 'product-list'},
-      hidden: true
-    }]
-  },
+  //   children: [{
+  //     path: 'storeInformation',
+  //     name: 'storeInformation',
+  //     component: () => import('@/views/store/storeInformation/index'),
+  //     meta: {title: '门店信息', icon: 'product-list'}
+  //   },{
+  //     path:'storeEquipment',
+  //     name:'storeEquipment',
+  //     component: ()=>import('@/views/store/storeEquipment/index'),
+  //     meta: {title: '门店设备', icon: 'product-add'}
+  //   },{
+  //     path:'equipmentApply',
+  //     name:'equipmentApply',
+  //     component: ()=>import('@/views/store/equipmentApply/index'),
+  //     meta: {title: '设备申请', icon: 'product-add'}
+  //   },
+  //   {
+  //     path:'storeCourse',
+  //     name:'storeCourse',
+  //     component: ()=>import('@/views/store/storeCourse/index'),
+  //     meta: {title: '门店课程', icon: 'product-add'}
+  //   },
+  //   {
+  //     path:'courseApply',
+  //     name:'courseApply',
+  //     component: ()=>import('@/views/store/courseApply/index'),
+  //     meta: {title: '课程申请', icon: 'product-add'}
+  //   },
+  //   {
+  //     path:'handleEquipmentApply',
+  //     name:'handleEquipmentApply',
+  //     component: ()=>import('@/views/store/equipmentApply/applyDetail'),
+  //     meta: {title: '处理申请', icon: 'product-add'},
+  //     hidden:true
+  //   },{
+  //     path:'updateStoreInfo',
+  //     name:'updateStoreInfo',
+  //     component: ()=>import('@/views/store/storeInformation/update'),
+  //     meta: {title: '更新门店信息'},
+  //     hidden: true
+  //   }
+  //   ,{
+  //     path:'addStoreInfo',
+  //     name:'addStoreInfo',
+  //     component: ()=>import('@/views/store/storeInformation/add'),
+  //     meta: {title: '添加门店信息'},
+  //     hidden: true
+  //   },{
+  //     path:'getStoreInfoDetail',
+  //     name:'getStoreInfoDetail',
+  //     component: ()=>import('@/views/store/storeInformation/detail'),
+  //     meta: {title: '获取门店详细信息'},
+  //     hidden: true
+  //   }]
+  // },
+
+  // {
+  //   path: '/userAdmin',
+  //   component: Layout,
+  //   redirect: '/userAdmin',
+  //   meta: {title: '用户管理', icon: 'product'},
+  //   // hidden:a[1],
+  //   children: [{
+  //     path: 'permissionAdmin',
+  //     name: 'permissionAdmin',
+  //     component: () => import('@/views/userAdmin/permission/index'),
+  //     meta: {title: '用户管理', icon: 'product-list'}
+  //   },{
+  //     path:'roleAdmin',
+  //     name:'roleAdmin',
+  //     component: ()=>import('@/views/userAdmin/role/index'),
+  //     meta: {title: '角色管理', icon: 'product-add'}
+  //   },
+  //   {
+  //     path: 'updateUser',
+  //     name: 'updateUser',
+  //     component: ()=> import('@/views/userAdmin/permission/update'),
+  //     meta: {title: '修改用户'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addUser',
+  //     name: 'addUser',
+  //     component: ()=> import('@/views/userAdmin/permission/add'),
+  //     meta: {title: '添加用户'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateRole',
+  //     name: 'updateRole',
+  //     component: ()=> import('@/views/userAdmin/role/update'),
+  //     meta: {title: '修改角色权限'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addRole',
+  //     name: 'addRole',
+  //     component: ()=> import('@/views/userAdmin/role/add'),
+  //     meta: {title: '添加角色'},
+  //     hidden: true
+  //   }
+  // ]
+  // },
+  // {
+  //   path: '/equipment',
+  //   component: Layout,
+  //   redirect: '/equipment',
+  //   meta: {title: '设备管理', icon: 'product'},
+  //   // hidden:a[2],
+  //   children: [{
+  //     path: 'instance',
+  //     name: 'instance',
+  //     component: () => import('@/views/equipment/instance/index'),
+  //     meta: {title: '设备实例管理', icon: 'product-add'}
+  //   },
+  //   {
+  //     path: 'type',
+  //     name: 'type',
+  //     component: () => import('@/views/equipment/type/index'),
+  //     meta: {title: '设备类型管理', icon: 'product-list'}
+  //   },
+  //   {
+  //     path: 'addEquipmentType',
+  //     name: 'addEquipmentType',
+  //     component: () => import('@/views/equipment/type/add'),
+  //     meta: {title: '添加设备类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateEquipmentType',
+  //     name: 'updateEquipmentType',
+  //     component: () => import('@/views/equipment/type/update'),
+  //     meta: {title: '修改设备类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addEquipmentInstance',
+  //     name: 'addEquipmentInstance',
+  //     component: () => import('@/views/equipment/instance/add'),
+  //     meta: {title: '添加设备实例', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateEquipmentInstance',
+  //     name: 'updateEquipmentInstance',
+  //     component: () => import('@/views/equipment/instance/update'),
+  //     meta: {title: '修改设备实例', icon: 'product-list'},
+  //     hidden: true
+  //   }]
+  // },
   //课程管理
-  {
-    path: '/course',
-    component: Layout,
-    redirect: '/course',
-    meta: {title: '课程管理', icon: 'product'},
-    children: [{
-      path: 'instance',
-      name: 'instance',
-      component: () => import('@/views/course/instance/index'),
-      meta: {title: '课程实例管理', icon: 'product-add'}
-    },
-    {
-      path: 'type',
-      name: 'type',
-      component: () => import('@/views/course/type/index'),
-      meta: {title: '课程类型管理', icon: 'product-list'}
-    },
-    {
-      path: 'addCourseType',
-      name: 'addCourseType',
-      component: () => import('@/views/course/type/add'),
-      meta: {title: '添加课程类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateCourseType',
-      name: 'updateCourseType',
-      component: () => import('@/views/course/type/update'),
-      meta: {title: '修改课程类型', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'addCourseInstance',
-      name: 'addCourseInstance',
-      component: () => import('@/views/course/instance/add'),
-      meta: {title: '添加课程实例', icon: 'product-list'},
-      hidden: true
-    },
-    {
-      path: 'updateCourseInstance',
-      name: 'updateCourseInstance',
-      component: () => import('@/views/course/instance/update'),
-      meta: {title: '修改课程实例', icon: 'product-list'},
-      hidden: true
-    }]
-  },
+  // {
+  //   path: '/course',
+  //   component: Layout,
+  //   redirect: '/course',
+  //   meta: {title: '课程管理', icon: 'product'},
+  //   children: [{
+  //     path: 'instance',
+  //     name: 'instance',
+  //     component: () => import('@/views/course/instance/index'),
+  //     meta: {title: '课程实例管理', icon: 'product-add'}
+  //   },
+  //   {
+  //     path: 'type',
+  //     name: 'type',
+  //     component: () => import('@/views/course/type/index'),
+  //     meta: {title: '课程类型管理', icon: 'product-list'}
+  //   },
+  //   {
+  //     path: 'addCourseType',
+  //     name: 'addCourseType',
+  //     component: () => import('@/views/course/type/add'),
+  //     meta: {title: '添加课程类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateCourseType',
+  //     name: 'updateCourseType',
+  //     component: () => import('@/views/course/type/update'),
+  //     meta: {title: '修改课程类型', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'addCourseInstance',
+  //     name: 'addCourseInstance',
+  //     component: () => import('@/views/course/instance/add'),
+  //     meta: {title: '添加课程实例', icon: 'product-list'},
+  //     hidden: true
+  //   },
+  //   {
+  //     path: 'updateCourseInstance',
+  //     name: 'updateCourseInstance',
+  //     component: () => import('@/views/course/instance/update'),
+  //     meta: {title: '修改课程实例', icon: 'product-list'},
+  //     hidden: true
+  //   }]
+  // },
   
   
   
-  {path: '*', redirect: '/404', hidden: true}
+  // {path: '*', redirect: '/404', hidden: true}
 ]
 
 export default new Router({

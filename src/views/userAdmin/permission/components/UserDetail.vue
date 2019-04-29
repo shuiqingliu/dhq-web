@@ -13,17 +13,38 @@
       <el-form-item label="用户地址：">
         <el-input v-model="user.address"></el-input>
       </el-form-item>
+      <el-form-item label="用户状态：">
+        <el-input v-model="user.status"></el-input>
+      </el-form-item>
+      <el-form-item label="用户角色：">
+        <el-select
+          v-model="checkedIds"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请选择用户角色">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
         
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
+        <el-button @click="onCancel" >取消</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
-  
+  import {getRoles} from '@/api/role'
+  import {fmtRoles} from '@/utils/utils'
   const defaultuser={    
     username: '',
     password: '',
@@ -39,12 +60,25 @@
     },
     data() {
       return {
+        checkedIds:[],
+        options: [
+          {
+            value: '系统管理员',
+            label: '系统管理员'
+          },
+          {
+            value: '维修人员',
+            label: '维修人员'
+          }
+        ],
         user: {
           username:'fsass',
           password:'',
           phone: '',
-          address: ''
-          
+          address: '',
+          status: 1,
+          roles:[],
+          email: ''
         },
         allrole:[],
         rules: {
@@ -59,25 +93,22 @@
         },
       }
     },
-    watch:{
-      roles(newVal, oldVal){
-        this.user.roles = newVal;
-        console.log(...newVal)
-      }
-    },
+    
     created() {
-      
+      getRoles().then(response => {
+        this.options = fmtRoles(response.data)
+      })
       if (this.isEdit) {
         getUser(this.$route.query.id).then(response => {
           this.user = response.data;
-        });
-        //获取用户对应的角色，然后将对应的选项设置为checked
-        getUserRole(this.$route.query.id).then(response =>{
-          for(var role in response.data){
-            this.checkId.push(role.id)
+          console.log(this.user)
+          for(var u in response.data.roles){
+            this.checkedIds.push(response.data.roles[u]['id'])
+            console.log(u)
           }
-          console.log(...this.checkId)
+          // console.log(this.checkedIds)
         });
+       
       }else{
         this.user = Object.assign({},defaultuser);
       }
@@ -130,6 +161,9 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.user = Object.assign({},defaultuser);
+      },
+      onCancel(){
+        this.$router.back();
       }
     }
   }
