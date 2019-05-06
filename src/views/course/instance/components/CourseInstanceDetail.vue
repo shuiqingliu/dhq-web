@@ -98,8 +98,18 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit('courseInstanceForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('courseInstanceForm')">重置</el-button>
+        <el-button @click="dialogVisible = true">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>
+        <font color="#FF0000">您确定要返回门店信息列表吗? 您填写的内容将不会被保存</font>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="returnToStoreInformation(),dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
@@ -154,8 +164,12 @@ export default {
           { required: true, message: "请输入课程名", trigger: "blur" }
         ],
         name: [{ required: true, message: "请输入课程名", trigger: "blur" }],
-        timesOfClass: [{ required: true, message: "请输入课长", trigger: "blur" }],
-        countsOfClass: [{ required: true, message: "请输入课时", trigger: "blur" }],
+        timesOfClass: [
+          { required: true, message: "请输入课长", trigger: "blur" }
+        ],
+        countsOfClass: [
+          { required: true, message: "请输入课时", trigger: "blur" }
+        ],
         courseContent: [
           { required: true, message: "请输入课程内容", trigger: "blur" }
         ],
@@ -174,7 +188,8 @@ export default {
         thirdType: null,
         pageNum: 1,
         pageSize: 5
-      }
+      },
+      dialogVisible: false,
     };
   },
   created() {
@@ -330,6 +345,9 @@ export default {
         alert(response.data.list[0].id);
         this.courseInstance.typeId = response.data.list[0].id;
       });
+    },
+    returnToStoreInformation() {
+      this.$router.push({ path: "/course/instance" });
     }
   }
 };

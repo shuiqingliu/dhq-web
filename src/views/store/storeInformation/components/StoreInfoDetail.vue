@@ -9,45 +9,49 @@
         <el-input v-model="storeInfo.shopName"></el-input>
       </el-form-item>
 
-      <el-form-item label="门店类型：" prop="shopType">
+      <!-- <el-form-item label="门店类型：" prop="shopType">
         <el-input v-model="storeInfo.shopType"></el-input>
+      </el-form-item>-->
+      <el-form-item label="门店类型：">
+        <el-select v-model="storeInfo.shopType" placeholder="请选择门店类别">
+          <el-option
+            v-for="item in shopType"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
-
       <el-form-item label="门店描述：">
         <el-input v-model="storeInfo.shopDesc" type="textarea" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="省市区">
         <el-cascader size="large" :options="options" v-model="selectedOptions"></el-cascader>
       </el-form-item>
-      <!-- <el-form-item label="省份：">
-        <el-input v-model="storeInfo.shopLocationProvince"></el-input>
-      </el-form-item>
-      <el-form-item label="城市：">
-        <el-input v-model="storeInfo.shopLocationCity"></el-input>
-      </el-form-item>
-      <el-form-item label="区县：">
-        <el-input v-model="storeInfo.shopLocationDistrict"></el-input>
-      </el-form-item>-->
       <el-form-item label="详细地址：">
         <el-input v-model="storeInfo.shopLocationDetail"></el-input>
       </el-form-item>
-      <el-form-item label="电话">
-        <el-input v-model="storeInfo.shopPhone"></el-input>
+      <el-form-item label="电话" prop="shopPhone">
+        <el-input v-model.number="storeInfo.shopPhone"></el-input>
       </el-form-item>
-      <el-form-item label="门店大小：">
-        <el-input v-model="storeInfo.shopSize"></el-input>
+      <el-form-item label="门店大小：" prop="shopSize">
+        <el-input v-model.number="storeInfo.shopSize"></el-input>
       </el-form-item>
-      <el-form-item label="员工数量：">
-        <el-input v-model="storeInfo.employeeNum"></el-input>
+      <el-form-item label="员工数量：" prop="employeeNum">
+        <el-input v-model.number="storeInfo.employeeNum"></el-input>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit('storeInfoForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('storeInfoForm')">重置</el-button>
         <el-button @click="dialogVisible = true">取消</el-button>
       </el-form-item>
     </el-form>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <span><font color="#FF0000">您确定要返回门店信息列表吗?  您填写的内容将不会被保存</font></span>
+    <!-- <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose"> -->
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>
+        <font color="#FF0000">您确定要返回门店信息列表吗? 您填写的内容将不会被保存</font>
+      </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="returnToStoreInformation(),dialogVisible = false">确 定</el-button>
@@ -66,6 +70,7 @@ import {
   CodeToText,
   TextToCode
 } from "element-china-area-data";
+import { isvalidPhone } from "../../../../utils/validate";
 //默认信息
 const defaultStoreInfo = {
   id: 1,
@@ -90,20 +95,48 @@ export default {
     }
   },
   data() {
+    var validPhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入电话号码"));
+      } else if (!isvalidPhone(value)) {
+        callback(new Error("请输入正确的11位手机号码"));
+      } else {
+        callback();
+      }
+    };
     return {
       storeInfo: Object.assign({}, defaultStoreInfo),
       rules: {
         managerId: [
           { required: true, message: "请输入管理者Id", trigger: "blur" },
-          { min: 2, max: 140, message: "长度为10位", trigger: "blur" }
+          { min: 2, max: 10, message: "长度为10位", trigger: "blur" }
         ],
-        shopType: [
-          { required: true, message: "请输入门店类型", trigger: "blur" }
+        employeeNum: [
+          // { validator: checkEmployeeNum, trigger: "blur" },
+          { required: true, message: "员工数量不能为空" },
+          { type: "number", message: "员工数量必须为数字值" }
+        ],
+        shopSize: [
+          { required: true, message: "门店大小不能为空" },
+          { type: "number", message: "门店大小必须为数字值" }
+        ],
+        shopPhone: [
+          { required: true, trigger: "blur", validator: validPhone } //这里需要用到全局变量
         ]
       },
       options: regionDataPlus,
       selectedOptions: [],
-      dialogVisible: false
+      dialogVisible: false,
+      shopType: [
+        {
+          value: "学校",
+          label: "学校"
+        },
+        {
+          value: "门店",
+          label: "门店"
+        }
+      ]
     };
   },
   created() {
@@ -179,7 +212,7 @@ export default {
       this.$refs[formName].resetFields();
       this.storeInfo = Object.assign({}, defaultStoreInfo);
     },
-    returnToStoreInformation(){
+    returnToStoreInformation() {
       this.$router.push({ path: "/store/storeInformation" });
     }
   }

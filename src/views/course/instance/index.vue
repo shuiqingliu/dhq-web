@@ -129,8 +129,8 @@
         </el-table-column>
         <el-table-column label="线上/线下" align="center" width="90">
           <template slot-scope="scope">
-            <span v-if="scope.row.online === 0" style="color: #37B328">ON</span>
-            <span v-else style="color:red">OFF</span>
+            <span v-if="scope.row.online === 0" style="color: #37B328">线上</span>
+            <span v-else style="color:red">线下</span>
           </template>
         </el-table-column>
         <el-table-column label="上架" align="center" width="80">

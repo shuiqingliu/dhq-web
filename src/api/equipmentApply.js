@@ -24,7 +24,7 @@ export function batchAllocateDevice(params) {
   return request({
     url: '/deviceApply/agree',
     method: 'get',
-    params:params
+    params: params
   })
 }
 
@@ -59,14 +59,14 @@ export function batchDeleteEquipmentInstance(ids) {
     method: 'post',
   })
 }
-//根据id获取获取设备信息
-export function getEquipmentInstance(id) {
+//根据设备类型ID查看未分配的设备。
+export function findDevicesWithType(params) {
   return request({
-    url: '/device/get?id=' + id,
-    method: 'get'
+    url: '/deviceApply/findDevicesWithType',
+    method: 'get',
+    params: params
   })
 }
-
 //获取一级列表
 export function getFirstCategory() {
   return request({
