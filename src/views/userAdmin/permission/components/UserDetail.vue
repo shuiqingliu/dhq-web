@@ -147,7 +147,9 @@
                 });
 
               } else {
+                
                 this.user.roleIds = this.checkedIds;
+                // alert(this.checkedIds)
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);

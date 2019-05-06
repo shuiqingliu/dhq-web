@@ -2,6 +2,7 @@
   <div class="tinymce-container editor-container">
     <textarea class="tinymce-textarea" :id="tinymceId"></textarea>
     <div class="editor-custom-btn-container">
+      
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>
     </div>
   </div>
@@ -10,7 +11,7 @@
 <script>
   import editorImage from './components/editorImage'
   import '../../../static/tinymce4.7.5/langs/zh_CN'
-
+  import SingleUpload from '@/components/Upload/singleUpload'
   const plugins = [
  `advlist anchor autolink autosave code codesample colorpicker colorpicker
   contextmenu directionality emoticons fullscreen hr image imagetools importcss insertdatetime
@@ -25,7 +26,7 @@
   ];
   export default {
     name: 'tinymce',
-    components: {editorImage},
+    components: {editorImage, SingleUpload},
     props: {
       id: {
         type: String
