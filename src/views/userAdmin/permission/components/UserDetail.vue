@@ -20,7 +20,7 @@
           
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户角色：" v-if="isEdit">
+      <el-form-item label="用户角色：">
         <el-select
           v-model="checkedIds"
           multiple
@@ -85,7 +85,7 @@
           phone: '',
           address: '',
           status: 1,
-          roles:[],
+          roleIds:[],
           email: ''
         },
         allrole:[],
@@ -147,10 +147,11 @@
                 });
 
               } else {
+                this.user.roleIds = this.checkedIds;
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
-                  // this.userRole.roleIds = this.checkedIds.join(',');
+                  
                   // updateUserRole(this.userRole);
                   this.$message({
                     message: '提交成功',
