@@ -1,7 +1,7 @@
 <template> 
   <div>
     <el-upload
-      action="http://localhost:8080/upload/pic"
+      action="http://10.103.246.113:8080/upload/pic"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"

@@ -15,3 +15,12 @@ export function getStoreEquipmentById(params) {
     params:params
   })
 }
+
+
+export function deleteStoreEquipment(params){
+  return request({
+    url:'/shopDevice/deleteByID',
+    method:'get',
+    params:params
+  })
+}
