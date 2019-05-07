@@ -87,3 +87,8 @@ export function getRolePermission(id){
     method: 'get'
   })
 }
+// export function addUserRole(params){
+//   return request({
+//     url: '/user/role/update'
+//   })
+// }

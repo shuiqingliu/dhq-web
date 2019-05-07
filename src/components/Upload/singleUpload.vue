@@ -1,7 +1,11 @@
 <template> 
   <div>
     <el-upload
+<<<<<<< HEAD
       action="http://10.103.246.113:8080/upload/pic"
+=======
+      action="http://10.103.241.66:2140/upload/pic"
+>>>>>>> 85ecbf853931b11f9271704dd97617e876d32d0a
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
