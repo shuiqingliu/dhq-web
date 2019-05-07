@@ -1,15 +1,16 @@
 <template> 
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
-      <el-form-item label="角色名：" prop="name">
-        <el-input v-model="user.name"></el-input>
+      <el-form-item label="角色名：" prop="description">
+        <el-input v-model="user.description"></el-input>
       </el-form-item>
       <el-form-item label="角色描述：">
-        <el-input v-model="user.description"></el-input>
+        <el-input v-model="user.name"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
+        <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -38,7 +39,7 @@
           id: 0
         },
         rules: {
-          name: [
+          description: [
             {required: true, message: '请输入角色描述', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
@@ -48,7 +49,12 @@
     },
     
     created() {
-      
+
+      //获取指定角色的描述，这里后台好像没有返回东西，需要沟通
+      // this.$route.query.id
+      // getRole(this.$route.query.id).then(resp=>{
+      //   this.user = resp.data
+      // })
     },
    
     methods: {
@@ -98,6 +104,9 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.user = Object.assign({},defaultuser);
+      },
+      onCancel(){
+        this.$router.back();
       }
     }
   }

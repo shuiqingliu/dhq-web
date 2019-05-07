@@ -13,17 +13,42 @@
       <el-form-item label="用户地址：">
         <el-input v-model="user.address"></el-input>
       </el-form-item>
+      <el-form-item label="用户状态：">
+        <el-radio-group v-model="user.status">
+          <el-radio :label="0">0</el-radio>
+          <el-radio :label="1">1</el-radio>
+          
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="用户角色：">
+        <el-select
+          v-model="checkedIds"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请选择用户角色">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
         
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
+        <el-button @click="onCancel" >取消</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
-  
+  import {getRoles,addUserRole,updateUserRole} from '@/api/role'
+  import {fmtRoles} from '@/utils/utils'
   const defaultuser={    
     username: '',
     password: '',
@@ -39,17 +64,34 @@
     },
     data() {
       return {
+        checkedIds:[],
+        options: [
+          {
+            value: '系统管理员',
+            label: '系统管理员'
+          },
+          {
+            value: '维修人员',
+            label: '维修人员'
+          }
+        ],
+        userRole:{
+          userId: 1,
+          roleIds:''
+        },
         user: {
           username:'fsass',
           password:'',
           phone: '',
-          address: ''
-          
+          address: '',
+          status: 1,
+          roleIds:[],
+          email: ''
         },
         allrole:[],
         rules: {
           username: [
-            {required: true, message: '请输入品牌名称', trigger: 'blur'},
+            {required: true, message: '请输入用户名', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
           password:[
@@ -59,25 +101,23 @@
         },
       }
     },
-    watch:{
-      roles(newVal, oldVal){
-        this.user.roles = newVal;
-        console.log(...newVal)
-      }
-    },
+    
     created() {
-      
+      this.userRole.userId = this.$route.query.id
+      getRoles().then(response => {
+        this.options = fmtRoles(response.data)
+      })
       if (this.isEdit) {
         getUser(this.$route.query.id).then(response => {
           this.user = response.data;
-        });
-        //获取用户对应的角色，然后将对应的选项设置为checked
-        getUserRole(this.$route.query.id).then(response =>{
-          for(var role in response.data){
-            this.checkId.push(role.id)
+          console.log(this.user)
+          for(var u in response.data.roles){
+            this.checkedIds.push(response.data.roles[u]['id'])
+            console.log(u)
           }
-          console.log(...this.checkId)
+          // console.log(this.checkedIds)
         });
+       
       }else{
         this.user = Object.assign({},defaultuser);
       }
@@ -96,6 +136,8 @@
               if (this.isEdit) {
                 updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
+                  this.userRole.roleIds = this.checkedIds.join(',');
+                  updateUserRole(this.userRole);
                   this.$message({
                     message: '修改成功',
                     type: 'success',
@@ -103,10 +145,16 @@
                   });
                   this.$router.back();
                 });
+
               } else {
+                
+                this.user.roleIds = this.checkedIds;
+                // alert(this.checkedIds)
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
+                  
+                  // updateUserRole(this.userRole);
                   this.$message({
                     message: '提交成功',
                     type: 'success',
@@ -130,6 +178,9 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.user = Object.assign({},defaultuser);
+      },
+      onCancel(){
+        this.$router.back();
       }
     }
   }

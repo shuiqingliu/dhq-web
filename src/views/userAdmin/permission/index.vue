@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.username" placeholder="品牌名称/关键字"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.username" placeholder="用户名/关键字"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -37,9 +37,6 @@
                 v-loading="!listLoading"
                 border>
         
-        <el-table-column label="编号" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
         <el-table-column label="用户名" align="center">
           <template slot-scope="scope">{{scope.row.username}}</template>
         </el-table-column>
@@ -71,6 +68,7 @@
       :before-close="handleClose">
         <el-form>
           <el-form-item label="请选择角色：">
+            <br/>
             <el-checkbox-group v-model="roles">
               <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type" >{{role.description}}</el-checkbox>
             </el-checkbox-group>
@@ -174,7 +172,7 @@
         this.$router.push({path:'/userAdmin/updateUser', query: {id: row.id}})
       },
       handleDelete(index, row) {
-        this.$confirm('是否要删除该品牌', '提示', {
+        this.$confirm('是否要删除该用户？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -185,7 +183,7 @@
               type: 'success',
               duration: 1000
             });
-            this.listQuery.pageNum = 1;
+            //this.listQuery.pageNum = 1;
             this.getList();
           });
         });
