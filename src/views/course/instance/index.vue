@@ -10,6 +10,12 @@
           type="primary"
           size="small"
         >查询结果</el-button>
+        <el-button
+          style="float: right;margin-right: 15px"
+          @click="resetSearchConditions()"
+          size="small">
+          重置
+        </el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -20,7 +26,6 @@
             <el-select
               v-model="listQuery.firstType"
               placeholder="请选择类别"
-              clearable
               @change="selectFirstCategory()"
             >
               <el-option
@@ -36,7 +41,6 @@
             <el-select
               v-model="listQuery.secondType"
               placeholder="请选择类别"
-              clearable
               @change="selectSecondCategory()"
             >
               <el-option
@@ -49,7 +53,7 @@
           </el-form-item>
 
           <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" clearable>
+            <el-select v-model="listQuery.thirdType" placeholder="请选择类别">
               <el-option
                 v-for="item in thirdCategoryOptions"
                 :key="item.value"
@@ -76,25 +80,37 @@
         border
       >
         <el-table-column type="selection" align="center"></el-table-column>
-        <el-table-column label="编号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.id}}</template>
+        <el-table-column label="课程编号" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.courseNumber}}</template>
         </el-table-column>
         <el-table-column label="课程名" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
-            <img style="height: 80px" :src="scope.row.picture">
+            <img style="height: 70px" :src="scope.row.picture">
           </template>
         </el-table-column>
         <el-table-column label="内容" align="center">
           <template slot-scope="scope">{{scope.row.courseContent}}</template>
         </el-table-column>
-        <el-table-column label="课时" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.timesOfClass}}</template>
+        <el-table-column label="特色" align="center" width="70">
+          <template slot-scope="scope">
+            <span v-if="scope.row.specialState === 0" style="color: #37B328">特色</span>
+            <span v-else style="color:red">非特色</span>
+          </template>
         </el-table-column>
-        <el-table-column label="价格￥" align="center" width="80">
+        <el-table-column label="课长" align="center" width="70">
+          <template slot-scope="scope">{{scope.row.timesOfClass}}分钟</template>
+        </el-table-column>
+        <el-table-column label="课时" align="center" width="70">
+          <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
+        </el-table-column>
+        <el-table-column label="价格￥" align="center" width="70">
           <template slot-scope="scope">{{scope.row.price}}</template>
+        </el-table-column>
+        <el-table-column label="推荐指数" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.recommendationCoefficient}}</template>
         </el-table-column>
         <el-table-column label="类别编号" align="center" width="80">
           <template slot-scope="scope">
@@ -103,7 +119,7 @@
               <p>二级分类: {{ scope.row.courseType.secondType }}</p>
               <p>三级分类: {{ scope.row.courseType.thirdType }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-button type="text" >{{ scope.row.courseType.id }}</el-button>
+                <el-button type="text">{{ scope.row.courseType.id }}</el-button>
               </div>
             </el-popover>
           </template>
@@ -111,20 +127,23 @@
             <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">查看</el-button>
           </template>-->
         </el-table-column>
-        <el-table-column label="线上/线下" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.online == true ? "ON":"OFF"}}</template>
+        <el-table-column label="线上/线下" align="center" width="90">
+          <template slot-scope="scope">
+            <span v-if="scope.row.online === 0" style="color: #37B328">线上</span>
+            <span v-else style="color:red">线下</span>
+          </template>
         </el-table-column>
-        <el-table-column label="上架" align="center" width="100">
+        <el-table-column label="上架" align="center" width="80">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
               @change="handleUpdateStatus(scope.$index,scope.row)"
-              :active-value="true"
-              :inactive-value="false"
+              :active-value="1"
+              :inactive-value="0"
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="备注" align="center" width="80">
+        <el-table-column label="简介" align="center" width="70">
           <!-- <template slot-scope="scope">{{scope.row.description}}</template> -->
           <template slot-scope="scope">
             <el-button type="text" @click="description=scope.row.description;open()">详情</el-button>
@@ -138,7 +157,7 @@
         </el-table-column>
       </el-table>
 
-      <el-dialog title="备注详情" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="课程简介" :visible.sync="dialogVisible" width="30%">
         <span>
           <el-input type="textarea" v-model="this.description"></el-input>
         </span>
@@ -305,9 +324,6 @@ export default {
     },
     //查询
     searchCourseInstanceList() {
-      alert(this.listQuery.firstType);
-      alert(this.listQuery.secondType);
-      alert(this.listQuery.thirdType);
       this.listQuery.pageNum = 1;
       this.getList();
     },
@@ -388,6 +404,7 @@ export default {
         }
       });
       this.listQuery.secondType = null; //将上一次二级分类选中的结果置为空。
+      this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空
     },
     //选择二级列表以后
     selectSecondCategory() {
@@ -413,7 +430,14 @@ export default {
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
-    
+    open() {
+      this.$alert(this.description, "课程简介");
+    },
+    resetSearchConditions(){
+      this.listQuery.firstType=null
+      this.listQuery.secondType=null
+      this.listQuery.thirdType=null
+    }
   }
 };
 </script>

@@ -1,6 +1,9 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="courseInstance" :rules="rules" ref="courseInstanceForm" label-width="150px">
+      <el-form-item label="课程编号：" prop="courseNumber">
+        <el-input v-model="courseInstance.courseNumber"></el-input>
+      </el-form-item>
       <el-form-item label="课程名：" prop="name">
         <el-input v-model="courseInstance.name"></el-input>
       </el-form-item>
@@ -10,8 +13,14 @@
       <el-form-item label="课程图片:">
         <single-upload v-model="courseInstance.picture"></single-upload>
       </el-form-item>
-      <el-form-item label="课时:" prop="timesOfClass">
+      <el-form-item label="课长(分/每节):" prop="timesOfClass">
         <el-input v-model="courseInstance.timesOfClass" placeholder="请输入内容"></el-input>
+      </el-form-item>
+      <el-form-item label="课时:" prop="countsOfClass">
+        <el-input v-model="courseInstance.countsOfClass" placeholder="请输入内容"></el-input>
+      </el-form-item>
+      <el-form-item label="推荐指数:">
+        <el-input v-model="courseInstance.recommendationCoefficient" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="价格：" prop="price">
         <el-input v-model="courseInstance.price"></el-input>
@@ -22,7 +31,7 @@
       <!-- <el-form-item label="类型Id：" prop="typeId">
         <el-input v-if="this.isEdit" v-model="courseInstance.courseType.id" ></el-input>
         <el-input v-model="courseInstance.typeId" placeholder="请输入内容"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
 
       <el-form-item label="选择类型：">
         <el-select
@@ -68,23 +77,39 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="特色课程：">
+        <el-radio-group v-model="courseInstance.specialState">
+          <el-radio :label="0">是</el-radio>
+          <el-radio :label="1">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="线上/线下：">
         <el-radio-group v-model="courseInstance.online">
-          <el-radio :label="true">线上</el-radio>
-          <el-radio :label="false">线下</el-radio>
+          <el-radio :label="0">线上</el-radio>
+          <el-radio :label="1">线下</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="上架/下架：">
         <el-radio-group v-model="courseInstance.status">
-          <el-radio :label="true">上架</el-radio>
-          <el-radio :label="false">下架</el-radio>
+          <el-radio :label="1">上架</el-radio>
+          <el-radio :label="0">下架</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('courseInstanceForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('courseInstanceForm')">重置</el-button>
+        <el-button @click="dialogVisible = true">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>
+        <font color="#FF0000">您确定要返回门店信息列表吗? 您填写的内容将不会被保存</font>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="returnToStoreInformation(),dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
@@ -99,7 +124,7 @@ import {
   fetchList,
   fetchList as getListByCategory,
   deleteCourseType,
-  batchDeleteCourseType,
+  batchDeleteCourseType
   //getFirstCategory,
   // getSecondCategory,
   // getThirdCategory
@@ -107,16 +132,20 @@ import {
 
 //默认信息
 const defaultCourseInstance = {
+  courseNumber: null,
   courseContent: null,
   description: null,
-  id: null,
+  id: 0,
   name: null,
-  online: true,
+  online: 0,
   picture: null,
   price: null,
-  status: true,
+  status: 1,
   timesOfClass: null,
-  typeId: null
+  countsOfClass: null,
+  typeId: null,
+  recommendationCoefficient: null,
+  specialState: 0
 };
 export default {
   name: "CourseInstanceDetail",
@@ -131,8 +160,14 @@ export default {
     return {
       courseInstance: Object.assign({}, defaultCourseInstance),
       rules: {
+        courseNumber: [
+          { required: true, message: "请输入课程名", trigger: "blur" }
+        ],
         name: [{ required: true, message: "请输入课程名", trigger: "blur" }],
         timesOfClass: [
+          { required: true, message: "请输入课长", trigger: "blur" }
+        ],
+        countsOfClass: [
           { required: true, message: "请输入课时", trigger: "blur" }
         ],
         courseContent: [
@@ -153,20 +188,21 @@ export default {
         thirdType: null,
         pageNum: 1,
         pageSize: 5
-      }
+      },
+      dialogVisible: false,
     };
   },
   created() {
     this.getFirstCategoryList();
     if (this.isEdit) {
       getCourseInstance(this.$route.query.id).then(response => {
-      this.courseInstance = response.data;
-      this.courseInstance.typeId = response.data.courseType.id;
-      this.listQuery.firstType = response.data.courseType.firstType;
-      this.selectFirstCategory();
-      this.listQuery.secondType = response.data.courseType.secondType;
-      this.selectSecondCategory();
-       this.listQuery.thirdType = response.data.courseType.thirdType;
+        this.courseInstance = response.data;
+        this.courseInstance.typeId = response.data.courseType.id;
+        this.listQuery.firstType = response.data.courseType.firstType;
+        this.selectFirstCategory();
+        this.listQuery.secondType = response.data.courseType.secondType;
+        this.selectSecondCategory();
+        this.listQuery.thirdType = response.data.courseType.thirdType;
       });
     } else {
       this.courseInstance = Object.assign({}, defaultCourseInstance);
@@ -304,11 +340,14 @@ export default {
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
-    selectThirdCategory(){
+    selectThirdCategory() {
       fetchList(this.listQuery).then(response => {
         alert(response.data.list[0].id);
         this.courseInstance.typeId = response.data.list[0].id;
       });
+    },
+    returnToStoreInformation() {
+      this.$router.push({ path: "/course/instance" });
     }
   }
 };

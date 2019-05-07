@@ -52,10 +52,10 @@
         <el-table-column label="门店名" align="center" width="100">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <!-- <el-table-column label="设备申请Id" align="center" width="120">
+        <el-table-column label="设备申请Id" align="center" width="150">
           <template slot-scope="scope">{{scope.row.applyDeviceId}}</template>
-        </el-table-column>-->
-        <el-table-column label="设备编号" align="center" width="130">
+        </el-table-column>
+        <el-table-column label="设备编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
         <el-table-column label="设备名" align="center" width="100">
@@ -67,7 +67,7 @@
         <el-table-column label="所属类别" align="center">
           <template slot-scope="scope">{{scope.row.threeCategory}}</template>
         </el-table-column>
-        <el-table-column label="批准时间" align="center" width="160">
+        <el-table-column label="批准时间" align="center">
           <template slot-scope="scope">{{scope.row.agreeTimes}}</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
@@ -76,44 +76,13 @@
         <el-table-column label="是否收货" align="center">
           <template slot-scope="scope">{{scope.row.ifReceive}}</template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <!-- <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="deleteParam.shopDeviceid=scope.row.id,
-            deleteParam.deviceID=scope.row.deviceId,dialogVisible = true">删除</el-button>
+            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
-      <el-dialog title="选择状态" :visible.sync="dialogVisible" width="30%">
-        <el-form :model="deleteParam" >
-          <el-form-item label="回收途径" label-width='150px'>
-            <el-select v-model="deleteParam.newSatus" placeholder="请选择活动区域">
-              <el-option label="报废" value="已报废"></el-option>
-              <el-option label="重新分配" value="未分配"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleDelete(),dialogVisible = false">确 定</el-button>
-        </div>
-      </el-dialog>
-    </div>
-    <div class="batch-operate-container">
-      <el-select size="small" v-model="operateType" placeholder="批量操作">
-        <el-option
-          v-for="item in operates"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-button
-        style="margin-left: 20px"
-        class="search-button"
-        @click="handleBatchOperate()"
-        type="primary"
-        size="small"
-      >确定</el-button>
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -132,8 +101,7 @@
 <script>
 import {
   fetchList,
-  getStoreEquipmentById,
-  deleteStoreEquipment
+  getStoreEquipmentById
   // deleteEquipmentInstance,
   // batchDeleteEquipmentInstance,
   // getFirstCategory,
@@ -162,11 +130,6 @@ export default {
         pageNum: 1,
         pageSize: 20
       },
-      deleteParam:{
-        shopDeviceid:null,
-        deviceID:null,
-        newSatus:null
-      },
       list: [],
       firstCategoryOptions: [],
       secondCategoryOptions: [],
@@ -175,8 +138,7 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       options: regionDataPlus, //全国的地理信息
-      selectedOptions: [],
-      dialogVisible:false
+      selectedOptions: []
     };
   },
   created() {
@@ -211,13 +173,13 @@ export default {
       });
     },
     //删除
-    handleDelete() {
+    handleDelete(index, row) {
       this.$confirm("是否要删除", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteStoreEquipment(this.deleteParam).then(response => {
+        deleteEquipmentInstance(row.id).then(response => {
           this.$message({
             message: "删除成功",
             type: "success",
@@ -335,7 +297,7 @@ export default {
     },
     //条件查询重置
     resetSearchConditions() {
-      this.selectedOptions = [];
+      this.selectedOptions =[];
       this.listQuery.province = null;
       this.listQuery.city = null;
       this.listQuery.district = null;

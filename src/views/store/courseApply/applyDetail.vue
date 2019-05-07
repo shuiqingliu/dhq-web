@@ -11,16 +11,10 @@
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="设备编号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
+          <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="设备名" align="center" width="150">
           <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column>
-        <el-table-column label="设备类型" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.typeId}}</template>
-        </el-table-column>
-        <el-table-column label="型号" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
         </el-table-column>
         <el-table-column label="设备图片" align="center" width="150">
           <template slot-scope="scope">{{scope.row.picture}}</template>
@@ -34,19 +28,27 @@
         <el-table-column label="使用年限" align="center" width="80">
           <template slot-scope="scope">{{scope.row.useYear}}</template>
         </el-table-column>
-        <el-table-column label="分配状态" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.deviceUseState}}</template>
+         <el-table-column label="设备类别" align="center">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>一级分类: {{ scope.row.deviceType.firstCategory }}</p>
+              <p>二级分类: {{ scope.row.deviceType.secondCategory }}</p>
+              <p>三级分类: {{ scope.row.deviceType.thirdCategory }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text" >{{scope.row.deviceType.id}}</el-button>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="设备编号" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">{{scope.row.describtion}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="success"
-              @click="allocateDevice(scope.$index, scope.row)"
-            >分配设备</el-button>
+            <el-button size="mini" type="success" @click="allocateDevice(scope.$index, scope.row)">分配设备</el-button>
             <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -84,10 +86,16 @@
   </div>
 </template>
 <script>
+import {
+  getEquipmentInstanceByTypeId,
+} from "@/api/equipmentInstance";
 
-import { batchAllocateDevice,findDevicesWithType} from "@/api/equipmentApply";
+import {
+  batchAllocateDevice
+} from "@/api/equipmentApply";
 
-import { fetchList as getListByCategory } from "@/api/equipmentType";
+
+import {fetchList as getListByCategory} from "@/api/equipmentType"
 export default {
   name: "equipmentInstanceList",
   data() {
@@ -100,7 +108,7 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        deviceTypeID: null,
+        type_id: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -109,28 +117,29 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       //  query: { shopId: row.shopId,applyId: row.applyId,deviceTypeId : row.deviceTypeId}
-      allocateDeviceParams: {
-        shopID: null, //记录设备申请的门店Id
-        applyID: null, //记录申请Id
-        IDs: null //设备ids
+      allocateDeviceParams:{
+        shopID:null,//记录设备申请的门店Id
+        applyID:null,//记录申请Id
+        IDs:null//设备ids
       }
     };
   },
   created() {
     //将设备申请页面传递的数据保存起来。
-    this.listQuery.deviceTypeID = this.$route.query.deviceTypeId;
+    this.listQuery.type_id = this.$route.query.deviceTypeId
 
     this.allocateDeviceParams.shopID = this.$route.query.shopId;
     this.allocateDeviceParams.applyID = this.$route.query.applyId;
 
     this.getList();
+   
   },
   methods: {
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
-      findDevicesWithType(this.listQuery).then(response => {
-        this.listLoading = false;
+       getEquipmentInstanceByTypeId(this.listQuery).then(response => {
+         this.listLoading = false;
         this.list = response.data.list;
         this.total = response.data.total;
         this.totalPage = response.data.totalPage;
@@ -146,8 +155,8 @@ export default {
     },
     //单个分配设备(在这里为了省事，直接调用了批量分配设备的接口)
     allocateDevice(index, row) {
-      (this.allocateDeviceParams.IDs = row.id),
-        this.batchAllocateDevice(this.allocateDeviceParams);
+      this.allocateDeviceParams.IDs = row.id,
+      this.batchAllocateDevice(this.allocateDeviceParams);
     },
     //删除
     handleDelete(index, row) {
@@ -191,7 +200,7 @@ export default {
       for (let i = 0; i < this.multipleSelection.length; i++) {
         ids.push(this.multipleSelection[i].id);
       }
-      this.allocateDeviceParams.IDs = ids.join(",");
+      this.allocateDeviceParams.IDs = ids.join(',');
       if (this.operateType === 0) {
         //批量分配设备.参数分别为:门店Id,申请Id,设备ids
         this.batchAllocateDevice(this.allocateDeviceParams);

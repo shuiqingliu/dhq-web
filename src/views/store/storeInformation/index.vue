@@ -18,7 +18,6 @@
               size="medium"
               :options="options"
               v-model="selectedOptions"
-              clearable
             ></el-cascader>
           </el-form-item>
           <el-form-item label="输入店名：">
@@ -34,7 +33,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>门店列表</span>
+      <span>门店信息列表</span>
       <el-button class="btn-add" @click="addStoreInfo()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
@@ -89,7 +88,7 @@
          <el-table-column label="备注" align="center" width="80">
           <!-- <template slot-scope="scope">{{scope.row.description}}</template> -->
           <template slot-scope="scope">
-            <el-button type="text" @click="description=scope.row.shopDesc;open()">详情</el-button>
+            <el-button type="text" @click="description=scope.row.shopDesc;open()">备注</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="150" align="center">
@@ -109,11 +108,10 @@
         </span>
       </el-dialog>
     </div>
-    <!-- 先将批量删除注释掉 -->
-    <!-- <div class="batch-operate-container">
+    <div class="batch-operate-container">
       <el-select
         size="small"
-        v-model="operateType" placeholder="批量操作666">
+        v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
           :key="item.value"
@@ -129,7 +127,7 @@
         size="small">
         确定
       </el-button>
-    </div>-->
+    </div>
     <div class="pagination-container">
       <el-pagination
         background
@@ -145,7 +143,7 @@
   </div>
 </template>
 <script>
-import { fetchList, deleteStoreInfo } from "@/api/storeInformation";
+import { fetchList, deleteStoreInfo ,batchDeleteStoreInfo} from "@/api/storeInformation";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 export default {
   name: "storeInfoList",
@@ -225,7 +223,7 @@ export default {
     },
     //删除
     handleDelete(index, row) {
-      this.$confirm("是否要删除该品牌", "提示", {
+      this.$confirm("是否要删除该门店信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -238,7 +236,7 @@ export default {
           });
           this.getList();
         });
-      });
+      });6
     },
     //处理改变分页
     handleSizeChange(val) {
@@ -276,7 +274,6 @@ export default {
     },
     //处理批量操作
     handleBatchOperate() {
-      console.log(this.multipleSelection);
       if (this.multipleSelection < 1) {
         this.$message({
           message: "请选择一条记录",
@@ -292,7 +289,7 @@ export default {
       }
       if (this.operateType === 0) {
         //删除
-        // this.deleteHomeAdvertise(ids);
+        this.batchDeleteStoreInfo(ids.join(','));
         //在这里重新写一个函数
       } else {
         this.$message({
@@ -301,6 +298,24 @@ export default {
           duration: 1000
         });
       }
+    },
+    batchDeleteStoreInfo(ids) {
+
+      this.$confirm("是否要删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        //let params = new URLSearchParams();
+        //params.append("ids", ids);
+        batchDeleteStoreInfo(ids).then(response => {
+          this.getList();
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        });
+      });
     },
     addStoreInfo() {
       this.$router.push({ path: "/store/addStoreInfo" });

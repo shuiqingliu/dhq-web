@@ -13,10 +13,45 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="申请状态：">
-            <el-select v-model="listQuery.status" placeholder="请选择状态" clearable @change="searchEquipmentInstanceList()">
+          <!-- <el-form-item label="输入搜索：">
+              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
+          </el-form-item>-->
+          <el-form-item label="一级类别：">
+            <el-select
+              v-model="listQuery.keyword1"
+              placeholder="请选择类别"
+              clearable
+              @change="selectFirstCategory()"
+            >
               <el-option
                 v-for="item in firstCategoryOptions"
+                :key="item.first_category"
+                :label="item.label"
+                :value="item.first_category"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="二级类别：">
+            <el-select
+              v-model="listQuery.keyword2"
+              placeholder="请选择类别"
+              clearable
+              @change="selectSecondCategory()"
+            >
+              <el-option
+                v-for="item in secondCategoryOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="三级类别：">
+            <el-select v-model="listQuery.keyword3" placeholder="请选择类别" clearable>
+              <el-option
+                v-for="item in thirdCategoryOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -59,14 +94,14 @@
         <el-table-column label="申请状态" align="center" width="80">
           <template slot-scope="scope">{{scope.row.applyStatus}}</template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center" width="160">
-          <template slot-scope="scope">{{scope.row.applyTimes}}</template>
+        <el-table-column label="申请时间" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
-        <el-table-column label="处理结果" align="center">
+        <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.resultDes}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center" >
-          <template slot-scope="scope" v-if="scope.row.resultDes === null">
+        <el-table-column label="操作" width="150" align="center">
+          <template slot-scope="scope">
             <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
             <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
           </template>
@@ -133,29 +168,16 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        status:'待审核',
+        keyword1: null,
+        keyword2: null,
+        keyword3: null,
         pageNum: 1,
         pageSize: 5
       },
       list: [],
-      firstCategoryOptions: [
-        {
-          value: "待审核",
-          label: "待审核"
-        },
-        {
-          value: "已同意",
-          label: "已同意"
-        },
-        {
-          value: "已拒绝",
-          label: "已拒绝"
-        },
-        {
-          value: "已发货",
-          label: "已发货"
-        }
-      ],
+      firstCategoryOptions: [],
+      secondCategoryOptions: [],
+      thirdCategoryOptions: [],
       total: null,
       listLoading: false, //临时修改了一下
       multipleSelection: [],
@@ -210,24 +232,20 @@ export default {
       });
     },
     //处理申请
-    handleApply(index, row) {
+    handleApply(index,row){
       this.$router.push({
         path: "/store/handleEquipmentApply",
-
-        query: {
-          shopId: row.shopId,
-          applyId: row.id,
-          deviceTypeId: row.deviceTypeId
-        }
+      
+        query: { shopId: row.shopId,applyId:row.id,deviceTypeId : row.deviceTypeId}
       });
     },
     handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
-    },
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
     //处理改变分页
     handleSizeChange(val) {
       this.listQuery.pageNum = 1;
@@ -240,6 +258,9 @@ export default {
     },
     //查询
     searchEquipmentInstanceList() {
+      alert(this.listQuery.keyword1);
+      alert(this.listQuery.keyword2);
+      alert(this.listQuery.keyword3);
       this.listQuery.pageNum = 1;
       this.getList();
     },
@@ -258,6 +279,71 @@ export default {
             message: "删除成功!"
           });
         });
+      });
+    },
+    //选择一级列表以后
+    selectFirstCategory() {
+      this.secondCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        keyword1: this.listQuery.keyword1,
+        keyword2: null,
+        keyword3: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
+        let secondCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < secondCategoryList.length; i++) {
+          arr.push(secondCategoryList[i].secondCategory);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        //赋值
+        for (let i = 0; i < arr.length; i++) {
+          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
+      this.listQuery.keyword2 = null; //将上一次二级分类选中的结果置为空。
+      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
+    },
+    //选择二级列表以后
+    selectSecondCategory() {
+      this.thirdCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        keyword1: this.listQuery.keyword1,
+        keyword2: this.listQuery.keyword2,
+        keyword3: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
+        let thirdCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < thirdCategoryList.length; i++) {
+          arr.push(thirdCategoryList[i].thirdCategory);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        for (let i = 0; i < arr.length; i++) {
+          this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
+      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
+    },
+    getSecondCategoryList() {
+      fetchCategoryList({ pageNum: 1, pageSize: 100 }).then(response => {
+        this.secondCategoryOptions = [];
+        let secondCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < secondCategoryList.length; i++) {
+          arr.push(secondCategoryList[i].secondCategory);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        for (let i = 0; i < arr.length; i++) {
+          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
       });
     }
   }
