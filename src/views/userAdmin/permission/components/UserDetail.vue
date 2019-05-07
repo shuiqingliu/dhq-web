@@ -20,7 +20,7 @@
           
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户角色：" v-if="isEdit">
+      <el-form-item label="用户角色：">
         <el-select
           v-model="checkedIds"
           multiple
@@ -85,13 +85,13 @@
           phone: '',
           address: '',
           status: 1,
-          roles:[],
+          roleIds:[],
           email: ''
         },
         allrole:[],
         rules: {
           username: [
-            {required: true, message: '请输入品牌名称', trigger: 'blur'},
+            {required: true, message: '请输入用户名', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
           password:[
@@ -147,10 +147,13 @@
                 });
 
               } else {
+                
+                this.user.roleIds = this.checkedIds;
+                // alert(this.checkedIds)
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
-                  // this.userRole.roleIds = this.checkedIds.join(',');
+                  
                   // updateUserRole(this.userRole);
                   this.$message({
                     message: '提交成功',
