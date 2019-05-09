@@ -70,7 +70,11 @@
         this.showFileList = true;
         this.fileList.pop();
         alert(res.data)
+<<<<<<< HEAD
         this.fileList.push({name: file.name, url:res.data});
+=======
+        this.fileList.push({name: file.name, url: res.data});
+>>>>>>> ee145a2310d7bc12538baf03890400f78a2dea1a
         this.emitInput(this.fileList[0].url);
       }
     }
