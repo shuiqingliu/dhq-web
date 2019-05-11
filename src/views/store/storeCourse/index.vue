@@ -6,7 +6,7 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right"
-          @click="searchStoreEquipmentList()"
+          @click="searchStoreCourseList()"
           type="primary"
           size="small"
         >查询结果</el-button>
@@ -17,28 +17,85 @@
         >重置</el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+        <el-form :inline="true" :model="shopParam" size="small" label-width="140px">
+          <el-form-item label="省/直辖市：">
+            <el-select
+              v-model="shopParam.province"
+              placeholder="省/直辖市"
+              @change="selectedProvince()"
+            >
+              <el-option
+                v-for="item in provinceOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="输入店名：">
-            <el-input
-              style="width: 203px"
-              v-model="listQuery.shopName"
-              placeholder="门店名字"
-              size="medium"
-            ></el-input>
+
+          <el-form-item label="市/市辖区">
+            <el-select v-model="shopParam.city" placeholder="市/市辖区" @change="selectedCity()">
+              <el-option
+                v-for="item in cityOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="区/县">
+            <el-select v-model="shopParam.district" placeholder="区/县" @change="selectedDistrict()">
+              <el-option
+                v-for="item in districtOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <el-form :inline="true" :model="shopParam" size="small" label-width="140px">
+          <el-form-item label="门店名：">
+            <el-select v-model="shopParam.shopName" placeholder="请选择门店名">
+              <el-option
+                v-for="item in shopOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @change="selectedShop()"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="特色课：">
+            <el-select v-model="shopParam.shopName" placeholder="是否为特色课">
+              <el-option label="特色课" value="已报废"></el-option>
+              <el-option label="非特色课" value="未分配"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="开课：">
+            <el-select v-model="shopParam.shopName" placeholder="是否开课">
+              <el-option label="正在开设的课程" value="已报废"></el-option>
+              <el-option label="以关闭的课程" value="未分配"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>门店设备列表</span>
+      <span>门店课程列表</span>
+      <el-button
+        class="btn-add"
+        @click="dialogVisible=true,getProvince(),getFirstCategoryList()"
+        size="mini"
+      >添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
-        ref="equipmentTable"
+        ref="courseTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -46,43 +103,192 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" align="center" width="100">
+        <el-table-column label="门店编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="门店名" align="center" width="100">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <el-table-column label="设备申请Id" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.applyDeviceId}}</template>
+        <el-table-column label="联系方式" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.shopPhone}}</template>
         </el-table-column>
-        <el-table-column label="设备编号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
+        <el-table-column label="详细地址" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.shopLocationProvince}}</template>
         </el-table-column>
-        <el-table-column label="设备名" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceName}}</template>
+        <el-table-column label="课程名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="设备型号" align="center">
-          <template slot-scope="scope">{{scope.row.modelNum}}</template>
+        <el-table-column label="课时" align="center">
+          <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
         </el-table-column>
-        <el-table-column label="所属类别" align="center">
-          <template slot-scope="scope">{{scope.row.threeCategory}}</template>
+        <el-table-column label="时长" align="center">
+          <template slot-scope="scope">{{scope.row.timesOfClass}}分钟</template>
         </el-table-column>
-        <el-table-column label="批准时间" align="center">
-          <template slot-scope="scope">{{scope.row.agreeTimes}}</template>
-        </el-table-column>
-        <el-table-column label="备注" align="center">
-          <template slot-scope="scope">{{scope.row.remark}}</template>
-        </el-table-column>
-        <el-table-column label="是否收货" align="center">
-          <template slot-scope="scope">{{scope.row.ifReceive}}</template>
-        </el-table-column>
-        <!-- <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="图片" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+            <img style="height: 70px" :src="scope.row.picture">
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="200" align="center">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
+      <el-dialog
+        title="添加门店课程"
+        :visible.sync="dialogVisible"
+        width="62%"
+        :before-close="handleClose"
+      >
+        <div>
+          <span>选择门店:</span>
+        </div>
+        <div style="margin-top: 15px">
+          <el-form :inline="true" :model="shopParam" size="small" label-width="100px">
+            <el-form-item label="省/市/区：">
+              <el-select
+                v-model="shopParam.province"
+                placeholder="省/直辖市"
+                @change="selectedProvince()"
+                style="width:120px"
+              >
+                <el-option
+                  v-for="item in provinceOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item>
+              <el-select
+                v-model="shopParam.city"
+                placeholder="市"
+                style="width:100px"
+                @change="selectedCity()"
+              >
+                <el-option
+                  v-for="item in cityOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label-width="80px">
+              <el-select
+                v-model="shopParam.district"
+                placeholder="区/县"
+                style="width:100px"
+                @change="selectedDistrict()"
+              >
+                <el-option
+                  v-for="item in districtOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="门店名：" label-width="80px">
+              <el-select
+                v-model="shopParam.shopName"
+                placeholder="门店名"
+                style="width:100px"
+                @change="selectedShop()"
+              >
+                <el-option
+                  v-for="item in shopOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <hr>
+        <div>
+          <span>选择课程:</span>
+        </div>
+
+        <div style="margin-top: 15px">
+          <el-form :inline="true" size="small" label-width="100px">
+            <!-- <el-form-item label="输入搜索：">
+              <el-input style="width: 203px" v-model="shopParam.firstType" placeholder="品牌名称/关键字"></el-input>
+            </el-form-item>-->
+            <el-form-item label="三级类别:">
+              <el-select
+                v-model="listQuery.firstType"
+                placeholder="一级类别"
+                clearable
+                style="width:150px"
+                @change="selectFirstCategory()"
+              >
+                <el-option
+                  v-for="item in firstCategoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item>
+              <el-select
+                v-model="listQuery.secondType"
+                placeholder="二级类别"
+                style="width:100px"
+                @change="selectSecondCategory()"
+              >
+                <el-option
+                  v-for="item in secondCategoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label-width="80px">
+              <el-select v-model="listQuery.thirdType" placeholder="三级类别" style="width:100px">
+                <el-option
+                  v-for="item in thirdCategoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label-width="80px" label="线上/线下">
+              <el-select v-model="listQuery.online" placeholder="线上/线下" style="width:100px">
+                <el-option label="线上" value="0"></el-option>
+                <el-option label="线下" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="课程名：" label-width="80px">
+              <el-select v-model="shopParam.thirdType" placeholder="课程名" style="width:100px">
+                <el-option
+                  v-for="item in thirdCategoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            
+          </el-form>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -90,9 +296,9 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize"
+        :page-size="shopParam.pageSize"
         :page-sizes="[10,15,20]"
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="shopParam.pageNum"
         :total="total"
       ></el-pagination>
     </div>
@@ -101,18 +307,24 @@
 <script>
 import {
   fetchList,
-  getStoreEquipmentById
-  // deleteEquipmentInstance,
-  // batchDeleteEquipmentInstance,
-  // getFirstCategory,
-  // getSecondCategory,
-  // getThirdCategory
-} from "@/api/storeEquipment";
+  getProvince,
+  getCity,
+  getDistrict,
+  getShopName,
+  getShopId,
+  deleteStoreCourse
+} from "@/api/storeCourse";
 
-import { fetchList as getListByCategory } from "@/api/equipmentType";
-import { regionDataPlus, CodeToText } from "element-china-area-data";
+import {
+  fetchList as Fetch,
+  fetchList as getListByCategory,
+  deleteCourseType,
+  batchDeleteCourseType
+} from "@/api/courseType";
+
+// import { fetchList as getListByCategory } from "@/api/courseType";
 export default {
-  name: "equipmentInstanceList",
+  name: "storeCourse",
   data() {
     return {
       operates: [
@@ -122,35 +334,48 @@ export default {
         }
       ],
       operateType: null,
-      listQuery: {
+      shopParam: {
         province: null,
         city: null,
         district: null,
         shopName: null,
+        state: "生效",
         pageNum: 1,
         pageSize: 20
       },
+      listQuery: {
+        firstType: null,
+        secondType: null,
+        thirdType: null,
+        online:null,
+        pageNum: 1,
+        pageSize: 5
+      },
       list: [],
+      provinceOptions: [],
+      cityOptions: [],
+      districtOptions: [],
+      shopOptions: [],
       firstCategoryOptions: [],
       secondCategoryOptions: [],
       thirdCategoryOptions: [],
+      courseOptions:[],
       total: null,
       listLoading: false, //临时修改了一下
       multipleSelection: [],
-      options: regionDataPlus, //全国的地理信息
-      selectedOptions: []
+      dialogVisible: false
     };
   },
   created() {
     this.getList();
-    //this.getFirstCategoryList();
+    this.getProvince();
     // this.getSecondCategoryList();
   },
   methods: {
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.shopParam).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
         this.total = response.data.total;
@@ -161,25 +386,13 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    //添加
-    addEquipmentInstance() {
-      this.$router.push({ path: "/equipment/addEquipmentInstance" });
-    },
-    //更新
-    handleUpdate(index, row) {
-      this.$router.push({
-        path: "/equipment/updateEquipmentInstance",
-        query: { id: row.id }
-      });
-    },
-    //删除
     handleDelete(index, row) {
       this.$confirm("是否要删除", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteEquipmentInstance(row.id).then(response => {
+        deleteStoreCourse(row.id).then(response => {
           this.$message({
             message: "删除成功",
             type: "success",
@@ -191,20 +404,24 @@ export default {
     },
     //处理改变分页
     handleSizeChange(val) {
-      this.listQuery.pageNum = 1;
-      this.listQuery.pageSize = val;
+      this.shopParam.pageNum = 1;
+      this.shopParam.pageSize = val;
       this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val;
+      this.shopParam.pageNum = val;
       this.getList();
     },
+    //添加
+    addStoreCourse() {
+      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+    },
     //查询
-    searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1);
-      alert(this.listQuery.keyword2);
-      alert(this.listQuery.keyword3);
-      this.listQuery.pageNum = 1;
+    searchCourseInstanceList() {
+      alert(this.shopParam.keyword1);
+      alert(this.shopParam.keyword2);
+      alert(this.shopParam.keyword3);
+      this.shopParam.pageNum = 1;
       this.getList();
     },
     //处理批量操作
@@ -229,7 +446,7 @@ export default {
         //删除
         // this.deleteHomeAdvertise(ids);
         //在这里重新写一个函数
-        this.batchDeleteEquipmentInstance(ids);
+        this.batchDeleteCourseInstance(ids);
       } else {
         this.$message({
           message: "请选择批量操作类型",
@@ -238,7 +455,7 @@ export default {
         });
       }
     },
-    batchDeleteEquipmentInstance(ids) {
+    batchDeleteCourseInstance(ids) {
       this.$confirm("是否要删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -246,7 +463,7 @@ export default {
       }).then(() => {
         //let params = new URLSearchParams();
         //params.append("ids", ids);
-        batchDeleteEquipmentInstance(ids).then(response => {
+        batchDeleteCourseInstance(ids).then(response => {
           this.getList();
           this.$message({
             type: "success",
@@ -260,49 +477,167 @@ export default {
         this.firstCategoryOptions = response.data;
       });
     },
-    //查询
-    searchStoreEquipmentList() {
-      let length = this.selectedOptions.length;
-      this.listQuery.province = CodeToText[this.selectedOptions[0]];
-      //alert(this.listQuery.province)
-      if (length === 2) {
-        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
-        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
-        this.listQuery.city = null;
-        this.listQuery.district = null;
-      }
-      if (length === 3) {
-        this.listQuery.city = CodeToText[this.selectedOptions[1]];
-        if (this.selectedOptions[2] == "") {
-          this.listQuery.district = null;
-        } else {
-          this.listQuery.district = CodeToText[this.selectedOptions[2]];
-        }
-      }
-      //alert(this.listQuery.city)
-      //alert(this.listQuery.district)
-      this.listQuery.pageNum = 1;
-      this.getListById();
-    },
-    getListById() {
-      this.listLoading = true;
-      //this.listLoading = false;
-      getStoreEquipmentById(this.listQuery).then(response => {
-        this.listLoading = false;
-        this.list = response.data.list;
-        this.total = response.data.total;
-        this.totalPage = response.data.totalPage;
-        this.pageSize = response.data.pageSize;
-      });
-    },
     //条件查询重置
     resetSearchConditions() {
-      this.selectedOptions =[];
-      this.listQuery.province = null;
-      this.listQuery.city = null;
-      this.listQuery.district = null;
-      this.listQuery.shopName = null;
+      this.shopParam.province = null;
+      this.shopParam.city = null;
+      this.shopParam.district = null;
+      this.shopParam.shopName = null;
+      this.shopParam.state = null;
+      this.cityOptions = [];
+      this.districtOptions = [];
+      this.shopOptions = [];
+    },
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          //resetSearchConditions();
+          done();
+        })
+        .catch(_ => {});
+    },
+    //获取已开设学能通门店的省份;
+    getProvince() {
+      getProvince().then(response => {
+        // this.list = response.data.list;
+        // this.total = response.data.total;
+        // this.totalPage = response.data.totalPage;
+        // this.pageSize = response.data.pageSize;
+        this.provinceOptions = [];
+        let provinces = response.data;
+        for (let i = 0; i < provinces.length; i++) {
+          this.provinceOptions.push({
+            label: provinces[i],
+            value: provinces[i]
+          });
+        }
+      });
+    },
+
+    //选择完省份以后
+    selectedProvince() {
+      this.cityOptions = [];
+      this.districtOptions = [];
+      this.shopOptions = [];
+      getCity(this.shopParam.province).then(response => {
+        let cities = response.data;
+        for (let i = 0; i < cities.length; i++) {
+          this.cityOptions.push({ label: cities[i], value: cities[i] });
+        }
+      });
+      (this.shopParam.city = null),
+        (this.shopParam.district = null),
+        (this.shopParam.shopName = null);
+    },
+    //选择城市以后
+    selectedCity() {
+      this.districtOptions = [];
+      this.shopOptions = [];
+      getDistrict(this.shopParam).then(response => {
+        let districts = response.data;
+        for (let i = 0; i < districts.length; i++) {
+          this.districtOptions.push({
+            label: districts[i],
+            value: districts[i]
+          });
+        }
+      });
+      (this.shopParam.district = null), (this.shopParam.shopName = null);
+    },
+    //选择县区以后
+    selectedDistrict() {
+      this.shopOptions = [];
+      getShopName(this.shopParam).then(response => {
+        let shopNames = response.data;
+        for (let i = 0; i < shopNames.length; i++) {
+          this.shopOptions.push({ label: shopNames[i], value: shopNames[i] });
+        }
+      }),
+        (this.shopParam.shopName = null);
+    },
+    //选取了门店以后
+    selectedShop() {
+      getShopId(this.shopParam).then(response => {
+        alert(response.data);
+      });
+    },
+    //********************************************************************************************** */
+    //自动获取一级列表。
+    getFirstCategoryList() {
+      getListByCategory({ pageNum: 1, pageSize: 100 }).then(response => {
+        this.firstCategoryOptions = [];
+        let firstCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < firstCategoryList.length; i++) {
+          arr.push(firstCategoryList[i].firstType);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        for (let i = 0; i < arr.length; i++) {
+          this.firstCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
+    },
+    //选择一级列表以后
+    selectFirstCategory() {
+      this.secondCategoryOptions = [];
+      this.thirdCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        firstType: this.listQuery.firstType,
+        secondType: null,
+        thirdType: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
+        let secondCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < secondCategoryList.length; i++) {
+          arr.push(secondCategoryList[i].secondType);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        //赋值
+        for (let i = 0; i < arr.length; i++) {
+          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
+      this.listQuery.secondType = null; //将上一次二级分类选中的结果置为空。
+      this.listQuery.thirdType = null; //将上一次二级分类选中的结果置为空。
+    },
+    //选择二级列表以后
+    selectSecondCategory() {
+      this.thirdCategoryOptions = [];
+      //加载二级列表
+      getListByCategory({
+        firstType: this.listQuery.firstType,
+        secondType: this.listQuery.secondType,
+        thirdType: null,
+        pageSize: 100
+      }).then(response => {
+        // this.firstCategoryOptions = [];
+        let thirdCategoryList = response.data.list;
+        let arr = [];
+        for (let i = 0; i < thirdCategoryList.length; i++) {
+          arr.push(thirdCategoryList[i].thirdType);
+        }
+        //去重
+        arr = [...new Set(arr)];
+        for (let i = 0; i < arr.length; i++) {
+          this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
+        }
+      });
+      this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
+    },
+    selectThirdCategory() {
+      
+      Fetch(this.listQuery).then(response => {
+        // alert(response.data.list[0].id);
+        // this.courseInstance.typeId = response.data.list[0].id;
+        //this.courseOptions = 
+      });
     }
+    //#########+++++++++++++++++++++++++++++++++++++++++++
   }
 };
 </script>
