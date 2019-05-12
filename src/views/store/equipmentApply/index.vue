@@ -14,7 +14,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="申请状态：">
-            <el-select v-model="listQuery.status" placeholder="请选择状态" clearable>
+            <el-select v-model="listQuery.status" placeholder="请选择状态" clearable @change="searchEquipmentInstanceList()">
               <el-option
                 v-for="item in firstCategoryOptions"
                 :key="item.value"
@@ -59,14 +59,14 @@
         <el-table-column label="申请状态" align="center" width="80">
           <template slot-scope="scope">{{scope.row.applyStatus}}</template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.applyTime}}</template>
+        <el-table-column label="申请时间" align="center" width="160">
+          <template slot-scope="scope">{{scope.row.applyTimes}}</template>
         </el-table-column>
-        <el-table-column label="拒绝理由" align="center">
+        <el-table-column label="处理结果" align="center">
           <template slot-scope="scope">{{scope.row.resultDes}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
-          <template slot-scope="scope">
+        <el-table-column label="操作" width="150" align="center" >
+          <template slot-scope="scope" v-if="scope.row.resultDes === null">
             <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
             <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
           </template>
@@ -133,15 +133,15 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        status:'申请中',
+        status:'待审核',
         pageNum: 1,
         pageSize: 5
       },
       list: [],
       firstCategoryOptions: [
         {
-          value: "申请中",
-          label: "申请中"
+          value: "待审核",
+          label: "待审核"
         },
         {
           value: "已同意",

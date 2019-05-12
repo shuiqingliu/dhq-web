@@ -13,17 +13,31 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit('courseTypeForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('courseTypeForm')">重置</el-button>
+        <el-button @click="dialogVisible = true">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>
+        <font color="#FF0000">您确定要返回门店信息列表吗? 您填写的内容将不会被保存</font>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="returnToStoreInformation(),dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
-import { createCourseType, getCourseType, updateCourseType } from "@/api/courseType";
+import {
+  createCourseType,
+  getCourseType,
+  updateCourseType
+} from "@/api/courseType";
 //默认信息
 const defaultCourseType = {
   firstType: "XXX",
-  secondType:"YYY",
-  thirdType:"ZZZ"
+  secondType: "YYY",
+  thirdType: "ZZZ"
 };
 export default {
   name: "CourseTypeDetail",
@@ -46,7 +60,8 @@ export default {
         thirdType: [
           { required: true, message: "请输入三级类别", trigger: "blur" }
         ]
-      }
+      },
+      dialogVisible: false
     };
   },
   created() {
@@ -104,6 +119,9 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.courseType = Object.assign({}, defaultCourseType);
+    },
+     returnToStoreInformation() {
+      this.$router.push({ path: "/course/type" });
     }
   }
 };
