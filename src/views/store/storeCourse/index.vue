@@ -69,16 +69,16 @@
           </el-form-item>
 
           <el-form-item label="特色课：">
-            <el-select v-model="shopParam.shopName" placeholder="是否为特色课">
-              <el-option label="特色课" value="已报废"></el-option>
-              <el-option label="非特色课" value="未分配"></el-option>
+            <el-select v-model="shopParam.specialState" placeholder="是否为特色课">
+              <el-option label="特色课" value="0"></el-option>
+              <el-option label="非特色课" value="1"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="开课：">
-            <el-select v-model="shopParam.shopName" placeholder="是否开课">
-              <el-option label="正在开设的课程" value="已报废"></el-option>
-              <el-option label="以关闭的课程" value="未分配"></el-option>
+            <el-select v-model="shopParam.state" placeholder="是否开课">
+              <el-option label="正在开设的课程" value="生效"></el-option>
+              <el-option label="以关闭的课程" value="废弃"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -256,7 +256,12 @@
             </el-form-item>
 
             <el-form-item label-width="80px">
-              <el-select v-model="listQuery.thirdType" placeholder="三级类别" style="width:100px">
+              <el-select
+                v-model="listQuery.thirdType"
+                placeholder="三级类别"
+                style="width:100px"
+                @change="selectThirdCategory()"
+              >
                 <el-option
                   v-for="item in thirdCategoryOptions"
                   :key="item.value"
@@ -266,27 +271,31 @@
               </el-select>
             </el-form-item>
             <el-form-item label-width="80px" label="线上/线下">
-              <el-select v-model="listQuery.online" placeholder="线上/线下" style="width:100px">
+              <el-select
+                v-model="listQuery.online"
+                placeholder="线上/线下"
+                style="width:100px"
+                @change="selectedOnline()"
+              >
                 <el-option label="线上" value="0"></el-option>
                 <el-option label="线下" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="课程名：" label-width="80px">
-              <el-select v-model="shopParam.thirdType" placeholder="课程名" style="width:100px">
+              <el-select v-model="addParam.courseId" placeholder="课程名" style="width:100px">
                 <el-option
-                  v-for="item in thirdCategoryOptions"
+                  v-for="item in courseOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
-            
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button @click="dialogVisible = false">返 回</el-button>
+          <el-button type="primary" @click="addShopCourse">添加门店课程</el-button>
         </div>
       </el-dialog>
     </div>
@@ -312,6 +321,7 @@ import {
   getDistrict,
   getShopName,
   getShopId,
+  addShopCourse,
   deleteStoreCourse
 } from "@/api/storeCourse";
 
@@ -322,7 +332,7 @@ import {
   batchDeleteCourseType
 } from "@/api/courseType";
 
-// import { fetchList as getListByCategory } from "@/api/courseType";
+import { fetchList as courseInstanceFetch } from "@/api/courseInstance";
 export default {
   name: "storeCourse",
   data() {
@@ -340,6 +350,7 @@ export default {
         district: null,
         shopName: null,
         state: "生效",
+        specialState: null,
         pageNum: 1,
         pageSize: 20
       },
@@ -347,7 +358,7 @@ export default {
         firstType: null,
         secondType: null,
         thirdType: null,
-        online:null,
+        online: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -359,7 +370,11 @@ export default {
       firstCategoryOptions: [],
       secondCategoryOptions: [],
       thirdCategoryOptions: [],
-      courseOptions:[],
+      courseOptions: [],
+      addParam: {
+        shopId: null,
+        courseId: null
+      },
       total: null,
       listLoading: false, //临时修改了一下
       multipleSelection: [],
@@ -415,14 +430,6 @@ export default {
     //添加
     addStoreCourse() {
       this.$router.push({ path: "/equipment/addEquipmentInstance" });
-    },
-    //查询
-    searchCourseInstanceList() {
-      alert(this.shopParam.keyword1);
-      alert(this.shopParam.keyword2);
-      alert(this.shopParam.keyword3);
-      this.shopParam.pageNum = 1;
-      this.getList();
     },
     //处理批量操作
     handleBatchOperate() {
@@ -559,6 +566,7 @@ export default {
     selectedShop() {
       getShopId(this.shopParam).then(response => {
         alert(response.data);
+        this.addParam.shopId = response.data;
       });
     },
     //********************************************************************************************** */
@@ -630,14 +638,42 @@ export default {
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
     selectThirdCategory() {
-      
-      Fetch(this.listQuery).then(response => {
-        // alert(response.data.list[0].id);
-        // this.courseInstance.typeId = response.data.list[0].id;
-        //this.courseOptions = 
+      // Fetch(this.listQuery).then(response => {
+      //   alert(response.data.list[0].id);
+      //   this.courseInstance.typeId = response.data.list[0].id;
+      //   this.courseOptions =
+      // });
+      alert("我爱你");
+      this.listQuery.online = null;
+    },
+    selectedOnline() {
+      this.addParam.courseId = null;
+      this.courseOptions = [];
+      courseInstanceFetch(this.listQuery).then(response => {
+        let arr1 = [];
+        arr1 = response.data.list;
+        for (let i = 0; i < arr1.length; i++) {
+          this.courseOptions.push({ label: arr1[i].name, value: arr1[i].id });
+        }
       });
-    }
+    },
     //#########+++++++++++++++++++++++++++++++++++++++++++
+    addShopCourse() {
+      if (this.addParam.shopId != null && this.addParam.courseId != null) {
+        addShopCourse(this.addParam).then(response => {
+          this.$message({
+            message: "提交成功",
+            type: "success",
+            duration: 1000
+          });
+        });
+      } else {
+        alert("请重新选择门店和课程");
+      }
+    },
+    searchStoreCourseList() {
+      this.getList();
+    }
   }
 };
 </script>
