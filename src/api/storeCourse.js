@@ -52,6 +52,13 @@ export function getShopId(params){
   })
 }
 
+export function addShopCourse(params) {
+  return request({
+    url:'/shopCourse/add',
+    method:'get',
+    params:params
+  })
+}
 
 export function deleteStoreCourse(id) {
   return request({
