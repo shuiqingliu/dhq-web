@@ -100,3 +100,28 @@ export const fmtRoles = (data)=> {
   })
   return fmData;
 }
+
+export const fmtInsTree = (data)=> {
+  let fmData = [];
+  data.forEach( d => {
+    let {
+      id,
+      children,
+      name,
+      pid
+    } = d;
+    if (children && children instanceof Array) {
+      children = fmtInsTree(children);
+    }
+    let fmD = {
+      id:id,
+      label: name,
+      pid:pid,
+     // disabled: meta == null || meta['title'] == '首页'? true: false,
+      delAble: name == '董事会'? false: true,
+      children:children,
+    };
+    fmData.push(fmD);
+  })
+  return fmData;
+}

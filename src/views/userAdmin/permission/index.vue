@@ -7,6 +7,7 @@
           <el-button
             style="float: right"
             @click="searchUserList()"
+            
             type="primary"
             size="small">
             查询结果
@@ -20,6 +21,7 @@
           </el-form>
         </div>
     </el-card>
+    
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>用户列表</span>
@@ -30,57 +32,79 @@
         添加
       </el-button>
     </el-card>
-    <div class="table-container">
-      <el-table ref="userTable"
-                :data="list"
-                style="width: 100%"
-                v-loading="!listLoading"
-                border>
-        
-        <el-table-column label="用户名" align="center">
-          <template slot-scope="scope">{{scope.row.username}}</template>
-        </el-table-column>
-        <el-table-column label="所属角色" width="400" align="center">
-           <template slot-scope="scope">
-              <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.description}}</el-tag>
-              <el-button @click = "handleChangeRole(scope.row)" type="text" class="flr">
-                修改角色
+    <el-row>
+      <el-col :span="6" height="100%">
+        <el-card class="table-container br"  shadow="never">
+           <el-tree 
+               
+                :data="data" 
+                :props="defaultProps"
+                node-key="id"
+                default-expand-all
+                @node-click="handleNodeClick"
+                >
+                 <span class="custom-tree-node" @click="handleNodeClick" @click.stop slot-scope="{ node}">
+                    <span>{{ node.label }}</span>
+                    
+                </span>
+                </el-tree>
+        </el-card>
+      </el-col>
+      <el-col :span="18">
+      <div class="table-container">
+        <el-table ref="userTable"
+                  :data="list"
+                  style="width: 100%"
+                  v-loading="!listLoading"
+                  border>
+          
+          <el-table-column label="用户名" align="center">
+            <template slot-scope="scope">{{scope.row.username}}</template>
+          </el-table-column>
+          <el-table-column label="所属角色" width="400" align="center">
+            <template slot-scope="scope">
+                <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.description}}</el-tag>
+                <el-button @click = "handleChangeRole(scope.row)" type="text" class="flr">
+                  修改角色
+                </el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="200" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleUpdate(scope.$index, scope.row)">编辑
               </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleUpdate(scope.$index, scope.row)">编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-dialog title="角色修改" 
-      :visible.sync="dialogTableVisible" 
-      width="30%"
-      :before-close="handleClose">
-        <el-form>
-          <el-form-item label="请选择角色：">
-            <br/>
-            <el-checkbox-group v-model="roles">
-              <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type" >{{role.description}}</el-checkbox>
-            </el-checkbox-group>
-            
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleAddRole">确定</el-button>
-            <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </div>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-dialog title="角色修改" 
+        :visible.sync="dialogTableVisible" 
+        width="30%"
+        :before-close="handleClose">
+          <el-form>
+            <el-form-item label="请选择角色：">
+              <br/>
+              <el-checkbox-group v-model="roles">
+                <el-checkbox :label="role.id" v-for="role in allrole" :key="role.id" name="type" >{{role.description}}</el-checkbox>
+              </el-checkbox-group>
+              
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="handleAddRole">确定</el-button>
+              <el-button @click="dialogTableVisible=false;roles=[]">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </div>
+      </el-col>
+    </el-row>
+   
     
     <div class="pagination-container">
       <el-pagination
@@ -99,10 +123,15 @@
 <script>
   import {fetchList,  deleteUser} from '@/api/userAdmin'
   import {getRoles,getUserRole,updateUserRole} from '@/api/role'
+
+  import {fmtInsTree} from '@/utils/utils' 
+import {getInstitutions, addInstitution, delInstitution} from '@/api/institution'
   export default {
     name: 'userlist',
     data() {
       return {
+        data:[]
+        ,
         dialogTableVisible: false, 
         userRole:{
           userId: 1,
@@ -139,12 +168,19 @@
       }
     },
     created() {
+      this.getIns();
       this.getList();
       getRoles().then(response=>{
         this.allrole = response.data
       })
     },
     methods: {
+       getIns(){
+            getInstitutions().then( resp => {
+                this.data = fmtInsTree(resp.data)
+                // console.log(this.data)
+            })
+        },
       getList() {
         this.listLoading = false;
         fetchList(this.listQuery).then(response => {
@@ -223,13 +259,18 @@
           this.getList()
           this.roles = []
         })
+      },
+      handleNodeClick(){
+
       }
     }
   }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-
-
+.br{
+  border: none;
+  
+}
 </style>
 
 
