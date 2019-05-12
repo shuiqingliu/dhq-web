@@ -13,34 +13,14 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
-          <el-form-item label="一级类别：">
+          <el-form-item label="省/直辖市：">
             <el-select
-              v-model="listQuery.keyword1"
-              placeholder="请选择类别"
-              clearable
-              @change="selectFirstCategory()"
+              v-model="listQuery.province"
+              placeholder="省/直辖市"
+              @change="selectedProvince()"
             >
               <el-option
-                v-for="item in firstCategoryOptions"
-                :key="item.first_category"
-                :label="item.label"
-                :value="item.first_category"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="二级类别：">
-            <el-select
-              v-model="listQuery.keyword2"
-              placeholder="请选择类别"
-              clearable
-              @change="selectSecondCategory()"
-            >
-              <el-option
-                v-for="item in secondCategoryOptions"
+                v-for="item in provinceOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -48,16 +28,51 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.keyword3" placeholder="请选择类别" clearable>
+          <el-form-item label="市/市辖区">
+            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()">
               <el-option
-                v-for="item in thirdCategoryOptions"
+                v-for="item in cityOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
+
+          <el-form-item label="区/县">
+            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()">
+              <el-option
+                v-for="item in districtOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <el-form :inline="true" :model="shopParam" size="small" label-width="140px">
+          <el-form-item label="门店名：">
+            <el-select v-model="listQuery.shopName" placeholder="请选择门店名">
+              <el-option
+                v-for="item in shopOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                @change="selectedShop()"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item  label="线上/线下">
+              <el-select
+                v-model="listQuery.online"
+                placeholder="线上/线下"
+                @change="selectedOnline()"
+              >
+                <el-option label="线上" value="0"></el-option>
+                <el-option label="线下" value="1"></el-option>
+              </el-select>
+            </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -78,29 +93,34 @@
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="门店ID" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.shopId}}</template>
+        <el-table-column label="门店名" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <el-table-column label="设备类型ID" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
+        <el-table-column label="课程名" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.courseName}}</template>
         </el-table-column>
-        <el-table-column label="申请数量" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.applyNum}}</template>
+        <el-table-column label="申请单价" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.applyPrice}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center" width="200">
+        <el-table-column label="申请原因" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyReason}}</template>
         </el-table-column>
-
-        <el-table-column label="申请状态" align="center" width="80">
+        <el-table-column label="申请人" align="center">
+          <template slot-scope="scope">{{scope.row.applyPerson}}</template>
+        </el-table-column>
+        <el-table-column label="申请状态" align="center" width="120">
           <template slot-scope="scope">{{scope.row.applyStatus}}</template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="150">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
-        <el-table-column label="拒绝理由" align="center" >
-          <template slot-scope="scope">{{scope.row.resultDes}}</template>
+        <el-table-column label="附件" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.attachmentUrl}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <!-- <el-table-column label="拒绝理由" align="center" >
+          <template slot-scope="scope">{{scope.row.resultDes}}</template>
+        </el-table-column>-->
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
             <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
@@ -135,17 +155,8 @@
   </div>
 </template>
 <script>
-import {
-  fetchList,
-  rejectDeviceApply
-  // deleteEquipmentInstance,
-  // batchDeleteEquipmentInstance,
-  // getFirstCategory,
-  // getSecondCategory,
-  // getThirdCategory
-} from "@/api/equipmentApply";
+import { fetchList } from "@/api/courseApply";
 
-import { fetchList as getListByCategory } from "@/api/equipmentType";
 const defaultApply = {
   id: null,
   shopId: null,
@@ -168,9 +179,10 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        keyword1: null,
-        keyword2: null,
-        keyword3: null,
+        province: null,
+        city: null,
+        district: null,
+        shopName: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -192,8 +204,8 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = true;
-      //this.listLoading = false;
+      // this.listLoading = true;
+      this.listLoading = false;
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
@@ -232,20 +244,24 @@ export default {
       });
     },
     //处理申请
-    handleApply(index,row){
+    handleApply(index, row) {
       this.$router.push({
         path: "/store/handleEquipmentApply",
-      
-        query: { shopId: row.shopId,applyId:row.id,deviceTypeId : row.deviceTypeId}
+
+        query: {
+          shopId: row.shopId,
+          applyId: row.id,
+          deviceTypeId: row.deviceTypeId
+        }
       });
     },
     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      },
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
     //处理改变分页
     handleSizeChange(val) {
       this.listQuery.pageNum = 1;
