@@ -68,7 +68,7 @@
       handleUploadSuccess(res, file) {
         this.showFileList = true;
         this.fileList.pop();
-        this.fileList.push({name: file.name, url: res.data});
+        this.fileList.push({name: file.name, url:res.data});
         this.emitInput(this.fileList[0].url);
       }
     }

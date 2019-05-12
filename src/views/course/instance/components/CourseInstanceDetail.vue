@@ -28,11 +28,6 @@
       <el-form-item label="课程内容：" prop="courseContent">
         <el-input v-model="courseInstance.courseContent" placeholder="请输入内容"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="类型Id：" prop="typeId">
-        <el-input v-if="this.isEdit" v-model="courseInstance.courseType.id" ></el-input>
-        <el-input v-model="courseInstance.typeId" placeholder="请输入内容"></el-input>
-      </el-form-item>-->
-
       <el-form-item label="选择类型：">
         <el-select
           v-model="listQuery.firstType"
@@ -189,7 +184,7 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
-      dialogVisible: false,
+      dialogVisible: false
     };
   },
   created() {
