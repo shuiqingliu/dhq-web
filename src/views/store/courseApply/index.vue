@@ -63,7 +63,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item  label="线上/线下">
+          <el-form-item  label="处理状态">
               <el-select
                 v-model="listQuery.online"
                 placeholder="线上/线下"
