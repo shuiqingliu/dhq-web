@@ -15,8 +15,8 @@
       </el-form-item>
       <el-form-item label="用户状态：">
         <el-radio-group v-model="user.status">
-          <el-radio :label="0">0</el-radio>
-          <el-radio :label="1">1</el-radio>
+          <el-radio :label="0">无效</el-radio>
+          <el-radio :label="1">有效</el-radio>
           
         </el-radio-group>
       </el-form-item>
@@ -36,7 +36,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-        
+        <el-form-item label="用户邮箱：">
+          <el-input v-model="user.email"></el-input>
+        </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
