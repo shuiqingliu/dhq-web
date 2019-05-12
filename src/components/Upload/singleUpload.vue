@@ -66,11 +66,9 @@
         this.dialogVisible = true;
       },
       handleUploadSuccess(res, file) {
-        alert("哈哈哈")
         this.showFileList = true;
         this.fileList.pop();
-        alert(res.data)
-        this.fileList.push({name: file.name, url: "http://" + res.data});
+        this.fileList.push({name: file.name, url: res.data});
         this.emitInput(this.fileList[0].url);
       }
     }

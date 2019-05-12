@@ -191,7 +191,7 @@ export const constantRouterMap = [
   //   }]
   // },
   //课程管理
-  // {
+  //{
   //   path: '/course',
   //   component: Layout,
   //   redirect: '/course',
@@ -229,7 +229,7 @@ export const constantRouterMap = [
   //     meta: {title: '添加课程实例', icon: 'product-list'},
   //     hidden: true
   //   },
-  //   {
+  //{
   //     path: 'updateCourseInstance',
   //     name: 'updateCourseInstance',
   //     component: () => import('@/views/course/instance/update'),
