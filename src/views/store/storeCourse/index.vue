@@ -89,7 +89,7 @@
       <span>门店课程列表</span>
       <el-button
         class="btn-add"
-        @click="dialogVisible=true,getProvince(),getFirstCategoryList()"
+        @click="resetSearchConditions(),dialogVisible=true,getProvince(),getFirstCategoryList()"
         size="mini"
       >添加</el-button>
     </el-card>
@@ -124,6 +124,12 @@
         <el-table-column label="时长" align="center">
           <template slot-scope="scope">{{scope.row.timesOfClass}}分钟</template>
         </el-table-column>
+        <el-table-column label="特色课" align="center" width="90">
+          <template slot-scope="scope">
+            <span v-if="scope.row.specialState === 0" style="color: #37B328">特色课</span>
+            <span v-else style="color:red">非特色课</span>
+          </template>
+        </el-table-column>
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
             <img style="height: 70px" :src="scope.row.picture">
@@ -131,7 +137,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">详情</el-button>
+            <el-button size="mini" @click="getDatail(scope.$index, scope.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -294,7 +300,7 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">返 回</el-button>
+          <el-button @click="resetSearchConditions(),dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addShopCourse">添加门店课程</el-button>
         </div>
       </el-dialog>
@@ -491,6 +497,7 @@ export default {
       this.shopParam.district = null;
       this.shopParam.shopName = null;
       this.shopParam.state = null;
+      this.shopParam.specialState = null;
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];
@@ -565,7 +572,6 @@ export default {
     //选取了门店以后
     selectedShop() {
       getShopId(this.shopParam).then(response => {
-        alert(response.data);
         this.addParam.shopId = response.data;
       });
     },
@@ -637,15 +643,11 @@ export default {
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
+
     selectThirdCategory() {
-      // Fetch(this.listQuery).then(response => {
-      //   alert(response.data.list[0].id);
-      //   this.courseInstance.typeId = response.data.list[0].id;
-      //   this.courseOptions =
-      // });
-      alert("我爱你");
       this.listQuery.online = null;
     },
+
     selectedOnline() {
       this.addParam.courseId = null;
       this.courseOptions = [];
@@ -673,6 +675,12 @@ export default {
     },
     searchStoreCourseList() {
       this.getList();
+    },
+     getDatail(index, row) {
+      this.$router.push({
+        path: "/store/getStoreInfoDetail",
+        query: { id: row.id }
+      }); //!!!!!!!!注意（row.  后面跟具体的id）
     }
   }
 };
