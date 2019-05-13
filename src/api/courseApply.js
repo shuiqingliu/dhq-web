@@ -7,26 +7,26 @@ export function fetchList(params) {
     params: params
   })
 }
+//同意设备申请
+export function agreeApply(id) {
+  return request({
+    url: '/shopCourse/applyCourse?id='+id,
+    method: 'get',
+  })
+}
+
 
 //拒绝申请
-export function rejectDeviceApply(applyID, data) {
+export function rejectApply(id, remark) {
   return request({
-    url: '/deviceApply/reject?applyID=' + applyID,
-    method: 'post',
-    data: data,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-}
-//批量分配设备(同意设备的申请)
-export function batchAllocateDevice(params) {
-  return request({
-    url: '/deviceApply/agree',
+    url: '/shopCourse/refuseApplyCourse?id=' + id + "&remark=" + remark,
     method: 'get',
-    params: params
   })
 }
+/////////////////////////////////////////////
+
+
+
 
 
 //创建设备
