@@ -39,6 +39,17 @@
         <el-form-item label="用户邮箱：">
           <el-input v-model="user.email"></el-input>
         </el-form-item>
+        <!-- <el-form-item label="用户所属机构：">
+          <el-select v-model="user.organizationId" placeholder="请选择">
+            <el-option
+              v-for="item in organizations"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+         
+        </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
@@ -67,6 +78,11 @@
     data() {
       return {
         checkedIds:[],
+        organizations: [
+          {
+            value: ''
+          }
+        ],
         options: [
           {
             value: '系统管理员',
