@@ -38,13 +38,19 @@
            <el-tree 
                
                 :data="data" 
-                :props="defaultProps"
+                
                 node-key="id"
                 default-expand-all
-                @node-click="handleNodeClick"
+                @click="handleNodeClick(node)"
                 >
-                 <span class="custom-tree-node" @click="handleNodeClick" @click.stop slot-scope="{ node}">
+                 <span class="custom-tree-node" @click="handleNodeClick(node)" @click.stop slot-scope="{ node}" width="100%">
                     <span>{{ node.label }}</span>
+                    <el-button
+                    type="text"
+                    size="mini"
+                    >
+                      <span><i class="el-icon-search"></i></span>
+                    </el-button>
                     
                 </span>
                 </el-tree>
@@ -68,6 +74,12 @@
                   修改角色
                 </el-button>
             </template>
+          </el-table-column>
+          <el-table-column label="所属机构" align="center">
+            <template slot-scope="scope">{{scope.row.organizationName}}</template>
+          </el-table-column>
+          <el-table-column label="所在地址" align="center">
+            <template slot-scope="scope">{{scope.row.address}}</template>
           </el-table-column>
           <el-table-column label="操作" width="200" align="center">
             <template slot-scope="scope">
@@ -121,7 +133,7 @@
   </div>
 </template>
 <script>
-  import {fetchList,  deleteUser} from '@/api/userAdmin'
+  import {fetchList,  deleteUser, getUserByOrgnization} from '@/api/userAdmin'
   import {getRoles,getUserRole,updateUserRole} from '@/api/role'
 
   import {fmtInsTree} from '@/utils/utils' 
@@ -150,6 +162,11 @@ import {getInstitutions, addInstitution, delInstitution} from '@/api/institution
         }],
         listQuery: {
           username: null,
+          pageNum: 1,
+          pageSize: 10
+        },
+        listQuery2: {
+          id: 0,
           pageNum: 1,
           pageSize: 10
         },
@@ -260,8 +277,19 @@ import {getInstitutions, addInstitution, delInstitution} from '@/api/institution
           this.roles = []
         })
       },
-      handleNodeClick(){
-
+      handleNodeClick(node){
+      // console.log(node)
+      this.listQuery2.id = node.data.id
+       this.listLoading = false;
+        getUserByOrgnization(this.listQuery2).then(response => {
+          this.listLoading = true;
+          
+          this.list = response.data.list;
+          this.total = response.data.total;
+          
+          this.totalPage = response.data.totalPage;
+          this.pageSize = response.data.pageSize;
+        });
       }
     }
   }
@@ -271,6 +299,14 @@ import {getInstitutions, addInstitution, delInstitution} from '@/api/institution
   border: none;
   
 }
+.custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 </style>
 
 

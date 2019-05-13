@@ -36,3 +36,12 @@ export function updateUser(id,data) {
   })
 }
 
+//根据机构id获取用户列表
+
+export function getUserByOrgnization(params){
+  return request({
+    url: '/user/listByOrganizationid',
+    method: 'get',
+    params: params
+  })
+}

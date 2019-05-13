@@ -56,10 +56,10 @@
             >
             预览
             </el-button>
-            <el-button
+            <!-- <el-button
               size="mini"
               @click="handleUpdate(scope.row)">编辑
-            </el-button>
+            </el-button> -->
             <el-button
               size="mini"
               type="danger"

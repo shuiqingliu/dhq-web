@@ -18,25 +18,7 @@
           <el-option label="Category_4" value="4"/>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="作者">
-        <el-input v-model="content.message" placeholder="请输入作者"/>
-      </el-form-item>
-      <el-form-item label="封面">
-        <el-upload
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="handleChange"
-          :file-list="fileList"
-          :on-success="handleSuccess"
-          :on-error="handleErr"
-          name="test"
-          class="upload-demo"
-          action="http://10.103.241.66:8085/upload/pic"
-          list-type="picture">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-      </el-form-item> -->
+   
     </el-form>
     <div>
       <tinymce v-model="content.message" :height="300"></tinymce>
