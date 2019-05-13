@@ -4,12 +4,12 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
+        <el-button style="float: right" @click="searchApplyList()" type="primary" size="small">查询结果</el-button>
         <el-button
-          style="float: right"
-          @click="searchEquipmentInstanceList()"
-          type="primary"
+          style="float: right;margin-right: 15px"
+          @click="resetSearchConditions()"
           size="small"
-        >查询结果</el-button>
+        >重置</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -50,7 +50,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <el-form :inline="true" :model="shopParam" size="small" label-width="140px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="门店名：">
             <el-select v-model="listQuery.shopName" placeholder="请选择门店名">
               <el-option
@@ -58,21 +58,21 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                @change="selectedShop()"
               ></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item  label="线上/线下">
-              <el-select
-                v-model="listQuery.online"
-                placeholder="线上/线下"
-                @change="selectedOnline()"
-              >
-                <el-option label="线上" value="0"></el-option>
-                <el-option label="线下" value="1"></el-option>
-              </el-select>
-            </el-form-item>
+          <el-form-item label="处理状态">
+            <el-select
+              v-model="listQuery.applyStatus"
+              placeholder="请选择处理状态"
+              @change="selectedOnline()"
+            >
+              <el-option label="未处理" value="未处理"></el-option>
+              <el-option label="已同意" value="已同意"></el-option>
+              <el-option label="已拒绝" value="申请失败"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -93,7 +93,7 @@
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="门店名" align="center" width="150">
+        <el-table-column label="门店名" align="center" width="130">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
         <el-table-column label="课程名" align="center" width="100">
@@ -102,28 +102,44 @@
         <el-table-column label="申请单价" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyPrice}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center" width="100">
+        <el-table-column label="申请原因" align="center">
           <template slot-scope="scope">{{scope.row.applyReason}}</template>
         </el-table-column>
-        <el-table-column label="申请人" align="center">
+        <el-table-column label="申请人" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyPerson}}</template>
         </el-table-column>
         <el-table-column label="申请状态" align="center" width="120">
           <template slot-scope="scope">{{scope.row.applyStatus}}</template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center" width="150">
+        <el-table-column label="申请时间" align="center" width="130">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="附件" align="center" width="100">
           <template slot-scope="scope">{{scope.row.attachmentUrl}}</template>
         </el-table-column>
         <!-- <el-table-column label="拒绝理由" align="center" >
-          <template slot-scope="scope">{{scope.row.resultDes}}</template>
+          <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>-->
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
-            <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="rejectApply(scope.$index, scope.row)"
+              v-if="scope.row.applyStatus == '未处理'"
+            >拒绝</el-button>
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleApply(scope.$index, scope.row)"
+              v-if="scope.row.applyStatus == '未处理'"
+            >处理</el-button>
+            <el-button
+              size="mini"
+              type="info"
+               @click="rejectReason=scope.row.remark;open()"
+              v-if="scope.row.applyStatus == '申请失败'"
+            >查看拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -155,7 +171,16 @@
   </div>
 </template>
 <script>
-import { fetchList } from "@/api/courseApply";
+import { fetchList, agreeApply, rejectApply } from "@/api/courseApply";
+import {
+  getProvince,
+  getCity,
+  getDistrict,
+  getShopName,
+  getShopId,
+  addShopCourse,
+  deleteStoreCourse
+} from "@/api/storeCourse";
 
 const defaultApply = {
   id: null,
@@ -183,24 +208,27 @@ export default {
         city: null,
         district: null,
         shopName: null,
+        applyStatus: "未处理",
         pageNum: 1,
         pageSize: 5
       },
       list: [],
-      firstCategoryOptions: [],
-      secondCategoryOptions: [],
-      thirdCategoryOptions: [],
+      provinceOptions: [],
+      cityOptions: [],
+      districtOptions: [],
+      shopOptions: [],
       total: null,
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       dialogVisible: false,
       reason: null,
-      applyId: null
+      applyId: null,
+      rejectReason:null
     };
   },
   created() {
     this.getList();
-    // this.getSecondCategoryList();
+    this.getProvince();
   },
   methods: {
     getList() {
@@ -220,8 +248,7 @@ export default {
     //拒绝申请
     rejectApply(index, row) {
       this.dialogVisible = true;
-      this.isEdit = true;
-      this.reason = row.resultDes;
+      this.reason = row.remark;
       this.applyId = row.id;
     },
 
@@ -233,7 +260,7 @@ export default {
         type: "warning"
       }).then(() => {
         // rejectDeviceApply(this.applyId,this.reason).then(
-        rejectDeviceApply(this.applyId, this.reason).then(response => {
+        rejectApply(this.applyId, this.reason).then(response => {
           this.$message({
             message: "已拒绝",
             type: "success",
@@ -245,15 +272,14 @@ export default {
     },
     //处理申请
     handleApply(index, row) {
-      this.$router.push({
-        path: "/store/handleEquipmentApply",
-
-        query: {
-          shopId: row.shopId,
-          applyId: row.id,
-          deviceTypeId: row.deviceTypeId
-        }
+      agreeApply(row.id).then(response => {
+        this.$message({
+          message: "已处理",
+          type: "success",
+          duration: 1000
+        });
       });
+      this.getList();
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -273,10 +299,7 @@ export default {
       this.getList();
     },
     //查询
-    searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1);
-      alert(this.listQuery.keyword2);
-      alert(this.listQuery.keyword3);
+    searchApplyList() {
       this.listQuery.pageNum = 1;
       this.getList();
     },
@@ -297,70 +320,77 @@ export default {
         });
       });
     },
-    //选择一级列表以后
-    selectFirstCategory() {
-      this.secondCategoryOptions = [];
-      //加载二级列表
-      getListByCategory({
-        keyword1: this.listQuery.keyword1,
-        keyword2: null,
-        keyword3: null,
-        pageSize: 100
-      }).then(response => {
-        // this.firstCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        //赋值
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
+    //获取已开设学能通门店的省份;
+    getProvince() {
+      getProvince().then(response => {
+        // this.list = response.data.list;
+        // this.total = response.data.total;
+        // this.totalPage = response.data.totalPage;
+        // this.pageSize = response.data.pageSize;
+        this.provinceOptions = [];
+        let provinces = response.data;
+        for (let i = 0; i < provinces.length; i++) {
+          this.provinceOptions.push({
+            label: provinces[i],
+            value: provinces[i]
+          });
         }
       });
-      this.listQuery.keyword2 = null; //将上一次二级分类选中的结果置为空。
-      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
     },
-    //选择二级列表以后
-    selectSecondCategory() {
-      this.thirdCategoryOptions = [];
-      //加载二级列表
-      getListByCategory({
-        keyword1: this.listQuery.keyword1,
-        keyword2: this.listQuery.keyword2,
-        keyword3: null,
-        pageSize: 100
-      }).then(response => {
-        // this.firstCategoryOptions = [];
-        let thirdCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
+
+    //选择完省份以后
+    selectedProvince() {
+      this.cityOptions = [];
+      this.districtOptions = [];
+      this.shopOptions = [];
+      getCity(this.listQuery.province).then(response => {
+        let cities = response.data;
+        for (let i = 0; i < cities.length; i++) {
+          this.cityOptions.push({ label: cities[i], value: cities[i] });
         }
       });
-      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
+      (this.listQuery.city = null),
+        (this.listQuery.district = null),
+        (this.listQuery.shopName = null);
     },
-    getSecondCategoryList() {
-      fetchCategoryList({ pageNum: 1, pageSize: 100 }).then(response => {
-        this.secondCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
+    //选择城市以后
+    selectedCity() {
+      this.districtOptions = [];
+      this.shopOptions = [];
+      getDistrict(this.listQuery).then(response => {
+        let districts = response.data;
+        for (let i = 0; i < districts.length; i++) {
+          this.districtOptions.push({
+            label: districts[i],
+            value: districts[i]
+          });
         }
       });
+      (this.listQuery.district = null), (this.listQuery.shopName = null);
+    },
+    //选择县区以后
+    selectedDistrict() {
+      this.shopOptions = [];
+      getShopName(this.listQuery).then(response => {
+        let shopNames = response.data;
+        for (let i = 0; i < shopNames.length; i++) {
+          this.shopOptions.push({ label: shopNames[i], value: shopNames[i] });
+        }
+      }),
+        (this.listQuery.shopName = null);
+    },
+    open() {
+      this.$alert(this.rejectReason, "拒绝原因");
+    },
+    resetSearchConditions(){
+      this.listQuery.province = null;
+      this.listQuery.city = null;
+      this.listQuery.district = null;
+      this.listQuery.shopName = null;
+      this.listQuery.applyStatus='未处理'
+      this.cityOptions = [];
+      this.districtOptions = [];
+      this.shopOptions = [];
     }
   }
 };
