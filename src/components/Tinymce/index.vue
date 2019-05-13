@@ -11,7 +11,7 @@
 
   import '../../../static/tinymce4.7.5/tinymce.min.js'
   import '../../../static/tinymce4.7.5/skins/lightgray/skin.min.css'
-  import editorImage from './components/EditorImage'
+  import editorImage from './components/editorImage'
   import plugins from './plugins'
   import toolbar from './toolbar'
 
