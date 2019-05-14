@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) {
         initMenu(router, store)
         store.dispatch('GetInfo').then(res => { // 拉取用户信
-          next()
+          next({...to})
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
