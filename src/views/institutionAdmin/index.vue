@@ -146,7 +146,7 @@ export default {
         },
         remove(node, data){
            
-            this.$confirm('是否要删除该角色？', '提示', {
+            this.$confirm('是否要删除该机构？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

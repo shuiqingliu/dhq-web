@@ -7,20 +7,20 @@ export const initMenu = (router, store)=> {
   // console.log(router)
   getMenuList().then(resp=> {
     if (resp && resp.code == 200) {
-      if(router.options.routes.length <= 3){
+      
         var fmtRoutes = formatRoutes(resp.data);
         var notFound = [{path: '*', redirect: '/404', hidden: true}];
        // console.log(router.options.routes)
         router.addRoutes(fmtRoutes);
         router.addRoutes(notFound);
-        //console.log(router.options.routes)
+        // console.log(router.options.routes)
         for(var route in fmtRoutes){
           router.options.routes.push(fmtRoutes[route])
         }
         router.options.routes.push(notFound)
         
         //sessionStorage.setItem('routes',JSON.stringify(router.options.routes))
-      }
+      
        
         // console.log(router.options.routes)
     }

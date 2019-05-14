@@ -125,6 +125,7 @@
     },
     methods: {
       getContent(title, message){
+        // console.log(this.content)
         this.content.title = title
         this.content.message = message
       },
