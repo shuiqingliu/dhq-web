@@ -242,9 +242,6 @@ export default {
     },
     //查询
     searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1)
-      alert(this.listQuery.keyword2)
-      alert(this.listQuery.keyword3)
       this.listQuery.pageNum = 1;
       this.getList();
     },
