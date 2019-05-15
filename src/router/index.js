@@ -63,7 +63,13 @@ export const constantRouterMap = [
       path:'courseApply',
       name:'courseApply',
       component: ()=>import('@/views/store/courseApply/index'),
-      meta: {title: '课程申请', icon: 'product-add'}
+      meta: {title: '申请总部课程', icon: 'product-add'}
+    },
+    {
+      path:'specialCourseApply',
+      name:'specialCourseApply',
+      component: ()=>import('@/views/store/courseApply/specialCourse'),
+      meta: {title: '申请特殊课程', icon: 'product-add'}
     },
     {
       path:'handleEquipmentApply',

@@ -53,7 +53,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>设备实例列表</span>
       <el-button class="btn-add" @click="addEquipmentInstance()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
@@ -66,9 +66,9 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="设备编号" align="center" width="100">
+        <!-- <el-table-column label="设备编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="设备名" align="center" width="150">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>

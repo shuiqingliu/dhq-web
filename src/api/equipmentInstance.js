@@ -2,7 +2,7 @@ import request from '@/utils/request'
 //获取设备列表
 export function fetchList(params) {
   return request({
-    url:'/device/getAll',
+    url:'/device/list',
     method:'get',
     params:params
   })
