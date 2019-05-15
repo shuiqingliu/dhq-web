@@ -29,3 +29,20 @@ export function delInstitution(data){
         params:data
     })
 }
+
+//获取机构信息
+
+export function show(id){
+    return request({
+        url: '/HeadOrganization/listOrganizationById' + id,
+        method: 'get'
+    })
+}
+
+//获取所有机构
+export function getOrganizations(){
+    return request({
+        url: '/HeadOrganization/listTreeOrganization',
+        method: 'get'
+    })
+}
