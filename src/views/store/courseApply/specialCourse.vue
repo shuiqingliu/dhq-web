@@ -63,10 +63,7 @@
           </el-form-item>
 
           <el-form-item label="处理状态">
-            <el-select
-              v-model="listQuery.applyStatus"
-              placeholder="请选择处理状态"
-            >
+            <el-select v-model="listQuery.applyStatus" placeholder="请选择处理状态">
               <el-option label="未处理" value="未处理"></el-option>
               <el-option label="已同意" value="已同意"></el-option>
               <el-option label="已拒绝" value="申请失败"></el-option>
@@ -98,23 +95,26 @@
         <el-table-column label="课程名" align="center" width="100">
           <template slot-scope="scope">{{scope.row.courseName}}</template>
         </el-table-column>
-        <el-table-column label="申请单价" align="center" width="100">
+        <el-table-column label="课程描述" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.description}}</template>
+        </el-table-column>
+        <el-table-column label="时长" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.timesOfClass}}</template>
+        </el-table-column>
+        <el-table-column label="课程数" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
+        </el-table-column>
+        <el-table-column label="申请价格" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyPrice}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center">
-          <template slot-scope="scope">{{scope.row.applyReason}}</template>
-        </el-table-column>
-        <el-table-column label="申请人" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.applyPerson}}</template>
-        </el-table-column>
-        <el-table-column label="申请状态" align="center" width="120">
-          <template slot-scope="scope">{{scope.row.applyStatus}}</template>
+        <el-table-column label="课程内容" align="center">
+          <template slot-scope="scope">{{scope.row.courseContent}}</template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="130">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="附件" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.attachmentUrl}}</template>
+          <template slot-scope="scope">{{scope.row.attachment}}</template>
         </el-table-column>
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
@@ -130,28 +130,66 @@
             <el-button
               size="mini"
               type="success"
-              @click="handleApply(scope.$index, scope.row)"
+              @click="agreeApply(scope.$index, scope.row)"
               v-if="scope.row.applyStatus == '未处理'"
             >同意</el-button>
             <el-button
               size="mini"
               type="info"
-               @click="rejectReason=scope.row.remark;open()"
+              @click="rejectReason=scope.row.headOpinion;open()"
               v-if="scope.row.applyStatus == '申请失败'"
             >查看拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-dialog title="拒绝原因" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-dialog
+        title="拒绝原因"
+        :visible.sync="rejectDialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
         <el-form>
           <el-form-item label-width="120">
             <el-input v-model="reason" type="textarea"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleDialogConfirm(),dialogVisible = false">确 定</el-button>
+          <el-button @click="rejectDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog
+        title="同意"
+        :visible.sync="agreeDialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-form>
+          <el-form-item label-width="120" label="课程编号:">
+            <el-input v-model="reason" placeholder="请问该课程指定编号" style="width:60%"></el-input>
+          </el-form-item>
+          <el-form-item label="课程类型：">
+            <el-select v-model="listQuery.shopName" placeholder="请选择课程类型">
+              <el-option
+                v-for="item in shopOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="线上/线下：">
+            <el-radio-group v-model="online">
+              <el-radio :label="1">线上</el-radio>
+              <el-radio :label="0">线下</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="agreeDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm(),agreeDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -170,7 +208,7 @@
   </div>
 </template>
 <script>
-import { fetchList, agreeApply, rejectApply } from "@/api/courseApply";
+import { fetchList, agreeApply, rejectApply } from "@/api/specialCourseApply";
 import {
   getProvince,
   getCity,
@@ -219,10 +257,12 @@ export default {
       total: null,
       listLoading: false, //临时修改了一下
       multipleSelection: [],
-      dialogVisible: false,
+      rejectDialogVisible: false,
+      agreeDialogVisible: false,
       reason: null,
       applyId: null,
-      rejectReason:null
+      rejectReason: null,
+      online:0
     };
   },
   created() {
@@ -246,8 +286,14 @@ export default {
     },
     //拒绝申请
     rejectApply(index, row) {
-      this.dialogVisible = true;
-      //this.reason = row.remark;
+      this.rejectDialogVisible = true;
+      this.reason = row.remark;
+      this.applyId = row.id;
+    },
+    //同意申请
+    agreeApply(index, row) {
+      this.agreeDialogVisible = true;
+      this.reason = row.remark;
       this.applyId = row.id;
     },
 
@@ -381,12 +427,12 @@ export default {
     open() {
       this.$alert(this.rejectReason, "拒绝原因");
     },
-    resetSearchConditions(){
+    resetSearchConditions() {
       this.listQuery.province = null;
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
-      this.listQuery.applyStatus='未处理'
+      this.listQuery.applyStatus = "未处理";
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];
