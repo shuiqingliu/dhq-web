@@ -125,3 +125,22 @@ export const fmtInsTree = (data)=> {
   })
   return fmData;
 }
+
+
+export const fmtOrganization = (data)=> {
+  let fmData = [];
+  data.forEach( d => {
+    let {
+      id,
+      name,
+    } = d;
+
+    let fmD = {
+      value:id,
+      label: name,
+
+    };
+    fmData.push(fmD);
+  })
+  return fmData;
+}

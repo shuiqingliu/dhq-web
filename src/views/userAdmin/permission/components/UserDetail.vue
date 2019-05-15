@@ -39,7 +39,7 @@
         <el-form-item label="用户邮箱：">
           <el-input v-model="user.email"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="用户所属机构：">
+        <el-form-item label="用户所属机构：">
           <el-select v-model="user.organizationId" placeholder="请选择">
             <el-option
               v-for="item in organizations"
@@ -49,7 +49,7 @@
             </el-option>
           </el-select>
          
-        </el-form-item> -->
+        </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
@@ -60,8 +60,9 @@
 </template>
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
+  import {getOrganizations} from '@/api/institution'
   import {getRoles,addUserRole,updateUserRole} from '@/api/role'
-  import {fmtRoles} from '@/utils/utils'
+  import {fmtRoles, fmtOrganization} from '@/utils/utils'
   const defaultuser={    
     username: '',
     password: '',
@@ -121,6 +122,9 @@
     },
     
     created() {
+      getOrganizations().then(resp => {
+        this.organizations = fmtOrganization(resp.data.list);
+      })
       this.userRole.userId = this.$route.query.id
       getRoles().then(response => {
         this.options = fmtRoles(response.data)
@@ -143,6 +147,7 @@
    
     methods: {
       onSubmit(formName) {
+        
         console.log(this.user)
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -155,6 +160,7 @@
                 updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.userRole.roleIds = this.checkedIds.join(',');
+
                   updateUserRole(this.userRole);
                   this.$message({
                     message: '修改成功',
@@ -168,6 +174,7 @@
                 
                 this.user.roleIds = this.checkedIds;
                 // alert(this.checkedIds)
+
                 createUser(this.user).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
