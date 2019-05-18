@@ -348,23 +348,6 @@ export default {
       this.listQuery.pageNum = 1;
       this.getList();
     },
-    batchDeleteEquipmentInstance(ids) {
-      this.$confirm("是否要删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        //let params = new URLSearchParams();
-        //params.append("ids", ids);
-        batchDeleteEquipmentInstance(ids).then(response => {
-          this.getList();
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        });
-      });
-    },
     //获取已开设学能通门店的省份;
     getProvince() {
       getProvince().then(response => {
