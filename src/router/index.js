@@ -147,13 +147,13 @@ export const constantRouterMap = [
       path: 'instance',
       name: 'instance',
       component: () => import('@/views/equipment/instance/index'),
-      meta: {title: '设备实例管理', icon: 'product-add'}
+      meta: {title: '设备类型', icon: 'product-add'}
     },
     {
       path: 'type',
       name: 'type',
       component: () => import('@/views/equipment/type/index'),
-      meta: {title: '设备类型管理', icon: 'product-list'}
+      meta: {title: '设备类别', icon: 'product-list'}
     },
     {
       path: 'addEquipmentType',
@@ -174,6 +174,27 @@ export const constantRouterMap = [
       name: 'addEquipmentInstance',
       component: () => import('@/views/equipment/instance/add'),
       meta: {title: '添加设备实例', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'equipmentDetail',
+      name: 'equipmentDetail',
+      component: () => import('@/views/equipment/detail/index'),
+      meta: {title: '设备实例', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'addEquipmentDetail',
+      name: 'addEquipmentDetail',
+      component: () => import('@/views/equipment/detail/add'),
+      meta: {title: '添加设备实例', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'updateEquipmentDetail',
+      name: 'updateEquipmentDetail',
+      component: () => import('@/views/equipment/detail/update'),
+      meta: {title: '修改设备实例', icon: 'product-list'},
       hidden: true
     },
     {
