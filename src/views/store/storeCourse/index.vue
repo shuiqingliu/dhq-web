@@ -137,7 +137,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="getDatail(scope.$index, scope.row)">详情</el-button> -->
+            <el-button size="mini" @click="getDatail(scope.$index, scope.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>

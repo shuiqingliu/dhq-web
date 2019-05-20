@@ -2,16 +2,17 @@ import request from '@/utils/request'
 //获取设备申请类别
 export function fetchList(params) {
   return request({
-    url: '/shopCourse/getAllApplyCourse',
+    url: '/shopCourse/getAllApplySpecialCourse',
     method: 'get',
     params: params
   })
 }
 //同意设备申请
-export function agreeApply(id) {
+export function agreeApply(params) {
   return request({
-    url: '/shopCourse/applyCourse?id='+id,
+    url: '/shopCourse/applySpecialCourse',
     method: 'get',
+    params:params
   })
 }
 
@@ -19,7 +20,7 @@ export function agreeApply(id) {
 //拒绝申请
 export function rejectApply(id, remark) {
   return request({
-    url: '/shopCourse/refuseApplyCourse?id=' + id + "&remark=" + remark,
+    url: '/shopCourse/refuseSpecialApplyCourse?id=' + id + "&remark=" + remark,
     method: 'get',
   })
 }

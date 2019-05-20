@@ -61,11 +61,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item label="处理状态">
             <el-select
               v-model="listQuery.applyStatus"
               placeholder="请选择处理状态"
-              @change="selectedOnline()"
             >
               <el-option label="未处理" value="未处理"></el-option>
               <el-option label="已同意" value="已同意"></el-option>
@@ -132,7 +132,7 @@
               type="success"
               @click="handleApply(scope.$index, scope.row)"
               v-if="scope.row.applyStatus == '未处理'"
-            >处理</el-button>
+            >同意</el-button>
             <el-button
               size="mini"
               type="info"
@@ -247,7 +247,7 @@ export default {
     //拒绝申请
     rejectApply(index, row) {
       this.dialogVisible = true;
-      this.reason = row.remark;
+      //this.reason = row.remark;
       this.applyId = row.id;
     },
 
