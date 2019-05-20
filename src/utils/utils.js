@@ -7,20 +7,20 @@ export const initMenu = (router, store)=> {
   // console.log(router)
   getMenuList().then(resp=> {
     if (resp && resp.code == 200) {
-      if(router.options.routes.length <= 3){
+      
         var fmtRoutes = formatRoutes(resp.data);
         var notFound = [{path: '*', redirect: '/404', hidden: true}];
        // console.log(router.options.routes)
         router.addRoutes(fmtRoutes);
         router.addRoutes(notFound);
-        //console.log(router.options.routes)
+        // console.log(router.options.routes)
         for(var route in fmtRoutes){
           router.options.routes.push(fmtRoutes[route])
         }
         router.options.routes.push(notFound)
         
         //sessionStorage.setItem('routes',JSON.stringify(router.options.routes))
-      }
+      
        
         // console.log(router.options.routes)
     }
@@ -120,6 +120,25 @@ export const fmtInsTree = (data)=> {
      // disabled: meta == null || meta['title'] == '首页'? true: false,
       delAble: name == '董事会'? false: true,
       children:children,
+    };
+    fmData.push(fmD);
+  })
+  return fmData;
+}
+
+
+export const fmtOrganization = (data)=> {
+  let fmData = [];
+  data.forEach( d => {
+    let {
+      id,
+      name,
+    } = d;
+
+    let fmD = {
+      value:id,
+      label: name,
+
     };
     fmData.push(fmD);
   })

@@ -32,7 +32,7 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
-import { add } from '@/api/news'
+import { add, update} from '@/api/news'
 import { getNowFormatDate } from '@/utils/getFormatString'
 // import { upload } from '@/api/upload'
 export default {
@@ -52,6 +52,15 @@ export default {
       },
     }
   },
+  created(){
+    
+    if(this.$route.query.row){
+      console.log(this.$route.query.row)
+      this.content = this.$route.query.row
+      console.log(this.content)
+    }
+    
+  },
   methods: {
     submit() {
       // this.content.newsReleaseTime = getNowFormatDate()
@@ -59,20 +68,38 @@ export default {
       // if (this.newsPicture !== '') {
       //   this.shopNews.newsPicture = this.newsPicture
       // }
-      add(this.content).then(res => {
-        if (res.code === 200) {
+      if(!this.$route.query.edit){
+        add(this.content).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              message: res.message,
+              type: 'success'
+            })
+            this.$router.go(-1)
+          }
+        }).catch(res =>{
           this.$message({
-            message: res.message,
-            type: 'success'
-          })
-          this.$router.go(-1)
-        }
-      }).catch(res =>{
-         this.$message({
-            message: "请选择一个类型！",
-            type: 'error'
-          })
-      })
+              message: "请选择一个类型！",
+              type: 'error'
+            })
+        })
+      }else{
+        update(this.content,this.content.id).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              message: res.message,
+              type: 'success'
+            })
+            this.$router.go(-1)
+          }
+        }).catch(res =>{
+          this.$message({
+              message: "请选择一个类型！",
+              type: 'error'
+            })
+        })
+      }
+      
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

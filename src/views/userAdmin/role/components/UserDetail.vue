@@ -50,11 +50,11 @@
     
     created() {
 
-      //获取指定角色的描述，这里后台好像没有返回东西，需要沟通
-      // this.$route.query.id
-      // getRole(this.$route.query.id).then(resp=>{
-      //   this.user = resp.data
-      // })
+      
+      this.$route.query.id
+      getRole(this.$route.query.id).then(resp=>{
+        this.user = resp.data
+      })
     },
    
     methods: {

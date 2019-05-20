@@ -17,6 +17,12 @@
                     <el-button
                         type="text"
                         size="mini"
+                        @click="() => showDetail(data)" @click.stop>
+                        ...
+                    </el-button>
+                    <el-button
+                        type="text"
+                        size="mini"
                         @click="() => append(data)" @click.stop>
                         <i class="el-icon-plus"></i>
                     </el-button>
@@ -54,12 +60,34 @@
                     </span>
                 </el-dialog>
 
+                <el-dialog
+                    title="机构详情"
+                    width="25%"
+                    class="add-event-dialog"
+                    :visible.sync="detailDialog"
+                    size="tiny"
+                    
+                    >
+                    <el-form :model="detail" :rules="addEventNodeRules">
+                        <el-form-item label="机构名称" prop="name" >
+                        <el-input v-model="detail.name" name="name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构领导" prop="leader">
+                        <el-input v-model="detail.leader" name="leader"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构描述" prop="description">
+                        <el-input v-model="detail.description" name="description"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    
+                </el-dialog>
+
         </el-card>
     </div>
 </template>
 <script>
 import {fmtInsTree} from '@/utils/utils' 
-import {getInstitutions, addInstitution, delInstitution} from '@/api/institution'
+import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
 export default {
     data(){
         const validateName = (rule, value, callback) => {
@@ -77,7 +105,9 @@ export default {
             }
         };
         return {
-        data: [],
+            detail:{},
+            data: [],
+            detailDialog: false,
             addEventNodeRules:{
                 name: [{required: true, trigger: 'blur',validator: validateName}],
                 leader: [{required: true, trigger: 'blur', validator: validateLeader}]
@@ -144,9 +174,17 @@ export default {
         addEventFormCancleBtn(form){
             this.addEventdialogVisible = false
         },
+        showDetail(data){
+            // alert(1)
+            
+            show(data.id).then(resp=>{
+                this.detail = resp.data.list[0]
+            })
+            this.detailDialog = true;
+        },
         remove(node, data){
            
-            this.$confirm('是否要删除该角色？', '提示', {
+            this.$confirm('是否要删除该机构？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
