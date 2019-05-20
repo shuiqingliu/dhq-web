@@ -308,5 +308,3 @@ import {getInstitutions, addInstitution, delInstitution} from '@/api/institution
     padding-right: 8px;
   }
 </style>
-
-
