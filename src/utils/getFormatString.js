@@ -1,6 +1,13 @@
 /**
  * 获取当前时间 格式：yyyy-MM-dd HH:MM:SS
  */
+
+export function getFormatDate(dat){
+  const month = zeroFill(dat.getMonth() + 1)// 月
+  const day = zeroFill(dat.getDate())// 日
+  const formatDate = dat.getFullYear() + '-' + month + '-' + day
+return formatDate
+}
 export function getNowFormatDate() {
   const date = new Date()// 当前时间
   const month = zeroFill(date.getMonth() + 1)// 月

@@ -68,13 +68,13 @@
           <template slot-scope="scope">{{scope.row.threeCategory}}</template>
         </el-table-column>
         <el-table-column label="批准时间" align="center" width="160">
-          <template slot-scope="scope">{{scope.row.agreeTime}}</template>
+          <template slot-scope="scope">{{scope.row.agreeTime1}}</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>
         <el-table-column label="是否收货" align="center">
-          <template slot-scope="scope">{{scope.row.ifReceive}}</template>
+          <template slot-scope="scope">{{scope.row.ifReceive == 0? '否':'是'}}</template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
