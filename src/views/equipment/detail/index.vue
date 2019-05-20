@@ -39,8 +39,8 @@
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
-        <el-table-column label="设备类型ID" align="center">
-          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
+        <el-table-column label="设备类型名" align="center">
+          <template slot-scope="scope">{{name}}</template>
         </el-table-column>
         <el-table-column label="生产日期" align="center">
           <template slot-scope="scope">{{scope.row.produceDate}}</template>
@@ -87,6 +87,7 @@ export default {
           value: 0
         }
       ],
+      name:'',
       operateType: null,
       listQuery: {
         modelNumber: null,
@@ -115,6 +116,7 @@ export default {
     this.listQuery.modelNumber = this.$route.query.modelNumber;
     this.listQuery.name = this.$route.query.name;
     this.getList();
+    this.name = this.$route.query.name;
   },
   methods: {
     getList() {
