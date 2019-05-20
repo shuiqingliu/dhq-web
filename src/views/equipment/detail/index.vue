@@ -39,8 +39,8 @@
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
-        <el-table-column label="设备类型ID" align="center">
-          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
+        <el-table-column label="设备型号" align="center">
+          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
         </el-table-column>
         <el-table-column label="生产日期" align="center">
           <template slot-scope="scope">{{scope.row.produceDate}}</template>
