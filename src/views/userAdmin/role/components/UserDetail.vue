@@ -50,11 +50,13 @@
     
     created() {
 
+      if(this.$route.query.id != undefined){
+        getRole(this.$route.query.id).then(resp=>{
+                this.user = resp.data
+              })
+      }
+   
       
-      this.$route.query.id
-      getRole(this.$route.query.id).then(resp=>{
-        this.user = resp.data
-      })
     },
    
     methods: {
