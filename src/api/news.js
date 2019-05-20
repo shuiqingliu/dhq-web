@@ -23,11 +23,11 @@ export function add(data) {
   })
 }
 
-export function update(data) {
+export function update(data, id) {
   return request({
-    url: '/shopNews/update ',
+    url: '/msgcontent/update/'+id,
     method: 'post',
-    data
+    data:data
   })
 }
 

@@ -42,7 +42,7 @@
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column> -->
         <el-table-column label="内容类型" align="center">
-          <template slot-scope="scope">{{scope.row.typeId}}</template>
+          <template slot-scope="scope">{{scope.row.category}}</template>
         </el-table-column>
         <el-table-column label="内容标题" align="center">
           <template slot-scope="scope">{{scope.row.title}}</template>
@@ -56,10 +56,10 @@
             >
             预览
             </el-button>
-            <!-- <el-button
+            <el-button
               size="mini"
               @click="handleUpdate(scope.row)">编辑
-            </el-button> -->
+            </el-button>
             <el-button
               size="mini"
               type="danger"
@@ -125,6 +125,7 @@
     },
     methods: {
       getContent(title, message){
+        // console.log(this.content)
         this.content.title = title
         this.content.message = message
       },
@@ -175,11 +176,11 @@
       },
       
       addContent() {
-        this.$router.push({path: './news-add'})
+        this.$router.push({path: './news-add', query: {row:null,edit: false}})
       },
       handleUpdate(row){
-        this.$router.push({name: 'news-add-or-update',
-        params: row})
+        this.$router.push({path: './news-add',
+         query: {row: row, edit: true}})
       }
      
       
