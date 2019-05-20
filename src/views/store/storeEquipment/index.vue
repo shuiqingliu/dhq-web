@@ -59,16 +59,16 @@
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
         <el-table-column label="设备名" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceName}}</template>
+          <template slot-scope="scope">{{scope.row.deviceTypeName}}</template>
         </el-table-column>
         <el-table-column label="设备型号" align="center">
-          <template slot-scope="scope">{{scope.row.modelNum}}</template>
+          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
         </el-table-column>
         <el-table-column label="所属类别" align="center">
           <template slot-scope="scope">{{scope.row.threeCategory}}</template>
         </el-table-column>
         <el-table-column label="批准时间" align="center" width="160">
-          <template slot-scope="scope">{{scope.row.agreeTimes}}</template>
+          <template slot-scope="scope">{{scope.row.agreeTime}}</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">{{scope.row.remark}}</template>
