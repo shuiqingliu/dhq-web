@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
-      <div>
+      <!-- <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button
@@ -10,7 +10,7 @@
           type="primary"
           size="small"
         >查询结果</el-button>
-      </div>
+      </div> -->
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="申请状态：">
@@ -35,19 +35,20 @@
         ref="equipmentTable"
         :data="list"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="门店ID" align="center" width="150">
           <template slot-scope="scope">{{scope.row.shopId}}</template>
         </el-table-column>
-        <el-table-column label="设备类型ID" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
+        <el-table-column label="设备类别ID" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.deviceClassId}}</template>
+        </el-table-column>
+        <el-table-column label="设备型号" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
         </el-table-column>
         <el-table-column label="申请数量" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyNum}}</template>
@@ -57,7 +58,14 @@
         </el-table-column>
 
         <el-table-column label="申请状态" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.applyStatus}}</template>
+          <template slot-scope="scope">
+            <span v-if="scope.row.applyStatus === 0">待审核</span>
+            <span v-if="scope.row.applyStatus === 1">已同意</span>
+            <span v-if="scope.row.applyStatus === 2">已拒绝</span>
+            <span v-if="scope.row.applyStatus === 3">已发货</span>
+            <span v-if="scope.row.applyStatus === 4">部分收货</span>
+            <span v-if="scope.row.applyStatus === 5">全部收货</span>
+          </template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.applyTimes}}</template>
@@ -66,7 +74,7 @@
           <template slot-scope="scope">{{scope.row.resultDes}}</template>
         </el-table-column>
         <el-table-column label="操作" width="150" align="center" >
-          <template slot-scope="scope" v-if="scope.row.resultDes === null">
+          <template slot-scope="scope" v-if="scope.row.resultDes === ''">
             <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
             <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
           </template>
@@ -133,27 +141,37 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        status:'待审核',
+        status:0,
         pageNum: 1,
         pageSize: 5
       },
       list: [],
       firstCategoryOptions: [
         {
-          value: "待审核",
-          label: "待审核"
+          value: 0,
+          label: "待审核",
         },
         {
-          value: "已同意",
-          label: "已同意"
+          value: 1,
+          label: "已同意",
         },
         {
-          value: "已拒绝",
+          value: 2,
           label: "已拒绝"
         },
         {
-          value: "已发货",
+          value: 3,
           label: "已发货"
+        }
+        ,
+        {
+          value: 4,
+          label: "部分收货"
+        }
+        ,
+        {
+          value: 5,
+          label: "全部收货"
         }
       ],
       total: null,
@@ -215,9 +233,10 @@ export default {
         path: "/store/handleEquipmentApply",
 
         query: {
-          shopId: row.shopId,
           applyId: row.id,
-          deviceTypeId: row.deviceTypeId
+          shopId:row.shopId,
+          deviceClassId:row.deviceClassId,
+          modelNumber:row.modelNumber
         }
       });
     },

@@ -17,17 +17,17 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="设备类型" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.typeId}}</template>
+          <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
         </el-table-column>
         <el-table-column label="型号" align="center" width="150">
           <template slot-scope="scope">{{scope.row.modelNumber}}</template>
         </el-table-column>
-        <el-table-column label="设备图片" align="center" width="150">
+        <!-- <el-table-column label="设备图片" align="center" width="150">
           <template slot-scope="scope">{{scope.row.picture}}</template>
         </el-table-column>
         <el-table-column label="单价" align="center" width="100">
           <template slot-scope="scope">{{scope.row.price}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="生产日期" align="center">
           <template slot-scope="scope">{{scope.row.produceDate}}</template>
         </el-table-column>
@@ -35,7 +35,7 @@
           <template slot-scope="scope">{{scope.row.useYear}}</template>
         </el-table-column>
         <el-table-column label="分配状态" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.deviceUseState}}</template>
+          <template slot-scope="scope" v-if="scope.row.deviceUseState === 0">未分配</template>
         </el-table-column>
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">{{scope.row.describtion}}</template>
@@ -100,7 +100,8 @@ export default {
       ],
       operateType: null,
       listQuery: {
-        deviceTypeID: null,
+        deviceClassId: null,
+        modelNumber:null,
         pageNum: 1,
         pageSize: 5
       },
@@ -110,15 +111,16 @@ export default {
       multipleSelection: [],
       //  query: { shopId: row.shopId,applyId: row.applyId,deviceTypeId : row.deviceTypeId}
       allocateDeviceParams: {
-        shopID: null, //记录设备申请的门店Id
-        applyID: null, //记录申请Id
+        shopId: null, //记录设备申请的门店Id
+        applyId: null, //记录申请Id
         IDs: null //设备ids
       }
     };
   },
   created() {
     //将设备申请页面传递的数据保存起来。
-    this.listQuery.deviceTypeID = this.$route.query.deviceTypeId;
+    this.listQuery.deviceClassId = this.$route.query.deviceClassId;
+    this.listQuery.modelNumber = this.$route.query.modelNumber;
 
     this.allocateDeviceParams.shopID = this.$route.query.shopId;
     this.allocateDeviceParams.applyID = this.$route.query.applyId;
