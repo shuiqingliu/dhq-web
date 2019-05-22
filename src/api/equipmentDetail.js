@@ -33,7 +33,7 @@ export function deleteEquipmentDetail(id) {
 //根据id获取信息
 export function getEquipmentDetail(id) {
   return request({
-    url:'/device2/getByTypeId?id='+id,
+    url:'/device2/getById?id='+id,
     method:'get'
   })
 }
