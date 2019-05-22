@@ -15,9 +15,10 @@
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="设备使用状态：">
             <el-select v-model="listQuery.deviceUseState" placeholder="请选择状态" clearable="true">
-              <el-option label="未分配" value="0"></el-option>
-              <el-option label="已分配" value="1"></el-option>
-              <el-option label="已废弃" value="2"></el-option>
+              <el-option label="已分配（正常）" value="0"></el-option>
+              <el-option label="已分配（维修中）" value="1"></el-option>
+              <el-option label="未分配" value="2"></el-option>
+              <el-option label="已废弃" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -39,18 +40,28 @@
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">{{scope.row.deviceNumber}}</template>
         </el-table-column>
-        <el-table-column label="设备类型ID" align="center">
+        <!-- <el-table-column label="设备类型ID" align="center">
           <template slot-scope="scope">{{scope.row.deviceTypeId}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="生产日期" align="center">
           <template slot-scope="scope">{{scope.row.produceDate}}</template>
         </el-table-column>
+        <el-table-column label="分配日期" align="center">
+          <template slot-scope="scope">{{scope.row.agreeTime}}</template>
+        </el-table-column>
+        <el-table-column label="废弃日期" align="center">
+          <template slot-scope="scope" >{{scope.row.abandonedTime == null? "暂无": scope.row.abandonedTime}}</template>
+        </el-table-column>
         <el-table-column label="使用状态" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.deviceUseState === 0" style="color: #37B328">未分配</span>
-            <span v-if="scope.row.deviceUseState === 1" style="color:#37B328">已分配</span>
-            <span v-if="scope.row.deviceUseState === 2" style="color:red">已废弃</span>
+            <span v-if="scope.row.deviceUseState === 0" style="color: #37B328">已分配（正常）</span>
+            <span v-if="scope.row.deviceUseState === 1" style="color:#37B328">已分配（维修中）</span>
+            <span v-if="scope.row.deviceUseState === 2" style="color:red">未分配</span>
+            <span v-if="scope.row.deviceUseState === 3" style="color:red">已废弃</span>
           </template>
+        </el-table-column>
+        <el-table-column label="所属门店" align="center">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
