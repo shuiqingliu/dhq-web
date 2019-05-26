@@ -93,7 +93,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      stripe
+      
       fit
       highlight-current-row
       style="width: 100%;"

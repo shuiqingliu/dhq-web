@@ -63,6 +63,7 @@
                   :data="list"
                   style="width: 100%"
                   v-loading="!listLoading"
+                  
                   border>
           
           <el-table-column label="题目标题" align="center">
