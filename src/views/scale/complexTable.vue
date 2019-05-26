@@ -1,76 +1,95 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.scaleIndistinctName"
-        placeholder="量表名称"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-select
-        v-model="listQuery.scaleTypeName"
-        placeholder="量表类型"
-        clearable
-        class="filter-item"
-        style="width: 110px"
-      >
-        <el-option
-          v-for="item in scaleTypeOptions"
-          :key="item.key"
-          :label="item.key"
-          :value="item.key"
-        />
-      </el-select>
-      <el-input
-        v-model="listQuery.organizationName"
-        placeholder="所属机构"
-        style="width: 100px;"
-        class="filter-item"
-      />
-      <el-input
-        v-model="listQuery.creator"
-        placeholder="创建人"
-        style="width: 100px;"
-        class="filter-item"
-      />
 
-      <el-select
-        v-model="listQuery.scaleStatus"
-        placeholder="量表状态"
-        clearable
-        class="filter-item"
-        style="width: 110px"
-      >
-        <el-option
-          v-for="item in scaleStatusOptions"
-          :key="item.key"
-          :label="item.display_name"
-          :value="item.key"
-        />
-      </el-select>
+    <el-card class="filter-container" shadow="never">
+      <div>
+          <i class="el-icon-search"></i>
+          <span>筛选搜索</span>
+        
+        </div>
+          <div style="margin-top: 15px">
+          <el-form :inline="true" :model="listQuery" size="small" label-width="140px" style="padding-left:60px">
+            <el-form-item>
+                 <el-input
+                v-model="listQuery.scaleIndistinctName"
+                placeholder="量表名称"
+                style="width: 200px;"
+                class="filter-item"
+                @keyup.enter.native="handleFilter"
+              />
+              <el-select
+                v-model="listQuery.scaleTypeName"
+                placeholder="量表类型"
+                clearable
+                class="filter-item"
+                style="width: 110px"
+              >
+                <el-option
+                  v-for="item in scaleTypeOptions"
+                  :key="item.key"
+                  :label="item.key"
+                  :value="item.key"
+                />
+              </el-select>
+              <el-input
+                v-model="listQuery.organizationName"
+                placeholder="所属机构"
+                style="width: 100px;"
+                class="filter-item"
+              />
+              <el-input
+                v-model="listQuery.creator"
+                placeholder="创建人"
+                style="width: 100px;"
+                class="filter-item"
+              />
 
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        查找
-      </el-button>
-      <el-button
-        v-waves
-        class="filter-item"
-        style="margin-right: 100px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="scaleCreate"
-      >
-        添加
-      </el-button>
-    </div>
-    <el-table
+              <el-select
+                v-model="listQuery.scaleStatus"
+                placeholder="量表状态"
+                clearable
+                class="filter-item"
+                style="width: 110px"
+              >
+                <el-option
+                  v-for="item in scaleStatusOptions"
+                  :key="item.key"
+                  :label="item.display_name"
+                  :value="item.key"
+                />
+              </el-select>
+
+              <el-button
+                v-waves
+                class="filter-item"
+                type="primary"
+                icon="el-icon-search"
+                @click="handleFilter"
+              >
+                查找
+              </el-button>
+              <el-button
+                v-waves
+                class="filter-item"
+                style="margin-right: 100px;"
+                type="primary"
+                icon="el-icon-edit"
+                @click="scaleCreate"
+              >
+                添加
+              </el-button>
+            </el-form-item>
+          </el-form>
+          </div>
+  
+    </el-card>
+     <el-card class="operate-container" shadow="never">
+      <i class="el-icon-tickets"></i>
+      <span>量表列表</span>
+     
+    </el-card>
+<div class="table-container">
+   <el-table
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
@@ -79,6 +98,7 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange"
+      border
     >
       <el-table-column
         label="量表名称"
@@ -149,7 +169,7 @@
 
 <!--          查看-->
           <el-button
-            v-if="row.scaleState == 1 || row.scaleState == 2 || row.scaleState == 3"
+            v-if="row.scaleState == 1 || row.scaleState == 2 || row.scaleState == 3||row.scaleState==-1"
             type="primary"
             size="mini"
             @click="handleshow(row.scaleId)"
@@ -165,13 +185,13 @@
             编辑
           </el-button>
 
-          <el-button
+          <!-- <el-button
             v-if="row.scaleState == -1"
             type="info"
             size="mini"
           >
             查看
-          </el-button>
+          </el-button> -->
 
 <!--          量表的状态信息 -1代表处于废除状态（审核通过的量表表示不再使用，对于未审核的量表表示审核未通过）-->
 <!--          0代表处于编辑状态 1代表处于已提交未审核状态 2代表处于审核通过状态但只能提交者使用-->
@@ -224,6 +244,8 @@
         </template>
       </el-table-column>
     </el-table>
+</div>
+ 
 
     <pagination
       v-show="total>0"

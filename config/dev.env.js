@@ -6,6 +6,6 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   //BASE_API: '"http://localhost:2140"'
   BASE_API: '"http://10.103.241.66:2140"' 
-  // BASE_API: '"http://10.28.180.207:2140"'
+  // BASE_API: '"http://192.168.43.146:2140"'
 
 })
