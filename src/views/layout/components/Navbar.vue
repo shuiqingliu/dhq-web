@@ -14,8 +14,12 @@
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
+          <span @click="changePassword" style="display:block;">修改密码</span>
+        </el-dropdown-item>
+        <el-dropdown-item divided>
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
+
       </el-dropdown-menu>
     </el-dropdown>
   </el-menu>
@@ -45,6 +49,9 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    changePassword(){
+      this.$router.push({path:'/userAdmin/changePassword'})
     }
   }
 }

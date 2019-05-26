@@ -58,6 +58,15 @@
               ></el-option>
             </el-select>
           </el-form-item>
+
+          <el-form-item label="输入店名：">
+            <el-input
+              style="width: 203px"
+              v-model="listQuery.modelNumber"
+              placeholder="设备型号"
+              size="small"
+            ></el-input>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -149,6 +158,7 @@ export default {
         keyword1: null,
         keyword2: null,
         keyword3: null,
+        modelNumber:null,
         pageNum: 1,
         pageSize: 5
       },
