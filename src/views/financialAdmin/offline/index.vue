@@ -63,7 +63,7 @@
         border
       >
          <el-table-column label="日期" align="center">
-            <template slot-scope="scope">{{scope.row.runConditionDate}}</template>
+            <template slot-scope="scope">{{scope.row.time}}</template>
           </el-table-column>
           <el-table-column label="日流量" align="center">
             <template slot-scope="scope">{{scope.row.dayFlow}}</template>

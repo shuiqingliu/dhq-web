@@ -115,7 +115,7 @@
         align="center"
       >
         <template slot-scope="scope">
-<!--          <span>{{ scope.row.creatorId }}</span>-->
+         <!-- <span>{{ scope.row.creatorId }}</span> -->
          <span>张三</span>
         </template>
       </el-table-column>
@@ -266,9 +266,10 @@
       width="80%"
     >
 
-      <div>
+      <!-- <div>
+
         <h3>{{newScale}}</h3>
-      </div>
+      </div> -->
 
       <el-form
         ref="scaleForm"
@@ -408,11 +409,12 @@
           </el-form-item>
 
 <!--          选项-->
-          <!-- <el-form-item
+          <el-form-item
                         v-for="(choice, index) in evaluation.choiceList"
                         :label="'选项'+(index+1)"
                         :rules="rulesEvaluation"
-          > -->
+                        :key="index"
+          >
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item >
@@ -435,11 +437,12 @@
         <el-form-item></el-form-item>
 
 <!--        得分解释-->
-                <!-- <el-form-item
+                <el-form-item
                   v-for="(scoreDescription, index) in newScale.scoreDescriptionList"
                   :label="'得分解释'+(index+1)"
                   :rules="rulesEvaluation"
-                > -->
+                  :key="index"
+                >
                   <el-form-item >
                     <el-row :gutter="20">
                       <el-col :span="5">
@@ -519,7 +522,7 @@
 <script>
 import { fetchList, updateScaleState, fetchPv, submitScale, updateArticle } from '@/api/scale'
 import waves from '@/directive/waves' // Waves directive
-import { parseTime } from '@/utils'
+import { parseTime } from '@/utils/index'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import scale from './scale'
 const calendarTypeOptions = [
@@ -577,7 +580,8 @@ export default {
     },
     stateFilter(status) {
       return scaleStatusKeyValue[status]
-    }
+    },
+    parseTime: parseTime
   },
   data() {
     return {
@@ -840,6 +844,7 @@ export default {
     handleshow(scaleId) {
       this.dialogFormVisible = true
       this.scaleId = scaleId
+      console.log(this.scaleId)
     },
 
 
