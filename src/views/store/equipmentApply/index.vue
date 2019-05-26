@@ -74,7 +74,7 @@
           <template slot-scope="scope">{{scope.row.resultDes}}</template>
         </el-table-column>
         <el-table-column label="操作" width="150" align="center" >
-          <template slot-scope="scope" v-if="scope.row.resultDes === ''">
+          <template slot-scope="scope" v-if="scope.row.resultDes == null || scope.row.resultDes == ''">
             <el-button size="mini" type="danger" @click="rejectApply(scope.$index, scope.row)">拒绝</el-button>
             <el-button size="mini" type="success" @click="handleApply(scope.$index, scope.row)">处理</el-button>
           </template>
