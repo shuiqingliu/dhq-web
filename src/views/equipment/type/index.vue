@@ -17,12 +17,6 @@
                     <el-button
                         type="text"
                         size="mini"
-                        @click="() => showDetail(data)" @click.stop>
-                        ...
-                    </el-button>
-                    <el-button
-                        type="text"
-                        size="mini"
                         @click="() => append(data)" @click.stop>
                         <i class="el-icon-plus"></i>
                     </el-button>
@@ -88,6 +82,7 @@
 <script>
 import {fmtInsTree} from '@/utils/utils' 
 import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {fetchList} from '@/api/equipmentType'
 export default {
     data(){
         const validateName = (rule, value, callback) => {
@@ -130,13 +125,12 @@ export default {
         }
     },
     created(){
-       this.getIns()
+       this.getDeviceClass()
     },
     methods:{
-        getIns(){
-            getInstitutions().then( resp => {
-                this.data = fmtInsTree(resp.data)
-                // console.log(this.data)
+        getDeviceClass(){
+            fetchList().then( resp => {
+                this.data = resp.data
             })
         },
         append(data){
@@ -155,7 +149,7 @@ export default {
                         duration: 1000
                     });
                 this.addEventForm = {}
-                this.getIns()
+                this.getDeviceClass()
             })
             }else{
                 this.$message({
@@ -174,14 +168,6 @@ export default {
         addEventFormCancleBtn(form){
             this.addEventdialogVisible = false
         },
-        showDetail(data){
-            // alert(1)
-            
-            show(data.id).then(resp=>{
-                this.detail = resp.data.list[0]
-            })
-            this.detailDialog = true;
-        },
         remove(node, data){
            
             this.$confirm('是否要删除该机构？', '提示', {
@@ -197,7 +183,7 @@ export default {
                         type: 'success',
                         duration: 1000
                     });
-                    this.getIns()
+                    this.getDeviceClass()
                 })
             });
             

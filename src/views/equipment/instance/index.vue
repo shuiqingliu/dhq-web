@@ -98,7 +98,7 @@
           >{{scope.row.firstCategory}}-{{scope.row.secondCategory}}-{{scope.row.thirdCategory}}</template>
         </el-table-column>
         <el-table-column label="图片" align="center" width="120">
-         <template slot-scope="scope">
+          <template slot-scope="scope">
             <img style="height: 70px" :src="scope.row.picture">
           </template>
         </el-table-column>
@@ -120,7 +120,11 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            <el-button size="mini" type="primary" @click="getEquipmentDetail(scope.$index, scope.row)">查看实例</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="getEquipmentDetail(scope.$index, scope.row)"
+            >查看实例</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -158,7 +162,7 @@ export default {
         keyword1: null,
         keyword2: null,
         keyword3: null,
-        modelNumber:null,
+        modelNumber: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -328,10 +332,10 @@ export default {
       });
       this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
     },
-    getEquipmentDetail(index,row) {
+    getEquipmentDetail(index, row) {
       this.$router.push({
         path: "/equipment/equipmentDetail",
-        query: { modelNumber: row.modelNumber,name:row.name }
+        query: { modelNumber: row.modelNumber, name: row.name }
       });
     },
     open() {
