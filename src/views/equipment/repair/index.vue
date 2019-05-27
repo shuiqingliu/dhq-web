@@ -6,7 +6,7 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right"
-          @click="searchEquipmentTypeList()"
+          @click="searchDeviceMaintainList()"
           type="primary"
           size="small"
         >查询结果</el-button>
@@ -37,12 +37,7 @@
           </el-form-item>
 
           <el-form-item label="状态：">
-            <el-select
-              v-model="listQuery.deviceUseState"
-              placeholder="请选择状态"
-              clearable="true"
-              style="width:178px"
-            >
+            <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:178px">
               <el-option label="待处理" value="0"></el-option>
               <el-option label="维修中" value="1"></el-option>
               <el-option label="已修改" value="2"></el-option>
@@ -56,12 +51,7 @@
           </el-form-item>
 
           <el-form-item label="维修等级：">
-            <el-select
-              v-model="listQuery.deviceUseState"
-              placeholder="请选择状态"
-              clearable="true"
-              style="width:178px"
-            >
+            <el-select v-model="listQuery.faultLevel" placeholder="请选择状态" style="width:178px">
               <el-option label="维修" value="0"></el-option>
               <el-option label="整机更换" value="1"></el-option>
             </el-select>
@@ -72,7 +62,6 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>设备维修列表</span>
-      <el-button class="btn-add" @click="addEquipmentType()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -92,18 +81,27 @@
         </el-table-column>
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              @click="handleUpdate(scope.$index, scope.row)"
-            >{{scope.row.oldDeviceNumber}}</el-button>
+            <el-popover trigger="hover" placement="top">
+              <p>编号: {{ scope.row.oldDeviceNumber }}</p>
+              <p>型号: {{ scope.row.modelNumber }}</p>
+              <p>设备类型: {{ scope.row.deviceTypeName }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text">{{ scope.row.oldDeviceNumber }}</el-button>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="门店名字" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              @click="handleUpdate(scope.$index, scope.row)"
-            >{{scope.row.shopName}}</el-button>
+            <el-popover trigger="hover" placement="top">
+              <p>省/直辖市: {{ scope.row.shopLocationProvince }}</p>
+              <p>市: {{ scope.row.shopLocationCity }}</p>
+              <p>区/县: {{ scope.row.shopLocationDistrict }}</p>
+              <p>详细地址: {{ scope.row.shopLocationDetail }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text">{{ scope.row.shopName }}</el-button>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="联系人" align="center">
@@ -121,16 +119,32 @@
         </el-table-column>
         <!-- <el-table-column label="处理人" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column label="故障类型" align="center">
           <template slot-scope="scope">{{applyReasonList[scope.row.applyReason]}}</template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="300">
           <template slot-scope="scope">
-            <el-button size="mini" type="warning" @click="handleUpdate(scope.$index, scope.row)">维修</el-button>
-            <el-button size="mini" type="warning" @click="handleDelete(scope.$index, scope.row)">换货</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">拒绝</el-button>
-            <el-button size="mini" type="success" @click="handleDelete(scope.$index, scope.row)">分配</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              @click="maintainId = scope.row.id;searchMaintainPeople(),dialogMaintainVisible = true"
+            >维修</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              @click="scope.row.id,dialogExchangeVisible=true"
+            >换货</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="maintainId = scope.row.id;dialogRefuseVisible = true"
+            >拒绝</el-button>
+            <el-button
+              size="mini"
+              type="success"
+              @click="dialogDistributionVisible = true;searchDeviceList(scope.row.modelNumber)"
+            >分配</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,16 +161,90 @@
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog title="维修人员列表" :visible.sync="dialogMaintainVisible">
+      <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+      <el-button type="primary" @click="searchMaintainPeople()">查询维修人员</el-button>
+      <el-table :data="gridData">
+        <el-table-column property="id" label="ID" width="150"></el-table-column>
+        <el-table-column property="name" label="姓名" width="150"></el-table-column>
+        <el-table-column property="phone" label="电话" width="150"></el-table-column>
+        <el-table-column label="操作" align="center" width="150">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="allocateMaintenanceMan(maintainId, scope.row.id)"
+            >确定</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        @size-change="maintainHandleSizeChange"
+        @current-change="maintainHandleCurrentChange"
+        layout="total, sizes,prev, pager, next,jumper"
+        :page-size="listMaintainManagerQuery.pageSize"
+        :page-sizes="[5,10,15]"
+        :current-page.sync="listMaintainManagerQuery.pageNum"
+        :total="maintainTotal"
+      ></el-pagination>
+    </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogExchangeVisible" width="30%">
+      <span>是否同意换货？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogExchangeVisible = false">取 消</el-button>
+        <el-button type="primary" @click="exchangeGoods();dialogExchangeVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="拒绝原因" :visible.sync="dialogRefuseVisible" width="30%">
+      <el-form>
+        <el-form-item label-width="120">
+          <el-input v-model="refuseReason" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRefuseVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleRefuseApply(),dialogRefuseVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="设备列表" :visible.sync="dialogDistributionVisible">
+      <el-input style="width: 203px" placeholder="请输入设备型号" size="medium"></el-input>
+      <el-button type="primary" @click="searchMaintainPeople()">查询设备</el-button>
+      <el-table :data="deviceData">
+        <el-table-column property="id" label="设备编号" width="150"></el-table-column>
+        <el-table-column property="status" label="状态" width="150"></el-table-column>
+        <el-table-column label="操作" align="center" width="150">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="allocateDevice(maintainId, scope.row.id)"
+            >分配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        @size-change="maintainHandleSizeChange"
+        @current-change="maintainHandleCurrentChange"
+        layout="total, sizes,prev, pager, next,jumper"
+        :page-size="listMaintainManagerQuery.pageSize"
+        :page-sizes="[5,10,15]"
+        :current-page.sync="listMaintainManagerQuery.pageNum"
+        :total="maintainTotal"
+      ></el-pagination>
+    </el-dialog>
   </div>
 </template>
 <script>
-// import {
-//   fetchList,
-//   deleteEquipmentType,
-//   batchDeleteEquipmentType
-// } from "@/api/equipmentType";
-// import { fetchList as getListByCategory } from "@/api/equipmentType";
-import { fetchList } from "@/api/equipmentRepair";
+import {
+  fetchList,
+  getMaintainManagerList,
+  agreeDeviceMaintainApply,
+  refuseApply,
+  agreeDeviceChangingApply
+} from "@/api/equipmentRepair";
+import { regionDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
   name: "equipmentTypeList",
@@ -182,13 +270,35 @@ export default {
         thirdCategory: null,
         modelNumber: null,
         deviceTypeName: null,
+        faultLevel:null,
+        id:null,
         pageNum: 1,
         pageSize: 5
       },
+      listMaintainManagerQuery: {
+        province: null,
+        city: null,
+        distinct: null,
+        pageNum: 1,
+        pageSize: 5
+      },
+      gridData: [
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄"
+        }
+      ],
+      deviceData: [
+        {
+          id: "bupt20190505",
+          status: "未分配"
+        }
+      ],
       dealStatusList: [
         "待处理",
         "维修中",
-        "已修改",
+        "已维修",
         "换货中",
         "已拒绝",
         "已解决",
@@ -196,14 +306,34 @@ export default {
         "已换货",
         "维修失败"
       ],
-      applyReasonList:["操作失误","采购件质量问题","超期保养","工艺不合理","点检不到位","巡检不到位","电气故障","润滑不及时", "正常配件更换","其它"],
+      list: [],
+      applyReasonList: [
+        "操作失误",
+        "采购件质量问题",
+        "超期保养",
+        "工艺不合理",
+        "点检不到位",
+        "巡检不到位",
+        "电气故障",
+        "润滑不及时",
+        "正常配件更换",
+        "其它"
+      ],
       total: null,
+      maintainTotal: null,
+      dialogMaintainVisible: false,
+      dialogRefuseVisible: false,
+      dialogExchangeVisible: false,
+      dialogDistributionVisible: false,
+      selectedOptions: [],
+      refuseReason: null,
+      maintainId: null,
+      options: regionDataPlus, //全国的地理信息
       listLoading: false //临时修改了一下
     };
   },
   created() {
     this.getList();
-    this.getFirstCategoryList();
   },
   methods: {
     getList() {
@@ -217,6 +347,9 @@ export default {
         this.pageSize = response.data.pageSize;
       });
     },
+    searchDeviceMaintainList(){
+      this.getList();
+    },
     //添加
     addEquipmentType() {
       this.$router.push({ path: "/equipment/addEquipmentType" });
@@ -228,7 +361,7 @@ export default {
         query: { id: row.id }
       });
     },
-    getRepairInfo(index,row){
+    getRepairInfo(index, row) {
       this.$router.push({
         path: "/equipment/equipmentRepairInfo",
         query: { id: row.id }
@@ -261,28 +394,111 @@ export default {
       this.listQuery.pageNum = val;
       this.getList();
     },
-    //查询
-    searchEquipmentTypeList() {
-      this.listQuery.pageNum = 1;
-      this.getList();
+    //处理改变分页
+    maintainHandleSizeChange(val) {
+      this.listMaintainManagerQuery.pageNum = 1;
+      this.listMaintainManagerQuery.pageSize = val;
+      this.getMaintain();
     },
-    batchDeleteEquipmentType(ids) {
-      this.$confirm("是否要删除?", "提示", {
+    maintainHandleCurrentChange(val) {
+      this.listMaintainManagerQuery.pageNum = val;
+      this.getMaintain();
+    },
+    searchMaintainPeople() {
+      let length = this.selectedOptions.length;
+      this.listMaintainManagerQuery.province =
+        CodeToText[this.selectedOptions[0]];
+      //alert(this.listQuery.province)
+      if (length === 1) {
+        this.listMaintainManagerQuery.province = null;
+      }
+      if (length === 2) {
+        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+        this.listMaintainManagerQuery.city = null;
+        this.listMaintainManagerQuery.district = null;
+      }
+      if (length === 3) {
+        this.listMaintainManagerQuery.city =
+          CodeToText[this.selectedOptions[1]];
+        if (this.selectedOptions[2] == "") {
+          this.listMaintainManagerQuery.district = null;
+        } else {
+          this.listMaintainManagerQuery.district =
+            CodeToText[this.selectedOptions[2]];
+        }
+      }
+      this.listMaintainManagerQuery.pageNum = 1;
+      this.getMaintain();
+    },
+    getMaintain() {
+      getMaintainManagerList(this.listMaintainManagerQuery).then(response => {
+        this.gridData = response.data.list;
+        this.maintainTotal = response.data.total;
+        this.totalPage = response.data.totalPage;
+        this.pageSize = response.data.pageSize;
+      });
+    },
+    allocateMaintenanceMan(maintainId, personId) {
+      this.$confirm("确定要分配维修人员吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        //let params = new URLSearchParams();
-        //params.append("ids", ids);
-        batchDeleteEquipmentType(ids).then(response => {
-          this.getList();
+        agreeDeviceMaintainApply(maintainId, personId).then(response => {
           this.$message({
+            message: "分配成功",
             type: "success",
-            message: "删除成功!"
+            duration: 1000
           });
+          this.getMaintain();
         });
       });
     },
+    //换货
+    exchangeGoods() {
+      this.$confirm("确定要换货吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        //alert(this.maintainId)
+        // rejectDeviceApply(this.applyId,this.reason).then(
+        agreeDeviceChangingApply(this.maintainId).then(response => {
+          this.$message({
+            message: "已换货",
+            type: "success",
+            duration: 1000
+          });
+          this.getMaintain();
+        });
+      });
+    },
+    //拒绝
+    handleRefuseApply() {
+      this.$confirm("确定要拒绝吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        // rejectDeviceApply(this.applyId,this.reason).then(
+        refuseApply(this.maintainId, this.refuseReason).then(response => {
+          this.$message({
+            message: "已拒绝",
+            type: "success",
+            duration: 1000
+          });
+          this.getMaintain();
+        });
+      });
+    },
+    //未做
+    searchDeviceList(){
+
+    },
+    allocateDevice(){
+
+    }
   }
 };
 </script>
