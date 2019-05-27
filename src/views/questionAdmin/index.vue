@@ -1,5 +1,35 @@
 <template> 
   <div class="app-container">
+    <el-card style="margin-bottom: 20px" shadow="never">
+       <div>
+          <i class="el-icon-search"></i>
+          <span>选择要查看的试题类型</span>
+        </div>
+        <div style="margin-top:15px">
+            <el-button
+              type="primary"
+              class="btn-add"
+              @click="listQuery.knowledge_point ='';state = 1;getList()"
+              size="mini">
+              选择题
+            </el-button>
+            <el-button
+              type="primary"
+              class="btn-add"
+              @click="listQuery.knowledge_point ='';state = 2;getList()"
+              size="mini">
+              填空题
+            </el-button>
+            <el-button
+              type="primary"
+              class="btn-add"
+              @click="listQuery.knowledge_point ='';state = 3;getList()"
+              size="mini">
+              简答题
+            </el-button>
+        </div>
+      
+    </el-card>
     <el-card class="filter-container" shadow="never">
         <div>
           <i class="el-icon-search"></i>
@@ -15,11 +45,11 @@
         </div>
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-            <el-form-item label="试题内容：">
-              <el-input style="width: 203px" v-model="listQuery.username" placeholder="试题关键字"></el-input>
+            <el-form-item label="知识点：">
+              <el-input style="width: 203px" v-model="listQuery.knowledgePoint" placeholder="试题关键字"></el-input>
             </el-form-item>
             <el-form-item label="难度：">
-              <el-select v-model="jiandaForm.difficultyLevel" placeholder="请选择难度">
+              <el-select v-model="listQuery.difficulty_level" placeholder="请选择难度" clearable="true">
                   <el-option
                     v-for="item in difficultyOptions"
                     :key="item.value"
@@ -28,12 +58,10 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="类型：">
-              <el-input style="width: 203px" v-model="listQuery.username" placeholder="用户名/关键字"></el-input>
-            </el-form-item>
+       
    
             <el-form-item label="所属科目：">
-                <el-select v-model="jiandaForm.subject" placeholder="请选择科目">
+                <el-select v-model="listQuery.subject" placeholder="请选择科目" clearable="true">
                   <el-option
                     v-for="item in kemuOptions"
                     :key="item.value"
@@ -49,9 +77,10 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>试题列表</span>
+     
       <el-button
         class="btn-add"
-        @click="addQuestion()"
+        @click="edit=false;addQuestion()"
         size="mini">
         添加试题
       </el-button>
@@ -67,29 +96,31 @@
                   border>
           
           <el-table-column label="题目标题" align="center">
-            <template slot-scope="scope">{{scope.row.username}}</template>
+            <template slot-scope="scope">{{scope.row.name}}</template>
           </el-table-column>
-          <el-table-column label="题目类型" width="400" align="center">
-            <template slot-scope="scope">
-                <el-tag v-for="item in scope.row.roles" :key="item.id" type="success" class="ml10">{{item.description}}</el-tag>
-            </template>
+          <el-table-column label="题目类型"  align="center">
+           <el-tag type="success">{{type[state-1]}}</el-tag>
           </el-table-column>
-          <el-table-column label="题目难度" align="center">
-            <template slot-scope="scope">{{scope.row.organizationName}}</template>
+          <el-table-column label="所属科目" align="center">
+            <template slot-scope="scope">{{scope.row.subject}}</template>
           </el-table-column>
           <el-table-column label="知识点" align="center">
-            <template slot-scope="scope">{{scope.row.address}}</template>
+            <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
           </el-table-column>
-          <el-table-column label="操作" width="200" align="center">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleUpdate(scope.$index, scope.row)">编辑
+                @click="edit = true;handleShow(scope.row)">查看
+              </el-button>
+              <el-button
+                size="mini"
+                @click="edit = true;handleUpdate(scope.row)">编辑
               </el-button>
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除
+                @click="handleDelete(scope.row)">删除
               </el-button>
             </template>
           </el-table-column>
@@ -123,6 +154,9 @@
           <el-form :model="selectForm" label-width="100px">
             <el-form-item label="试题内容：">
               <el-input v-model="selectForm.choiceContent"></el-input>
+            </el-form-item>
+            <el-form-item label="试题标题：">
+              <el-input v-model="selectForm.name"></el-input>
             </el-form-item>
             <el-form-item label="答案：">
               <el-input v-model="selectForm.choiceAnswer"></el-input>
@@ -182,6 +216,9 @@
             <el-form-item label="试题内容：">
               <el-input v-model="tiankongForm.fillContent"></el-input>
             </el-form-item>
+            <el-form-item label="试题标题：">
+              <el-input v-model="tiankongForm.name"></el-input>
+            </el-form-item>
             <el-form-item label="答案：">
               <el-input v-model="tiankongForm.fillAnswer"></el-input>
             </el-form-item>
@@ -227,6 +264,9 @@
            <el-form :model="jiandaForm" label-width="100px">
             <el-form-item label="试题内容：">
               <el-input v-model="jiandaForm.answerContent" type="textarea" autosize></el-input>
+            </el-form-item>
+            <el-form-item label="试题标题：">
+              <el-input v-model="jiandaForm.name"></el-input>
             </el-form-item>
             <el-form-item label="分数：">
               <el-input v-model="jiandaForm.score"></el-input>
@@ -279,13 +319,15 @@
   </div>
 </template>
 <script>
-  import {fetchList,  deleteUser, getUserByOrgnization} from '@/api/userAdmin'
   import {getRoles,getUserRole,updateUserRole} from '@/api/role'
-  import {addSelect, addTiankong, addJianda} from '@/api/questionAdmin'
+  import {addSelect, addSelect2, addTiankong,addTiankong2, addJianda, addJianda2,fetchList1,fetchList2,fetchList3, getQuestion1, getQuestion2, getQuestion3, del1, del2, del3} from '@/api/questionAdmin'
   export default {
     name: 'userlist',
     data() {
       return {
+        edit: false,
+        type:['选择题', '填空题', '简答题'],
+        state:1,
         kemuOptions:[
           {
             value:"语文",
@@ -298,7 +340,32 @@
           {
             value: "英语",
             label: "英语"
+          },
+          {
+            value: "政治",
+            label: "政治",
+          },
+          {
+            value: "历史",
+            label: "历史",
+          },
+          {
+            value: "地理",
+            label: "地理",
+          },
+          {
+            value: "物理",
+            label: "物理",
+          },
+          {
+            value: "化学",
+            label: "化学",
+          },
+          {
+            value: "生物",
+            label: "生物",
           }
+          
         ],
         difficultyOptions:[
           {
@@ -306,8 +373,8 @@
             label:"简单"
           },
           {
-            value:"较难",
-            label:"较难",
+            value:"中等",
+            label:"中等",
           },
           {
             value: "困难",
@@ -359,7 +426,10 @@
         },
         lists:[],
         listQuery: {
-          username: null,
+          knowledge_point:'',
+          // grade: ,
+          // difficulty_level:'',
+          // subject:'', 
           pageNum: 1,
           pageSize: 10
         },
@@ -375,77 +445,157 @@
       }
     },
     watch:{
-
+      // state: function(n,o){
+      //   console.log(n)
+      // }
+      difficultyOptions: function(n,o){
+        this.listQuery.difficulty_level = n;
+        this.getList();
+      },
+      kemuOptions: function(n,o){
+        this.listQuery.subject = n;
+        this.getList();
+      },
+      "listQuery.knowledgePoint": function(n,o){
+        this.listQuery.knowledge_point = n;
+      }
     },
     created() {
-      this.getList();
+      
+     this.getList();
     },
     methods: {
 
+
       getList() {
         this.listLoading = false;
-        fetchList(this.listQuery).then(response => {
-          this.listLoading = true;
+
+        if(this.state == 1){
+          fetchList1(this.listQuery).then(response => {
+            this.listLoading = true;
+            
+            this.list = response.data.list;
+            this.total = response.data.total;
+            
+            this.totalPage = response.data.totalPage;
+            this.pageSize = response.data.pageSize;
+          });
+        }else if(this.state ==2){
+          fetchList2(this.listQuery).then(response => {
+            this.listLoading = true;
+            
+            this.list = response.data.list;
+            this.total = response.data.total;
+            
+            this.totalPage = response.data.totalPage;
+            this.pageSize = response.data.pageSize;
+          });
+
+        }else if(this.state == 3){
+          fetchList3(this.listQuery).then(response => {
+            this.listLoading = true;
+            
+            this.list = response.data.list;
+            this.total = response.data.total;
+            
+            this.totalPage = response.data.totalPage;
+            this.pageSize = response.data.pageSize;
+          });
           
-          this.list = response.data.list;
-          this.total = response.data.total;
-          
-          this.totalPage = response.data.totalPage;
-          this.pageSize = response.data.pageSize;
-        });
+        }
+       
         
       },
       
       //添加填空题
       selectAdd(){
-        addSelect(this.selectForm).then( response => {
-          this.$message({
-              message: '添加成功！',
-              type: 'success',
-              duration: 1000
-            });
-            this.getList();
-        })
+        if(this.edit == false){
+          addSelect(this.selectForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+        }else{
+          addSelect2(this.selectForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+
+        }
+        
       },
       tiankongAdd(){
-        addTiankong(this.tiankongForm).then( response => {
-          this.$message({
-              message: '添加成功！',
-              type: 'success',
-              duration: 1000
-            });
-            this.getList();
-        })
+        if(this.edit == false){
+          addTiankong(this.tiankongForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+        }else{
+          addTiankong2(this.tiankongForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+        }
+
       },
       jiandaAdd(){
-        addJianda(this.jiandaForm).then( response => {
-          this.$message({
-              message: '添加成功！',
-              type: 'success',
-              duration: 1000
-            });
-            this.getList();
-        })
+        if(this.edit == false){
+           addJianda(this.jiandaForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+        }else{
+          addJianda2(this.jiandaForm).then( response => {
+            this.$message({
+                message: '添加成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+          })
+        }
+       
       },
 
-      handleDelete(index, row) {
-        this.$confirm('是否要删除该用户？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          deleteUser(row.id).then(response => {
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration: 1000
-            });
-            //this.listQuery.pageNum = 1;
-            this.getList();
-          });
-        });
-      },
-     
+      // handleDelete(index, row) {
+      //   this.$confirm('是否要删除该用户？', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     deleteUser(row.id).then(response => {
+      //       this.$message({
+      //         message: '删除成功',
+      //         type: 'success',
+      //         duration: 1000
+      //       });
+      //       //this.listQuery.pageNum = 1;
+      //       this.getList();
+      //     });
+      //   });
+      // },
+     updateQuestion(){
+
+     },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
@@ -462,6 +612,41 @@
       
      addQuestion(){
         this.addQuesDialog = true;
+
+        this.selectForm = {
+          choiceAnswer: "",
+          choiceContent: "",
+          choiceId: 0,
+          difficultyLevel: "",
+          firstchoice: "",
+          fourthchoice: "",
+          grade: 0,
+          knowledgePoint: "",
+          score: "",
+          secondchoice: "",
+          subject: "",
+          thirdchoice: ""
+        };
+        this.jiandaForm = {
+          difficultyLevel: "",
+          fillAnswer: "",
+          fillContent: "",
+          fillId: 0,
+          grade: 0,
+          knowledgePoint: "",
+          score: "",
+          subject: ""
+        };
+        this.tiankongForm = {
+          difficultyLevel: "",
+          fillAnswer: "",
+          fillContent: "",
+          fillId: 0,
+          grade: 0,
+          knowledgePoint: "",
+          score: "",
+          subject: ""
+        }
      },
      handleAddXuanze(){
       this.addQuesDialog = false;
@@ -474,8 +659,80 @@
      handleAddJianda(){
       this.addQuesDialog = false;
       this.jiandaQuesDialog = true;
-     }
+     },
+     //查看
+     handleShow(row){
+       console.log(row)
+       var id = 0;
+       if(this.state == 1){
+        id = row.choiceId;
+         getQuestion1(id).then( response => {
+            this.selectForm = response.data.list[0];
+            this.selectQuesDialog = true;
+         })
+       }else if (this.state == 2){
+         id = row.fillId;
+          getQuestion2(id).then( response => {
+            this.tiankongForm = response.data.list[0];
+            this.tiankongQuesDialog = true;
+          })
 
+       }else if( this.state == 3){
+         id = row.answerId;
+          getQuestion3(id).then( response => {
+            this.jiandaForm = response.data.list[0];
+            this.jiandaQuesDialog = true;
+          })
+       }
+     },
+    //编辑
+    handleUpdate(row){
+       this.handleShow(row)
+    },
+    
+    //删除
+    handleDelete(row){
+      var id = 0;
+       this.$confirm('是否要删除该试题？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            if(this.state == 1){
+              id = row.choiceId;
+              del1(id).then(resp=>{
+                this.$message({
+                  message: '删除成功',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.getList()
+
+              })
+            }else if (this.state == 2){
+              id = row.fillId;
+              del2(id).then(resp=>{
+                this.$message({
+                  message: '删除成功',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.getList()
+              })
+            }else if( this.state == 3){
+              id = row.answerId
+              del3(id).then(resp=>{
+                this.$message({
+                  message: '删除成功',
+                  type: 'success',
+                  duration: 1000
+                });
+                this.getList()
+
+              })
+            }
+        })
+    }
      
     }
   }
