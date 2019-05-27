@@ -108,7 +108,10 @@
             <template slot-scope="scope">{{scope.row.name}}</template>
           </el-table-column>
           <el-table-column label="题目类型"  align="center">
-           <template slot-scope="scope"><el-tag type="success">{{timu_type[state-1]}}</el-tag></template>
+           <template slot-scope="scope">{{timu_type[state-1]}}</template>
+          </el-table-column>
+          <el-table-column label="所属科目" align="center">
+            <template slot-scope="scope">{{scnoope.row.subject}}</template>
           </el-table-column>
           <el-table-column label="所属科目" align="center">
             <template slot-scope="scope">{{scope.row.subject}}</template>
