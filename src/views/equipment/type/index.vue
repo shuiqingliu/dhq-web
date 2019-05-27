@@ -1,304 +1,210 @@
 <template>
-  <div class="app-container">
-    <el-card class="filter-container" shadow="never">
-      <div>
-        <i class="el-icon-search"></i>
-        <span>筛选搜索</span>
-        <el-button
-          style="float: right"
-          @click="searchEquipmentTypeList()"
-          type="primary"
-          size="small"
-        >查询结果</el-button>
-      </div>
-      <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
-          <el-form-item label="一级类别：">
-            <el-select
-              v-model="listQuery.keyword1"
-              placeholder="请选择类别"
-              clearable
-              @change="selectFirstCategory()"
-            >
-              <el-option
-                v-for="item in firstCategoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+    <div class="app-container">
+        <el-card class="form-container" shadow="never">
+            <h1 class="tc">设备类别树形图</h1>
+           
+              
+                <el-tree 
+                :data="data" 
+                :props="defaultProps"
+                node-key="id"
+                default-expand-all
+                
+                >
+                 <span class="custom-tree-node" slot-scope="{ node, data }">
+                    <span>{{ node.label }}</span>
+                    <span>
+                    <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => append(data)" @click.stop>
+                        <i class="el-icon-plus"></i>
+                    </el-button>
+                    <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => remove(node, data)" @click.stop>
+                        <i class="el-icon-delete"></i>
+                    </el-button>
+                    </span>
+                </span>
+                </el-tree>
+                 <el-dialog
+                    title="新增机构"
+                    width="25%"
+                    class="add-event-dialog"
+                    :visible.sync="addEventdialogVisible"
+                    size="tiny"
+                    :before-close="handleClose"
+                    >
+                    <el-form ref="addEventForm" :model="addEventForm" :rules="addEventNodeRules">
+                        <el-form-item label="机构名称" prop="name" >
+                        <el-input v-model="addEventForm.name" name="name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构领导" prop="leader">
+                        <el-input v-model="addEventForm.leader" name="leader"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构描述" prop="description">
+                        <el-input v-model="addEventForm.description" name="description"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer" >
+                        <el-button @click="addEventFormCancleBtn('addEventForm')">取 消</el-button>
+                        <el-button type="primary" @click="addEventFormSubmitBtn('addEventForm')">确 定</el-button>
+                    </span>
+                </el-dialog>
 
-          <el-form-item label="二级类别：">
-            <el-select
-              v-model="listQuery.keyword2"
-              placeholder="请选择类别"
-              clearable
-              @change="selectSecondCategory()"
-            >
-              <el-option
-                v-for="item in secondCategoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+                <el-dialog
+                    title="机构详情"
+                    width="25%"
+                    class="add-event-dialog"
+                    :visible.sync="detailDialog"
+                    size="tiny"
+                    
+                    >
+                    <el-form :model="detail" :rules="addEventNodeRules">
+                        <el-form-item label="机构名称" prop="name" >
+                        <el-input v-model="detail.name" name="name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构领导" prop="leader">
+                        <el-input v-model="detail.leader" name="leader"></el-input>
+                        </el-form-item>
+                        <el-form-item label="机构描述" prop="description">
+                        <el-input v-model="detail.description" name="description"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    
+                </el-dialog>
 
-          <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.keyword3" placeholder="请选择类别" clearable>
-              <el-option
-                v-for="item in thirdCategoryOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
-    <el-card class="operate-container" shadow="never">
-      <i class="el-icon-tickets"></i>
-      <span>设备类别列表</span>
-      <el-button class="btn-add" @click="addEquipmentType()" size="mini">添加</el-button>
-    </el-card>
-    <div class="table-container">
-      <el-table
-        ref="equipmentTable"
-        :data="list"
-        style="width: 100%"
-        v-loading="listLoading"
-        border
-      >
-        <el-table-column label="编号" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
-        <el-table-column label="一级类别" align="center">
-          <template slot-scope="scope">{{scope.row.firstCategory}}</template>
-        </el-table-column>
-        <el-table-column label="二级类别" align="center">
-          <template slot-scope="scope">{{scope.row.secondCategory}}</template>
-        </el-table-column>
-        <el-table-column label="三级类别" align="center">
-          <template slot-scope="scope">{{scope.row.thirdCategory}}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="240" align="center">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+        </el-card>
     </div>
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
-        :current-page.sync="listQuery.pageNum"
-        :total="total"
-      ></el-pagination>
-    </div>
-  </div>
 </template>
 <script>
-import {
-  fetchList,
-  deleteEquipmentType,
-  batchDeleteEquipmentType
-} from "@/api/equipmentType";
-import { fetchList as getListByCategory } from "@/api/equipmentType";
-
+import {fmtInsTree} from '@/utils/utils' 
+import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {fetchList} from '@/api/equipmentType'
 export default {
-  name: "equipmentTypeList",
-  data() {
-    return {
-      operates: [
-        {
-          label: "批量删除",
-          value: 0
+    data(){
+        const validateName = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('请输入正确的机构名！'))
+        } else {
+          callback()
         }
-      ],
-      operateType: null,
-      listQuery: {
-        keyword1: null,
-        keyword2: null,
-        keyword3: null,
-        pageNum: 1,
-        pageSize: 5
-      },
-      list: [
-        {
-          id: 27,
-          firstCategory: "北邮",
-          secondCategory: "软院",
-          thirdCategory: "刘召信"
+        };
+        const validateLeader = (rule, value, callback) => {
+            if (value.length < 1) {
+            callback(new Error('请输入机构的领导！'))
+            } else {
+            callback()
+            }
+        };
+        return {
+            detail:{},
+            data: [],
+            detailDialog: false,
+            addEventNodeRules:{
+                name: [{required: true, trigger: 'blur',validator: validateName}],
+                leader: [{required: true, trigger: 'blur', validator: validateLeader}]
+            },
+            defaultProps: {
+            children: 'children',
+            label: 'label'
+            },
+            addEventdialogVisible: false,
+            addEventForm:{
+                createTime: "2019-05-07T07:06:13.579Z",
+                description: "",
+                id: 0,
+                isLeaf: true,
+                leader: "",
+                name: "",
+                number: 1,
+                pid: 0
+            }
+        }
+    },
+    created(){
+       this.getDeviceClass()
+    },
+    methods:{
+        getDeviceClass(){
+            fetchList().then( resp => {
+                this.data = resp.data
+            })
         },
-        {
-          id: 28,
-          firstCategory: "北邮",
-          secondCategory: "计算机",
-          thirdCategory: "李大刚"
+        append(data){
+            this.addEventdialogVisible = true
+            this.addEventForm.pid  = data.id
+            // console.log(data.pid)
+        },
+        addEventFormSubmitBtn(form){
+            // console.log(this.addEventForm)
+            if(this.addEventForm.name && this.addEventForm.leader){
+                addInstitution(this.addEventForm).then(()=>{
+                this.addEventdialogVisible = false
+                this.$message({
+                        message: '添加成功',
+                        type: 'success',
+                        duration: 1000
+                    });
+                this.addEventForm = {}
+                this.getDeviceClass()
+            })
+            }else{
+                this.$message({
+                        message: '机构名称或者机构领导不能为空！',
+                        type: 'error',
+                        duration: 1000
+                    });
+            }
+            
+            
+        },
+        handleClose(done){
+            this.addEventForm = {}
+            done()
+        },
+        addEventFormCancleBtn(form){
+            this.addEventdialogVisible = false
+        },
+        remove(node, data){
+           
+            this.$confirm('是否要删除该机构？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                data = {id:data.id}
+                // data = JSON.stringify(data)
+                delInstitution(data).then(() => {
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success',
+                        duration: 1000
+                    });
+                    this.getDeviceClass()
+                })
+            });
+            
         }
-      ],
-      firstCategoryOptions: [],
-      secondCategoryOptions: [],
-      thirdCategoryOptions: [],
-      total: null,
-      listLoading: false, //临时修改了一下
-    };
-  },
-  created() {
-    this.getList();
-    this.getFirstCategoryList();
-  },
-  methods: {
-    getList() {
-      this.listLoading = true;
-      //this.listLoading = false;
-      fetchList(this.listQuery).then(response => {
-        this.listLoading = false;
-        this.list = response.data.list;
-        this.total = response.data.total;
-        this.totalPage = response.data.totalPage;
-        this.pageSize = response.data.pageSize;
-      });
-    },
-    //添加
-    addEquipmentType() {
-      this.$router.push({ path: "/equipment/addEquipmentType" });
-    },
-    //更新
-    handleUpdate(index, row) {
-      this.$router.push({
-        path: "/equipment/updateEquipmentType",
-        query: { id: row.id }
-      });
-    },
-    //删除
-    handleDelete(index, row) {
-      this.$confirm("是否要删除", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        deleteEquipmentType(row.id).then(response => {
-          this.$message({
-            message: "删除成功",
-            type: "success",
-            duration: 1000
-          });
-          this.getList();
-        });
-      });
-    },
-    //处理改变分页
-    handleSizeChange(val) {
-      this.listQuery.pageNum = 1;
-      this.listQuery.pageSize = val;
-      this.getList();
-    },
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val;
-      this.getList();
-    },
-    //查询
-    searchEquipmentTypeList() {
-      this.listQuery.pageNum = 1;
-      this.getList();
-    },
-    batchDeleteEquipmentType(ids) {
-      this.$confirm("是否要删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        //let params = new URLSearchParams();
-        //params.append("ids", ids);
-        batchDeleteEquipmentType(ids).then(response => {
-          this.getList();
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        });
-      });
-    },
-    getFirstCategoryList() {
-      getListByCategory({ pageNum: 1, pageSize: 100 }).then(response => {
-        this.firstCategoryOptions = [];
-        let firstCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < firstCategoryList.length; i++) {
-          arr.push(firstCategoryList[i].firstCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.firstCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-      });
-    },
-    //选择一级列表以后
-    selectFirstCategory() {
-      this.secondCategoryOptions = [];
-      this.thirdCategoryOptions=[];
-      //加载二级列表
-      getListByCategory({
-        keyword1: this.listQuery.keyword1,
-        keyword2: null,
-        keyword3: null,
-        pageSize: 100
-      }).then(response => {
-        // this.firstCategoryOptions = [];
-        let secondCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        //赋值
-        for (let i = 0; i < arr.length; i++) {
-          this.secondCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-      });
-      this.listQuery.keyword2 = null; //将上一次二级分类选中的结果置为空。
-      this.listQuery.keyword3 = null; //将上一次二级分类选中的结果置为空。
-    },
-    //选择二级列表以后
-    selectSecondCategory() {
-      this.thirdCategoryOptions = [];
-      //加载三级列表
-      getListByCategory({
-        keyword1: this.listQuery.keyword1,
-        keyword2: this.listQuery.keyword2,
-        keyword3: null,
-        pageSize: 100
-      }).then(response => {
-        // this.firstCategoryOptions = [];
-        let thirdCategoryList = response.data.list;
-        let arr = [];
-        for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdCategory);
-        }
-        //去重
-        arr = [...new Set(arr)];
-        for (let i = 0; i < arr.length; i++) {
-          this.thirdCategoryOptions.push({ label: arr[i], value: arr[i] });
-        }
-      });
-      this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
+        
     }
-  }
-};
+    
+}
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+
+<style lang="">
+    .tc{
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 </style>
