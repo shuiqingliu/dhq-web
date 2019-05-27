@@ -6,7 +6,7 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right"
-          @click="searchEquipmentInstanceList()"
+          @click="searchEquipmentTypeList()"
           type="primary"
           size="small"
         >查询结果</el-button>
@@ -58,22 +58,13 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="输入店名：">
-            <el-input
-              style="width: 203px"
-              v-model="listQuery.modelNumber"
-              placeholder="设备型号"
-              size="small"
-            ></el-input>
-          </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>设备类型列表</span>
-      <el-button class="btn-add" @click="addEquipmentInstance()" size="mini">添加</el-button>
+      <span>设备类别列表</span>
+      <el-button class="btn-add" @click="addEquipmentType()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -83,48 +74,22 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column label="编号" align="center" width="100">
+        <el-table-column label="编号" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="设备型号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.modelNumber}}</template>
+        <el-table-column label="一级类别" align="center">
+          <template slot-scope="scope">{{scope.row.firstCategory}}</template>
         </el-table-column>
-        <el-table-column label="设备名" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="二级类别" align="center">
+          <template slot-scope="scope">{{scope.row.secondCategory}}</template>
         </el-table-column>
-        <el-table-column label="所属类别" align="center">
-          <template
-            slot-scope="scope"
-          >{{scope.row.firstCategory}}-{{scope.row.secondCategory}}-{{scope.row.thirdCategory}}</template>
+        <el-table-column label="三级类别" align="center">
+          <template slot-scope="scope">{{scope.row.thirdCategory}}</template>
         </el-table-column>
-        <el-table-column label="图片" align="center" width="120">
-          <template slot-scope="scope">
-            <img style="height: 70px" :src="scope.row.picture">
-          </template>
-        </el-table-column>
-        <el-table-column label="单价￥" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.price}}</template>
-        </el-table-column>
-        <el-table-column label="使用年限" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.useYear}}</template>
-        </el-table-column>
-        <el-table-column label="库存" align="center" width="80">
-          <template slot-scope="scope">{{scope.row.stock}}</template>
-        </el-table-column>
-        <el-table-column label="备注" align="center" width="80">
-          <template slot-scope="scope">
-            <el-button type="text" @click="description=scope.row.description;open()">详情</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="250" align="center">
+        <el-table-column label="操作" width="240" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            <el-button
-              size="mini"
-              type="primary"
-              @click="getEquipmentDetail(scope.$index, scope.row)"
-            >查看实例</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -144,11 +109,15 @@
   </div>
 </template>
 <script>
-import { fetchList, deleteEquipmentInstance } from "@/api/equipmentInstance";
-
+import {
+  fetchList,
+  deleteEquipmentType,
+  batchDeleteEquipmentType
+} from "@/api/equipmentType";
 import { fetchList as getListByCategory } from "@/api/equipmentType";
+
 export default {
-  name: "equipmentInstanceList",
+  name: "equipmentTypeList",
   data() {
     return {
       operates: [
@@ -162,44 +131,40 @@ export default {
         keyword1: null,
         keyword2: null,
         keyword3: null,
-        modelNumber: null,
         pageNum: 1,
         pageSize: 5
       },
       list: [
         {
-          id: 123,
-          modelNumber: "note3",
-          name: "小米",
-          price: 8888,
-          useYear: 10,
-          stock: 56,
-          picture: "http:",
-          description: "hahah",
-          firstCategory: "可移动",
-          secondCategory: "电子",
-          thirdCategory: "学能知识相关"
+          id: 27,
+          firstCategory: "北邮",
+          secondCategory: "软院",
+          thirdCategory: "刘召信"
+        },
+        {
+          id: 28,
+          firstCategory: "北邮",
+          secondCategory: "计算机",
+          thirdCategory: "李大刚"
         }
       ],
       firstCategoryOptions: [],
       secondCategoryOptions: [],
       thirdCategoryOptions: [],
       total: null,
-      description: null,
-      listLoading: false //临时修改了一下
+      listLoading: false, //临时修改了一下
     };
   },
   created() {
     this.getList();
     this.getFirstCategoryList();
-    // this.getSecondCategoryList();
   },
   methods: {
     getList() {
-      //this.listLoading = true;
+      this.listLoading = true;
       //this.listLoading = false;
       fetchList(this.listQuery).then(response => {
-        // this.listLoading = false;
+        this.listLoading = false;
         this.list = response.data.list;
         this.total = response.data.total;
         this.totalPage = response.data.totalPage;
@@ -207,13 +172,13 @@ export default {
       });
     },
     //添加
-    addEquipmentInstance() {
-      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+    addEquipmentType() {
+      this.$router.push({ path: "/equipment/addEquipmentType" });
     },
     //更新
     handleUpdate(index, row) {
       this.$router.push({
-        path: "/equipment/updateEquipmentInstance",
+        path: "/equipment/updateEquipmentType",
         query: { id: row.id }
       });
     },
@@ -224,7 +189,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        deleteEquipmentInstance(row.id).then(response => {
+        deleteEquipmentType(row.id).then(response => {
           this.$message({
             message: "删除成功",
             type: "success",
@@ -245,11 +210,11 @@ export default {
       this.getList();
     },
     //查询
-    searchEquipmentInstanceList() {
+    searchEquipmentTypeList() {
       this.listQuery.pageNum = 1;
       this.getList();
     },
-    batchDeleteEquipmentInstance(ids) {
+    batchDeleteEquipmentType(ids) {
       this.$confirm("是否要删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -257,7 +222,7 @@ export default {
       }).then(() => {
         //let params = new URLSearchParams();
         //params.append("ids", ids);
-        batchDeleteEquipmentInstance(ids).then(response => {
+        batchDeleteEquipmentType(ids).then(response => {
           this.getList();
           this.$message({
             type: "success",
@@ -284,7 +249,7 @@ export default {
     //选择一级列表以后
     selectFirstCategory() {
       this.secondCategoryOptions = [];
-      this.thirdCategoryOptions = [];
+      this.thirdCategoryOptions=[];
       //加载二级列表
       getListByCategory({
         keyword1: this.listQuery.keyword1,
@@ -331,15 +296,6 @@ export default {
         }
       });
       this.listQuery.keyword3 = null; //将上一次三级分类选中的结果置为空。
-    },
-    getEquipmentDetail(index, row) {
-      this.$router.push({
-        path: "/equipment/equipmentDetail",
-        query: { modelNumber: row.modelNumber, name: row.name }
-      });
-    },
-    open() {
-      this.$alert(this.description, "课程简介");
     }
   }
 };
