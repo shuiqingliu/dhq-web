@@ -59,7 +59,16 @@
                 </el-select>
             </el-form-item>
        
-   
+            <el-form-item label="所属年级：">
+                <el-select v-model="listQuery.grade" placeholder="请选择年级" clearable="true">
+                  <el-option
+                    v-for="item in nianji"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="所属科目：">
                 <el-select v-model="listQuery.subject" placeholder="请选择科目" clearable="true">
                   <el-option
@@ -162,6 +171,7 @@
               <el-input v-model="selectForm.choiceAnswer"></el-input>
             </el-form-item>
             
+            
             <el-form-item label="选项一：">
               <el-input v-model="selectForm.firstchoice"></el-input>
             </el-form-item>
@@ -181,6 +191,16 @@
                 <el-select v-model="selectForm.subject" placeholder="请选择科目">
                   <el-option
                     v-for="item in kemuOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所属年级：">
+                <el-select v-model="selectForm.grade" placeholder="请选择年级" clearable="true">
+                  <el-option
+                    v-for="item in nianji"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -235,6 +255,16 @@
                   </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="所属年级：">
+                <el-select v-model="tiankongForm.grade" placeholder="请选择年级" clearable="true">
+                  <el-option
+                    v-for="item in nianji"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </el-form-item>
              <el-form-item label="难度：">
                <el-select v-model="tiankongForm.difficultyLevel" placeholder="请选择难度">
                   <el-option
@@ -275,6 +305,16 @@
                 <el-select v-model="jiandaForm.subject" placeholder="请选择科目">
                   <el-option
                     v-for="item in kemuOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所属年级：">
+                <el-select v-model="jiandaForm.grade" placeholder="请选择年级" clearable="true">
+                  <el-option
+                    v-for="item in nianji"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -328,6 +368,56 @@
         edit: false,
         type:['选择题', '填空题', '简答题'],
         state:1,
+        nianji:[
+          {
+            value: 1,
+            label: "小学一年级"
+          },
+          {
+            value: 2,
+            label: "小学二年级"
+          },
+          {
+            value: 3,
+            label: "小学三年级"
+          },
+          {
+            value: 4,
+            label: "小学四年级"
+          },
+          {
+            value: 5,
+            label: "小学五年级"
+          },
+          {
+            value: 6,
+            label: "小学六年级"
+          },
+          {
+            value: 7,
+            label: "初中一年级"
+          },
+          {
+            value: 8,
+            label: "初中二年级"
+          },
+          {
+            value: 9,
+            label: "初中三年级"
+          },
+           {
+            value: 10,
+            label: "高中一年级"
+          },
+           {
+            value: 11,
+            label: "高中二年级"
+          },
+           {
+            value: 12,
+            label: "高中三年级"
+          },
+        ],
         kemuOptions:[
           {
             value:"语文",
