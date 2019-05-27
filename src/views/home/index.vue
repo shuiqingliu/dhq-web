@@ -30,6 +30,7 @@
     name: 'home',
     data() {
       return {
+        id:0,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',

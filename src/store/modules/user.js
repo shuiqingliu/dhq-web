@@ -8,7 +8,8 @@ const user = {
     avatar: '',
     roles: [],
     permis:[],
-    routes:[]
+    routes:[],
+    id:''
   },
 
   mutations: {
@@ -29,6 +30,9 @@ const user = {
     },
     SET_PERMIS: (state, permis) =>{
       state.permis = permis
+    },
+    SET_ID: (state, id) =>{
+      state.id = id
     }
   },
 
@@ -39,6 +43,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
+         
           const tokenStr = data.tokenHead+data.token
           setToken(tokenStr)
           commit('SET_TOKEN', tokenStr)
@@ -54,6 +59,8 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
+          alert(data.id)
+          commit('SET_ID', data.id)
           // var permis = [true,false,false,true,true]
           // for(var i = 0; i < data.roles.length; i++){
           //   if(data.roles[i].name == "ROLE_manager"){

@@ -127,6 +127,8 @@ export const fmtInsTree = (data)=> {
 }
 
 
+
+
 export const fmtOrganization = (data)=> {
   let fmData = [];
   data.forEach( d => {
