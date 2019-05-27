@@ -108,7 +108,7 @@
             <template slot-scope="scope">{{scope.row.name}}</template>
           </el-table-column>
           <el-table-column label="题目类型"  align="center">
-           <el-tag type="success">{{type[state-1]}}</el-tag>
+           <el-tag type="success">{{timu_type[state-1]}}</el-tag>
           </el-table-column>
           <el-table-column label="所属科目" align="center">
             <template slot-scope="scope">{{scope.row.subject}}</template>
@@ -366,7 +366,7 @@
     data() {
       return {
         edit: false,
-        type:['选择题', '填空题', '简答题'],
+        timu_type:['选择题', '填空题', '简答题'],
         state:1,
         nianji:[
           {
@@ -487,7 +487,7 @@
           difficultyLevel: "",
           firstchoice: "",
           fourthchoice: "",
-          grade: 0,
+          grade: null,
           knowledgePoint: "",
           score: "",
           secondchoice: "",
@@ -701,8 +701,14 @@
       },
       
      addQuestion(){
-        this.addQuesDialog = true;
-
+        
+        if(this.state == 1){
+          this.selectQuesDialog = true;
+        }else if(this.state == 2){
+          this.tiankongQuesDialog = true;
+        }else{
+          this.jiandaQuesDialog = true;
+        }
         this.selectForm = {
           choiceAnswer: "",
           choiceContent: "",
@@ -710,7 +716,7 @@
           difficultyLevel: "",
           firstchoice: "",
           fourthchoice: "",
-          grade: 0,
+          // grade: 0,
           knowledgePoint: "",
           score: "",
           secondchoice: "",
