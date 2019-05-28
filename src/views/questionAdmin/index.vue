@@ -110,14 +110,14 @@
           <el-table-column label="题目类型"  align="center">
            <template slot-scope="scope">{{timu_type[state-1]}}</template>
           </el-table-column>
-          <el-table-column label="所属科目" align="center">
-            <template slot-scope="scope">{{scope.row.subject}}</template>
+          <el-table-column label="年级" align="center">
+            <template slot-scope="scope">{{nianji[scope.row.grade - 1].label}}</template>
           </el-table-column>
           
           <el-table-column label="知识点" align="center">
             <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="操作" align="center" width="330">
             <template slot-scope="scope">
               <el-button
                 size="mini"

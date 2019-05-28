@@ -37,3 +37,13 @@ export function getEquipmentDetail(id) {
     method:'get'
   })
 }
+
+
+
+export function listByModelNumber(params) {
+  return request({
+    url:'/device2/listByModelNumber',
+    method:'get',
+    params:params
+  })
+}

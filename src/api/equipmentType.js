@@ -1,12 +1,22 @@
 import request from '@/utils/request'
 //获取设备类型列表
-export function fetchList(params) {
+export function fetchList() {
   return request({
-    url:'/DeviceClass/list',
+    url:'/DeviceClass/listTree',
     method:'get',
-    params:params
   })
 }
+
+//查询设备类型列表
+export function queryDeviceClass(data){
+  return request({
+      url:'/DeviceClass/list',
+      method:'get',
+      data:data
+  }
+  )
+}
+
 //创建设备类型
 export function createEquipmentType(data) {
   return request({
