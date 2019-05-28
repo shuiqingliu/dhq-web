@@ -110,15 +110,15 @@
             <el-table-column label="新设备编号" align="center">
               <template slot-scope="scope">{{scope.row.deviceDTO.deviceNumber}}</template>
             </el-table-column>
-            <el-table-column label="设备型号" align="center">
+            <!-- <el-table-column label="设备型号" align="center">
               <template slot-scope="scope">{{scope.row.modelNumber}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="换货人" align="center">
               <template slot-scope="scope">{{scope.row.username}}</template>
             </el-table-column>
-            <el-table-column label="换货时间" align="center">
+            <!-- <el-table-column label="换货时间" align="center">
               <template slot-scope="scope">{{scope.row.exchangeTime}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="物流单号" align="center">
               <template slot-scope="scope">{{scope.row.exchangeOrderNum}}</template>
             </el-table-column>
