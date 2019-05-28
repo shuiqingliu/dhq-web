@@ -535,22 +535,22 @@
 
       }
     },
-    watch:{
-      // state: function(n,o){
-      //   console.log(n)
-      // }
-      difficultyOptions: function(n,o){
-        this.listQuery.difficulty_level = n;
-        this.getList();
-      },
-      kemuOptions: function(n,o){
-        this.listQuery.subject = n;
-        this.getList();
-      },
-      "listQuery.knowledgePoint": function(n,o){
-        this.listQuery.knowledge_point = n;
-      }
-    },
+    // watch:{
+    //   // state: function(n,o){
+    //   //   console.log(n)
+    //   // }
+    //   difficultyOptions: function(n,o){
+    //     this.listQuery.difficulty_level = n;
+    //     this.getList();
+    //   },
+    //   kemuOptions: function(n,o){
+    //     this.listQuery.subject = n;
+    //     this.getList();
+    //   },
+    //   "listQuery.knowledgePoint": function(n,o){
+    //     this.listQuery.knowledge_point = n;
+    //   }
+    // },
     created() {
       
      this.getList();
