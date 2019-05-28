@@ -9,21 +9,21 @@
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 1;getList()"
+              @click="state = 1;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               选择题
             </el-button>
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 2;getList()"
+              @click="state = 2;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               填空题
             </el-button>
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 3;getList()"
+              @click="state = 3;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               简答题
             </el-button>
@@ -110,9 +110,9 @@
           <el-table-column label="题目类型"  align="center">
            <template slot-scope="scope">{{timu_type[state-1]}}</template>
           </el-table-column>
-          <el-table-column label="年级" align="center">
+          <!-- <el-table-column label="年级" align="center">
             <template slot-scope="scope">{{nianji[scope.row.grade - 1].label}}</template>
-          </el-table-column>
+          </el-table-column> -->
           
           <el-table-column label="知识点" align="center">
             <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
@@ -517,40 +517,33 @@
         },
         lists:[],
         listQuery: {
-          knowledge_point:'',
-          // grade: ,
-          // difficulty_level:'',
-          // subject:'', 
+      
           pageNum: 1,
           pageSize: 10
         },
-        listQuery2: {
-          id: 0,
-          pageNum: 1,
-          pageSize: 10
-        },
+      
         list: null,
         total: null,
         listLoading: true,
 
       }
     },
-    watch:{
-      // state: function(n,o){
-      //   console.log(n)
-      // }
-      difficultyOptions: function(n,o){
-        this.listQuery.difficulty_level = n;
-        this.getList();
-      },
-      kemuOptions: function(n,o){
-        this.listQuery.subject = n;
-        this.getList();
-      },
-      "listQuery.knowledgePoint": function(n,o){
-        this.listQuery.knowledge_point = n;
-      }
-    },
+    // watch:{
+    //   // state: function(n,o){
+    //   //   console.log(n)
+    //   // }
+    //   difficultyOptions: function(n,o){
+    //     this.listQuery.difficulty_level = n;
+    //     this.getList();
+    //   },
+    //   kemuOptions: function(n,o){
+    //     this.listQuery.subject = n;
+    //     this.getList();
+    //   },
+    //   "listQuery.knowledgePoint": function(n,o){
+    //     this.listQuery.knowledge_point = n;
+    //   }
+    // },
     created() {
       
      this.getList();
@@ -667,23 +660,6 @@
        
       },
 
-      // handleDelete(index, row) {
-      //   this.$confirm('是否要删除该用户？', '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   }).then(() => {
-      //     deleteUser(row.id).then(response => {
-      //       this.$message({
-      //         message: '删除成功',
-      //         type: 'success',
-      //         duration: 1000
-      //       });
-      //       //this.listQuery.pageNum = 1;
-      //       this.getList();
-      //     });
-      //   });
-      // },
      updateQuestion(){
 
      },
