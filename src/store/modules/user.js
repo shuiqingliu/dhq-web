@@ -59,7 +59,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
-          alert(data.id)
+          //alert(data.id)
           commit('SET_ID', data.id)
           // var permis = [true,false,false,true,true]
           // for(var i = 0; i < data.roles.length; i++){

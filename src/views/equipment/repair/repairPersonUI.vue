@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item label="状态：">
             <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:178px">
-              <el-option label="未维修" value="1"></el-option>
+              <el-option label="维修中" value="1"></el-option>
               <el-option label="已维修" value="2"></el-option>
               <el-option label="维修失败" value="8"></el-option>
             </el-select>
@@ -50,7 +50,7 @@
         <el-table-column label="故障类型" align="center">
           <template slot-scope="scope">{{applyReasonList[scope.row.applyReason]}}</template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" >
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -82,13 +82,10 @@
           <el-input v-model="repairForm.countNumber" auto-complete="off"></el-input>
         </el-form-item>
         <div class="block">
-          <el-date-picker
-            v-model="value3"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
+          <span>起始时间:</span>
+          <el-date-picker v-model="value1" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <span>至</span>
+          <el-date-picker v-model="value2" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </div>
         <el-form-item label="故障原因分析与结果评定" :label-width="formLabelWidth">
           <el-input v-model="repairForm.failureAnalysisResultEvaluation" auto-complete="off"></el-input>
@@ -102,7 +99,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="repairSuccess()">维修成功</el-button>
-        <el-button @click="dialogMaintainVisible = false">维修失败</el-button>
+        <!-- <el-button @click="dialogMaintainVisible = false">维修失败</el-button> -->
         <el-button @click="dialogMaintainVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -135,7 +132,7 @@ export default {
         shopLocationCity: null,
         shopLocationDistrict: null,
         shopName: null,
-        dealStatus: null,
+        dealStatus: 1,
         maintainManagerId: null,
         exchangeManagerId: null,
         firstCategory: null,
@@ -199,53 +196,23 @@ export default {
       refuseReason: null,
       maintainId: null,
       repairForm: {
-        id: 1,
+        id: null,
         exchangeDeviceName: null,
         countNumber: null,
-        maintainStartTime: "2000-11-10 10:10:00",
-        maintainEndTime: "2000-11-11 10:10:00",
+        maintainStartTime: null,
+        maintainEndTime: null,
         failureAnalysisResultEvaluation: null,
         preventiveMeasure: null,
         maintainDealFunction: null
       },
       options: regionDataPlus, //全国的地理信息
       listLoading: false, //临时修改了一下
-      pickerOptions2: {
-        shortcuts: [
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近三个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
-      },
-      value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-      value4: ""
+      value1:'',
+      value2:''
     };
   },
   created() {
+    //listQuery.maintainManagerId = this.$store.state.user.id
     this.getList();
   },
   methods: {
@@ -308,6 +275,10 @@ export default {
       this.getList();
     },
     repairSuccess() {
+      this.repairForm.maintainStartTime = this.value1
+      this.repairForm.maintainEndTime = this.value2
+      this.repairForm.id = this.maintainId
+
       this.$confirm("是否提交？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

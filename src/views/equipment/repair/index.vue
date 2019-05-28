@@ -13,15 +13,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
           <el-form-item label="设备名称：">
-            <el-input v-model="listQuery.modelNumber" placeholder="请输入设备名称" size="small"></el-input>
-          </el-form-item>
-
-          <el-form-item label="维修单号：">
-            <el-input v-model="listQuery.modelNumber" placeholder="请输入维修单号" size="small"></el-input>
+            <el-input v-model="listQuery.deviceTypeName" placeholder="请输入设备名称" size="small"></el-input>
           </el-form-item>
 
           <el-form-item label="设备型号：">
@@ -29,12 +22,6 @@
           </el-form-item>
         </el-form>
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
-          <el-form-item label="处理人：">
-            <el-input v-model="listQuery.modelNumber" placeholder="请输入处理人" size="small"></el-input>
-          </el-form-item>
 
           <el-form-item label="状态：">
             <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:178px">
@@ -143,7 +130,8 @@
             <el-button
               size="mini"
               type="success"
-              @click="dialogDistributionVisible = true;searchDeviceList(scope.row.modelNumber)"
+              @click="maintainId = scope.row.id;exchangeManagerId = scope.row.exchangeManagerId;
+              dialogDistributionVisible = true;searchDeviceList(scope.row.modelNumber)"
             >分配</el-button>
           </template>
         </el-table-column>
@@ -208,31 +196,35 @@
       </div>
     </el-dialog>
     <el-dialog title="设备列表" :visible.sync="dialogDistributionVisible">
-      <el-input style="width: 203px" placeholder="请输入设备型号" size="medium"></el-input>
-      <el-button type="primary" @click="searchMaintainPeople()">查询设备</el-button>
       <el-table :data="deviceData">
-        <el-table-column property="id" label="设备编号" width="150"></el-table-column>
-        <el-table-column property="status" label="状态" width="150"></el-table-column>
+        <el-table-column property="id" label="设备ID" width="150"></el-table-column>
+        <el-table-column property="deviceNumber" label="设备编号" width="150"></el-table-column>
+        <el-table-column property="deviceUseState" label="状态" width="150" >
+        </el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="primary"
-              @click="allocateDevice(maintainId, scope.row.id)"
+              @click="newDeviceId = scope.row.id;dialogWuLiuVisible = true;"
             >分配</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        background
-        @size-change="maintainHandleSizeChange"
-        @current-change="maintainHandleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listMaintainManagerQuery.pageSize"
-        :page-sizes="[5,10,15]"
-        :current-page.sync="listMaintainManagerQuery.pageNum"
-        :total="maintainTotal"
-      ></el-pagination>
+    </el-dialog>
+     <el-dialog title="详情" :visible.sync="dialogWuLiuVisible" width="30%">
+      <el-form>
+        <!-- <el-form-item label-width="120" label="设备编号">
+          <el-input v-model="refuseReason"></el-input>
+        </el-form-item> -->
+        <el-form-item label-width="120" label="物流编号">
+          <el-input v-model="wuLiuNumber"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogWuLiuVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allocateDevice(),dialogWuLiuVisible = false">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -242,8 +234,10 @@ import {
   getMaintainManagerList,
   agreeDeviceMaintainApply,
   refuseApply,
-  agreeDeviceChangingApply
+  agreeDeviceChangingApply,
+  agreeDeviceChangedApply
 } from "@/api/equipmentRepair";
+import { listByModelNumber} from "@/api/equipmentDetail";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
@@ -325,9 +319,13 @@ export default {
       dialogRefuseVisible: false,
       dialogExchangeVisible: false,
       dialogDistributionVisible: false,
+      dialogWuLiuVisible:false,
       selectedOptions: [],
       refuseReason: null,
       maintainId: null,
+      wuLiuNumber:null,
+      newDeviceId:null,
+      exchangeManagerId:null,
       options: regionDataPlus, //全国的地理信息
       listLoading: false //临时修改了一下
     };
@@ -493,11 +491,24 @@ export default {
       });
     },
     //未做
-    searchDeviceList(){
-
+    searchDeviceList(modelNumber){
+      listByModelNumber({modelNumber:modelNumber,pageSize:100,pageNum:1}).then(
+        response =>{
+        this.deviceData = response.data.list;
+        }
+      );
     },
     allocateDevice(){
-
+      agreeDeviceChangedApply({id:this.maintainId,exchangeManagerId:this.exchangeManagerId,
+      newDeviceId:this.newDeviceId,exchangeOrderNumber:this.wuLiuNumber}).then(
+        response => {
+          this.$message({
+            message: "已分配成功",
+            type: "success",
+            duration: 1000
+          });
+        }
+      );
     }
   }
 };
