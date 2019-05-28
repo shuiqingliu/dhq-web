@@ -9,21 +9,21 @@
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 1;getList()"
+              @click="state = 1;getList()"
               size="mini">
               选择题
             </el-button>
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 2;getList()"
+              @click="state = 2;getList()"
               size="mini">
               填空题
             </el-button>
             <el-button
               type="primary"
               class="btn-add"
-              @click="listQuery.knowledge_point ='';state = 3;getList()"
+              @click="state = 3;getList()"
               size="mini">
               简答题
             </el-button>
@@ -517,7 +517,7 @@
         },
         lists:[],
         listQuery: {
-          knowledge_point:'',
+          // knowledge_point:'',
           // grade: ,
           // difficulty_level:'',
           // subject:'', 
