@@ -6,6 +6,17 @@ export function fetchList() {
     method:'get',
   })
 }
+
+//查询设备类型列表
+export function queryDeviceClass(data){
+  return request({
+      url:'/DeviceClass/list',
+      method:'get',
+      data:data
+  }
+  )
+}
+
 //创建设备类型
 export function createEquipmentType(data) {
   return request({
