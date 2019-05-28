@@ -120,7 +120,7 @@
             <el-button
               size="mini"
               type="warning"
-              @click="scope.row.id,dialogExchangeVisible=true"
+              @click="maintainId = scope.row.id,dialogExchangeVisible=true"
             >换货</el-button>
             <el-button
               size="mini"
