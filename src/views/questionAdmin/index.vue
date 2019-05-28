@@ -113,9 +113,7 @@
           <el-table-column label="所属科目" align="center">
             <template slot-scope="scope">{{scope.row.subject}}</template>
           </el-table-column>
-          <el-table-column label="所属科目" align="center">
-            <template slot-scope="scope">{{scope.row.subject}}</template>
-          </el-table-column>
+          
           <el-table-column label="知识点" align="center">
             <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
           </el-table-column>
@@ -713,38 +711,13 @@
           this.jiandaQuesDialog = true;
         }
         this.selectForm = {
-          choiceAnswer: "",
-          choiceContent: "",
-          choiceId: 0,
-          difficultyLevel: "",
-          firstchoice: "",
-          fourthchoice: "",
-          // grade: 0,
-          knowledgePoint: "",
-          score: "",
-          secondchoice: "",
-          subject: "",
-          thirdchoice: ""
+  
         };
         this.jiandaForm = {
-          difficultyLevel: "",
-          fillAnswer: "",
-          fillContent: "",
-          fillId: 0,
-          grade: 0,
-          knowledgePoint: "",
-          score: "",
-          subject: ""
+     
         };
         this.tiankongForm = {
-          difficultyLevel: "",
-          fillAnswer: "",
-          fillContent: "",
-          fillId: 0,
-          grade: 0,
-          knowledgePoint: "",
-          score: "",
-          subject: ""
+    
         }
      },
      handleAddXuanze(){
