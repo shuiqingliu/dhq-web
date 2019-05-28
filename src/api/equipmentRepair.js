@@ -60,3 +60,11 @@ export function agreeDeviceChangedApply(params) {
     params:params
   })
 }
+
+
+export function splitStatusChange(id) {
+  return request({
+    url:'/deviceMaintain/splitStatusChange?id='+id,
+    method:'get',
+  })
+}
