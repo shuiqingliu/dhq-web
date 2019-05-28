@@ -499,7 +499,7 @@ export default {
       );
     },
     allocateDevice(){
-      agreeDeviceChangedApply({id:this.maintainId,exchangeManagerId:this.exchangeManagerId,
+      agreeDeviceChangedApply({id:this.maintainId,exchangeManagerId:this.$store.state.user.id,
       newDeviceId:this.newDeviceId,exchangeOrderNumber:this.wuLiuNumber}).then(
         response => {
           this.$message({
