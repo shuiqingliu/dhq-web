@@ -113,9 +113,6 @@
           <el-table-column label="所属科目" align="center">
             <template slot-scope="scope">{{scope.row.subject}}</template>
           </el-table-column>
-          <el-table-column label="所属科目" align="center">
-            <template slot-scope="scope">{{scope.row.subject}}</template>
-          </el-table-column>
           <el-table-column label="知识点" align="center">
             <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
           </el-table-column>
