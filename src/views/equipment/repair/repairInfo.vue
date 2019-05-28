@@ -186,7 +186,8 @@ export default {
       splitStatusChange(id).then(
         res => {
           let arr = []
-           arr = [...new Set(res.data)];  
+           //arr = [...new Set(res.data)];  
+           arr = res.data;  
         for (let i = 0; i < arr.length; i++) {
           this.statusList.push({ label: arr[i], value: arr[i] });
         }
