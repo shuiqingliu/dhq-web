@@ -71,6 +71,7 @@
       }
     },
     created(){
+ 
       this.initOrderCountDate();
       this.getData();
     },
