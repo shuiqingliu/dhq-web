@@ -38,7 +38,7 @@
           </el-form-item>
 
           <el-form-item label="维修等级：">
-            <el-select v-model="listQuery.faultLevel" placeholder="请选择状态" style="width:178px">
+            <el-select v-model="listQuery.faultLevel" placeholder="请选择维修等级" style="width:178px">
               <el-option label="维修" value="0"></el-option>
               <el-option label="整机更换" value="1"></el-option>
             </el-select>
