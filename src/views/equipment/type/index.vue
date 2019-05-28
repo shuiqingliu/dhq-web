@@ -30,7 +30,7 @@
                 </span>
                 </el-tree>
                  <el-dialog
-                    title="新增机构"
+                    title="新增类别"
                     width="25%"
                     class="add-event-dialog"
                     :visible.sync="addEventdialogVisible"
@@ -38,14 +38,8 @@
                     :before-close="handleClose"
                     >
                     <el-form ref="addEventForm" :model="addEventForm" :rules="addEventNodeRules">
-                        <el-form-item label="机构名称" prop="name" >
+                        <el-form-item label="类别名称" prop="name" >
                         <el-input v-model="addEventForm.name" name="name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="机构领导" prop="leader">
-                        <el-input v-model="addEventForm.leader" name="leader"></el-input>
-                        </el-form-item>
-                        <el-form-item label="机构描述" prop="description">
-                        <el-input v-model="addEventForm.description" name="description"></el-input>
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer" >
@@ -53,59 +47,29 @@
                         <el-button type="primary" @click="addEventFormSubmitBtn('addEventForm')">确 定</el-button>
                     </span>
                 </el-dialog>
-
-                <el-dialog
-                    title="机构详情"
-                    width="25%"
-                    class="add-event-dialog"
-                    :visible.sync="detailDialog"
-                    size="tiny"
-                    
-                    >
-                    <el-form :model="detail" :rules="addEventNodeRules">
-                        <el-form-item label="机构名称" prop="name" >
-                        <el-input v-model="detail.name" name="name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="机构领导" prop="leader">
-                        <el-input v-model="detail.leader" name="leader"></el-input>
-                        </el-form-item>
-                        <el-form-item label="机构描述" prop="description">
-                        <el-input v-model="detail.description" name="description"></el-input>
-                        </el-form-item>
-                    </el-form>
-                    
-                </el-dialog>
-
         </el-card>
     </div>
 </template>
 <script>
 import {fmtInsTree} from '@/utils/utils' 
-import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {createEquipmentType, deleteEquipmentType,batchDeleteEquipmentType,queryDeviceClass} from '@/api/equipmentType'
 import {fetchList} from '@/api/equipmentType'
 export default {
     data(){
         const validateName = (rule, value, callback) => {
         if (!value) {
-          callback(new Error('请输入正确的机构名！'))
+          callback(new Error('请输入正确的类别名！'))
         } else {
           callback()
         }
         };
-        const validateLeader = (rule, value, callback) => {
-            if (value.length < 1) {
-            callback(new Error('请输入机构的领导！'))
-            } else {
-            callback()
-            }
-        };
+        
         return {
             detail:{},
             data: [],
             detailDialog: false,
             addEventNodeRules:{
                 name: [{required: true, trigger: 'blur',validator: validateName}],
-                leader: [{required: true, trigger: 'blur', validator: validateLeader}]
             },
             defaultProps: {
             children: 'children',
@@ -117,7 +81,6 @@ export default {
                 description: "",
                 id: 0,
                 isLeaf: true,
-                leader: "",
                 name: "",
                 number: 1,
                 pid: 0
@@ -153,7 +116,7 @@ export default {
             })
             }else{
                 this.$message({
-                        message: '机构名称或者机构领导不能为空！',
+                        message: '类别名称不能为空！',
                         type: 'error',
                         duration: 1000
                     });
@@ -169,8 +132,8 @@ export default {
             this.addEventdialogVisible = false
         },
         remove(node, data){
-           
-            this.$confirm('是否要删除该机构？', '提示', {
+            console.log(node.parent.data.label)
+            this.$confirm('是否要删除该类别？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
