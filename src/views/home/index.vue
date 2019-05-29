@@ -71,7 +71,7 @@
       }
     },
     created(){
- 
+      // this.$store.state.user.id
       this.initOrderCountDate();
       this.getData();
     },

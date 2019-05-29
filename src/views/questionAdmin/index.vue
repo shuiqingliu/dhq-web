@@ -32,53 +32,17 @@
     </el-card>
     <el-card class="filter-container" shadow="never">
         <div>
-          <i class="el-icon-search"></i>
-          <span>筛选搜索</span>
-          <el-button
-            style="float: right;margin-top:100px"
-            @click="searchUserList()"
-            
-            type="primary"
-            size="small">
-            搜索
-          </el-button>
+          <!-- <i class="el-icon-collection-tag"></i> -->
+          <!-- <span>biaoqian</span> -->
+          
         </div>
         <div style="margin-top: 15px">
-          <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-            <el-form-item label="知识点：">
-              <el-input style="width: 203px" v-model="listQuery.knowledgePoint" placeholder="试题关键字"></el-input>
-            </el-form-item>
-            <el-form-item label="难度：">
-              <el-select v-model="listQuery.difficulty_level" placeholder="请选择难度" clearable="true">
-                  <el-option
-                    v-for="item in difficultyOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </el-form-item>
-       
-            <el-form-item label="所属年级：">
-                <el-select v-model="listQuery.grade" placeholder="请选择年级" clearable="true">
-                  <el-option
-                    v-for="item in nianji"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="所属科目：">
-                <el-select v-model="listQuery.subject" placeholder="请选择科目" clearable="true">
-                  <el-option
-                    v-for="item in kemuOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-            </el-form-item>
+          <el-form :inline="true" :model="listQuery" size="small" >
+            <el-tag type="success">{{nianji[$route.query.row.grade-1].label}}</el-tag>
+            <el-tag type="success">{{$route.query.row.subject}}</el-tag>
+            <el-tag type="success">{{$route.query.row.difficultyLevel}}题</el-tag>
+            <el-tag type="success">{{$route.query.row.knowledgePoint}}</el-tag>
+           <!-- {{$route.query.row}} -->
           </el-form>
         </div>
     </el-card>
@@ -110,34 +74,37 @@
           <el-table-column label="题目类型"  align="center">
            <template slot-scope="scope">{{timu_type[state-1]}}</template>
           </el-table-column>
-          <!-- <el-table-column label="年级" align="center">
-            <template slot-scope="scope">{{nianji[scope.row.grade - 1].label}}</template>
-          </el-table-column> -->
+          <el-table-column label="年级" align="center">
+            <template slot-scope="scope">{{nianji[scope.row.grade-1].label}}</template>
+          </el-table-column>
           
           <el-table-column label="知识点" align="center">
             <template slot-scope="scope">{{scope.row.knowledgePoint}}</template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="330">
+          <el-table-column label="科目" align="center">
+            <template slot-scope="scope">{{scope.row.subject}}</template>
+          </el-table-column>
+          <el-table-column label="难度" align="center">
+            <template slot-scope="scope">{{scope.row.difficultyLevel}}</template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" >
             <template slot-scope="scope">
               <el-button
+              type="primary"
                 size="mini"
                 @click="edit = true;handleShow(scope.row)">查看
               </el-button>
               <el-button
+              type="danger"
                 size="mini"
-                @click="edit = true;handleUpdate(scope.row)">编辑
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.row)">删除
+                @click="edit = true;handleDelete(scope.row)">删除
               </el-button>
             </template>
           </el-table-column>
         </el-table>
 
         <!-- 选择添加的试题类型 -->
-        <el-dialog
+        <!-- <el-dialog
           title="请选择要添加的试题种类"
           :visible.sync="addQuesDialog"
           width="19%"
@@ -154,29 +121,27 @@
               <el-button type="primary" @click="handleAddJianda">简答题</el-button>
             </el-form-item>
           </el-form>
-        </el-dialog>
+        </el-dialog> -->
         <!-- 添加选择题 -->
         <el-dialog
           title="添加选择题"
           :visible.sync="selectQuesDialog"
           width="30%"
-          :before-close="handleClose">
-          <el-form :model="selectForm" label-width="100px">
-            <el-form-item label="试题内容：">
+          >
+          <el-form :model="selectForm" :rules="xuanzerules" label-width="100px"  ref="selectForm">
+            <el-form-item label="试题内容：" prop="choiceContent" >
               <el-input v-model="selectForm.choiceContent"></el-input>
             </el-form-item>
-            <el-form-item label="试题标题：">
+            <el-form-item label="试题标题：" >
               <el-input v-model="selectForm.name"></el-input>
             </el-form-item>
             <el-form-item label="答案：">
               <el-input v-model="selectForm.choiceAnswer"></el-input>
             </el-form-item>
-            
-            
-            <el-form-item label="选项一：">
+            <el-form-item label="选项一：" prop="firstchoice">
               <el-input v-model="selectForm.firstchoice"></el-input>
             </el-form-item>
-            <el-form-item label="选项二：">
+            <el-form-item label="选项二：" prop="secondchoice">
               <el-input v-model="selectForm.secondchoice"></el-input>
             </el-form-item>
             <el-form-item label="选项三：">
@@ -185,10 +150,10 @@
             <el-form-item label="选项四：">
               <el-input v-model="selectForm.fourthchoice"></el-input>
             </el-form-item>
-            <el-form-item label="分数：">
+            <el-form-item label="分数：" prop="score">
               <el-input v-model="selectForm.score"></el-input>
             </el-form-item>
-            <el-form-item label="科目：">
+            <el-form-item label="科目：" prop="subject">
                 <el-select v-model="selectForm.subject" placeholder="请选择科目">
                   <el-option
                     v-for="item in kemuOptions"
@@ -198,8 +163,8 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="所属年级：">
-                <el-select v-model="selectForm.grade" placeholder="请选择年级" clearable="true">
+            <el-form-item label="所属年级：" prop="grade">
+                <el-select v-model="selectForm.grade" placeholder="请选择年级" :clearable="true">
                   <el-option
                     v-for="item in nianji"
                     :key="item.value"
@@ -208,7 +173,7 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-             <el-form-item label="难度：">
+             <el-form-item label="难度：" prop="difficultyLevel">
                <el-select v-model="selectForm.difficultyLevel" placeholder="请选择难度">
                   <el-option
                     v-for="item in difficultyOptions"
@@ -218,23 +183,26 @@
                   </el-option>
                 </el-select>
              </el-form-item>
-            <el-form-item label="知识点：">
+            <el-form-item label="知识点：" prop="knowledgePoint">
               <el-input v-model="selectForm.knowledgePoint"></el-input>
             </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
+            <el-form-item>
+              
             <el-button @click="selectQuesDialog = false">取 消</el-button>
-            <el-button type="primary" @click="selectQuesDialog = false; selectAdd()">确 定</el-button>
-          </span>
+            <el-button type="primary" @click=" selectAdd('selectForm')">确 定</el-button>
+         
+            </el-form-item>
+          </el-form>
+          
         </el-dialog>
         <!-- 添加填空题 -->
         <el-dialog
           title="提示"
           :visible.sync="tiankongQuesDialog"
           width="30%"
-          :before-close="handleClose">
-           <el-form :model="tiankongForm" label-width="100px">
-            <el-form-item label="试题内容：">
+          >
+           <el-form :model="tiankongForm" label-width="100px" :rules="tiankongrules" ref="tiankongForm">
+            <el-form-item label="试题内容：" prop="fillContent">
               <el-input v-model="tiankongForm.fillContent"></el-input>
             </el-form-item>
             <el-form-item label="试题标题：">
@@ -243,10 +211,10 @@
             <el-form-item label="答案：">
               <el-input v-model="tiankongForm.fillAnswer"></el-input>
             </el-form-item>
-            <el-form-item label="分数：">
+            <el-form-item label="分数：" prop="score">
               <el-input v-model="tiankongForm.score"></el-input>
             </el-form-item>
-            <el-form-item label="科目：">
+            <el-form-item label="科目：" prop="subject">
                 <el-select v-model="tiankongForm.subject" placeholder="请选择科目">
                   <el-option
                     v-for="item in kemuOptions"
@@ -256,8 +224,8 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="所属年级：">
-                <el-select v-model="tiankongForm.grade" placeholder="请选择年级" clearable="true">
+            <el-form-item label="所属年级：" prop="grade">
+                <el-select v-model="tiankongForm.grade" placeholder="请选择年级" :clearable="true">
                   <el-option
                     v-for="item in nianji"
                     :key="item.value"
@@ -266,7 +234,7 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-             <el-form-item label="难度：">
+             <el-form-item label="难度：" prop="difficultyLevel">
                <el-select v-model="tiankongForm.difficultyLevel" placeholder="请选择难度">
                   <el-option
                     v-for="item in difficultyOptions"
@@ -276,13 +244,16 @@
                   </el-option>
                 </el-select>
              </el-form-item>
-            <el-form-item label="知识点：">
+            <el-form-item label="知识点：" prop="knowledgePoint">
               <el-input v-model="tiankongForm.knowledgePoint"></el-input>
+            </el-form-item>
+            <el-form-item>
+<el-button @click="tiankongQuesDialog = false">取 消</el-button>
+            <el-button type="primary" @click="tiankongAdd('tiankongForm')">确 定</el-button>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="tiankongQuesDialog = false">取 消</el-button>
-            <el-button type="primary" @click="tiankongQuesDialog = false; tiankongAdd()">确 定</el-button>
+            
           </span>
         </el-dialog>
 
@@ -291,18 +262,18 @@
           title="提示"
           :visible.sync="jiandaQuesDialog"
           width="30%"
-          :before-close="handleClose">
-           <el-form :model="jiandaForm" label-width="100px">
-            <el-form-item label="试题内容：">
+          >
+           <el-form :model="jiandaForm" label-width="100px" :rules="jiandarules" ref="jiandaForm">
+            <el-form-item label="试题内容：" prop="answerContent">
               <el-input v-model="jiandaForm.answerContent" type="textarea" autosize></el-input>
             </el-form-item>
             <el-form-item label="试题标题：">
               <el-input v-model="jiandaForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="分数：">
+            <el-form-item label="分数：" prop="score">
               <el-input v-model="jiandaForm.score"></el-input>
             </el-form-item>
-            <el-form-item label="科目：">
+            <el-form-item label="科目：" prop="subject">
                 <el-select v-model="jiandaForm.subject" placeholder="请选择科目">
                   <el-option
                     v-for="item in kemuOptions"
@@ -312,8 +283,8 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="所属年级：">
-                <el-select v-model="jiandaForm.grade" placeholder="请选择年级" clearable="true">
+            <el-form-item label="所属年级：" prop="grade">
+                <el-select v-model="jiandaForm.grade" placeholder="请选择年级" :clearable="true">
                   <el-option
                     v-for="item in nianji"
                     :key="item.value"
@@ -322,7 +293,7 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-             <el-form-item label="难度：">
+             <el-form-item label="难度：" prop="difficultyLevel">
                <el-select v-model="jiandaForm.difficultyLevel" placeholder="请选择难度">
                   <el-option
                     v-for="item in difficultyOptions"
@@ -332,13 +303,13 @@
                   </el-option>
                 </el-select>
              </el-form-item>
-            <el-form-item label="知识点：">
+            <el-form-item label="知识点：" prop="knowledgePoint">
               <el-input v-model="jiandaForm.knowledgePoint"></el-input>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="jiandaQuesDialog = false">取 消</el-button>
-            <el-button type="primary" @click="jiandaQuesDialog = false; jiandaAdd()">确 定</el-button>
+            <el-button type="primary" @click="jiandaAdd('jiandaForm')">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -366,6 +337,93 @@
     name: 'userlist',
     data() {
       return {
+        
+        xuanzerules:{
+          choiceContent:[
+            {required: true, message: '请输入试题内容！', trigger: 'blur' },
+            
+          ],
+          firstchoice:[
+            {required: true, message: '请至少给出两个选项！', trigger: 'blur' },
+          ],
+          secondchoice:[
+            {required: true, message: '请至少给出两个选项！', trigger: 'blur' },
+          ],
+          score:[
+            {required: true, message: '请输入该题分数', trigger: 'blur' },
+          ],
+          subject:[
+            {required: true, message: '请选择对应学科', trigger: 'blur' },
+            
+          ],
+          grade:[
+            {type: 'integer',required: true, message: '请选择对应年级', trigger: 'blur' },
+            
+          ],
+          difficultyLevel:[
+            {required: true, message: '请选择该题难度', trigger: 'blur' },
+            
+          ],
+          knowledgePoint:[
+            {required: true, message: '请输入该题的知识点', trigger: 'blur' },
+            
+          ]
+
+        },
+        tiankongrules:{
+          fillContent:[
+            {required: true, message: '请输入试题内容！', trigger: 'blur' },
+            
+          ],
+         
+          score:[
+            {required: true, message: '请输入该题分数', trigger: 'blur' },
+          ],
+          subject:[
+            {required: true, message: '请选择对应学科', trigger: 'blur' },
+            
+          ],
+          grade:[
+            {type: 'integer',required: true, message: '请选择对应年级', trigger: 'blur' },
+            
+          ],
+          difficultyLevel:[
+            {required: true, message: '请选择该题难度', trigger: 'blur' },
+            
+          ],
+          knowledgePoint:[
+            {required: true, message: '请输入该题的知识点', trigger: 'blur' },
+            
+          ]
+
+        },
+        jiandarules:{
+          answerContent:[
+            {required: true, message: '请输入试题内容！', trigger: 'blur' },
+            
+          ],
+         
+          score:[
+            {required: true, message: '请输入该题分数', trigger: 'blur' },
+          ],
+          subject:[
+            {required: true, message: '请选择对应学科', trigger: 'blur' },
+            
+          ],
+          grade:[
+            {type: 'integer',required: true, message: '请选择对应年级', trigger: 'blur' },
+            
+          ],
+          difficultyLevel:[
+            {required: true, message: '请选择该题难度', trigger: 'blur' },
+            
+          ],
+          knowledgePoint:[
+            {required: true, message: '请输入该题的知识点', trigger: 'blur' },
+            
+          ]
+
+        },
         edit: false,
         timu_type:['选择题', '填空题', '简答题'],
         state:1,
@@ -419,6 +477,7 @@
             label: "高中三年级"
           },
         ],
+
         kemuOptions:[
           {
             value:"语文",
@@ -458,6 +517,7 @@
           }
           
         ],
+
         difficultyOptions:[
           {
             value:"简单",
@@ -528,24 +588,13 @@
 
       }
     },
-    // watch:{
-    //   // state: function(n,o){
-    //   //   console.log(n)
-    //   // }
-    //   difficultyOptions: function(n,o){
-    //     this.listQuery.difficulty_level = n;
-    //     this.getList();
-    //   },
-    //   kemuOptions: function(n,o){
-    //     this.listQuery.subject = n;
-    //     this.getList();
-    //   },
-    //   "listQuery.knowledgePoint": function(n,o){
-    //     this.listQuery.knowledge_point = n;
-    //   }
-    // },
+  
     created() {
-      
+      console.log(this.$route.query.row)
+     this.listQuery.grade = this.$route.query.row.grade;
+     this.listQuery.difficulty_level = this.$route.query.row.difficultyLevel;
+     this.listQuery.subject = this.$route.query.row.subject;
+     this.listQuery.knowledgePoint = this.$route.query.row.knowledgePoint;
      this.getList();
     },
     methods: {
@@ -557,7 +606,9 @@
         if(this.state == 1){
           fetchList1(this.listQuery).then(response => {
             this.listLoading = true;
-            
+            // if(listQuery.knowledgePoint){
+            // listQuery.knowledge_point = listQuery.knowledgePoint
+            // }
             this.list = response.data.list;
             this.total = response.data.total;
             
@@ -592,72 +643,98 @@
       },
       
       //添加填空题
-      selectAdd(){
-        if(this.edit == false){
-          addSelect(this.selectForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
-        }else{
-          addSelect2(this.selectForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
+      selectAdd(formName){
+       this.$refs[formName].validate((valid)  =>{
+          if(valid){
+            console.log('验证成功！')
+              if(this.edit == false){
+                addSelect(this.selectForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
+              }else{
+                addSelect2(this.selectForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
 
-        }
+          }
+            this.selectQuesDialog = false;
+          }
+
+        });
+      
         
       },
-      tiankongAdd(){
-        if(this.edit == false){
-          addTiankong(this.tiankongForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
-        }else{
-          addTiankong2(this.tiankongForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
-        }
+      tiankongAdd(formName){
+       this.$refs[formName].validate((valid)  =>{
+          if(valid){
+            console.log('验证成功！')
+              if(this.edit == false){
+                addTiankong(this.tiankongForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
+              }else{
+                addTiankong2(this.tiankongForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
 
+          }
+            this.tiankongQuesDialog = false;
+          }
+
+        });
+      
+        
       },
-      jiandaAdd(){
-        if(this.edit == false){
-           addJianda(this.jiandaForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
-        }else{
-          addJianda2(this.jiandaForm).then( response => {
-            this.$message({
-                message: '添加成功！',
-                type: 'success',
-                duration: 1000
-              });
-              this.getList();
-          })
-        }
-       
+       jiandaAdd(formName){
+       this.$refs[formName].validate((valid)  =>{
+          if(valid){
+            console.log('验证成功！')
+              if(this.edit == false){
+                addJianda(this.jiandaForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
+              }else{
+                addJianda2(this.jiandaForm).then( response => {
+                  this.$message({
+                      message: '添加成功！',
+                      type: 'success',
+                      duration: 1000
+                    });
+                    this.getList();
+                })
+
+          }
+            this.jiandaQuesDialog = false;
+          }
+
+        });
+      
+        
       },
 
      updateQuestion(){
