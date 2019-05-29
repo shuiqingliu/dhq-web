@@ -123,3 +123,11 @@ export function del3(id){
         params: {answerid:id}
     })
 }
+//获取知识点
+export function fetchZhishidian(params){
+    return request({
+        url: '/testquestionmanagement/getChoiceInfo',
+        method: 'get',
+        params: params
+    })
+}
