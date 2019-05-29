@@ -1,11 +1,15 @@
 <template>
   <div class="app-container">
-    <el-steps :space="200" :active="statusList.length" finish-status="success">
-      <el-step :title="item.value" v-for="item in statusList"
-            :key="item.value">
-      </el-step>
-      
-    </el-steps>
+    <el-card>
+      <div>
+        <i class="el-icon-tickets"></i>
+        <span>维修状态</span>
+      </div>
+      <el-steps :space="200" :active="statusList.length" finish-status="success">
+        <el-step :title="item.value" v-for="item in statusList" :key="item.value"></el-step>
+      </el-steps>
+    </el-card>
+
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-tickets"></i>
@@ -135,7 +139,7 @@
   </div>
 </template>
 <script>
-import { fetchList,splitStatusChange} from "@/api/equipmentRepair";
+import { fetchList, splitStatusChange } from "@/api/equipmentRepair";
 export default {
   name: "StoreInfoDetail",
   data() {
@@ -172,27 +176,25 @@ export default {
         "其它"
       ],
       faultLevelList: ["维修", "整机更换"],
-      statusList:[],
+      statusList: []
     };
   },
   created() {
     this.listQuery.id = this.$route.query.id;
     // this.splitStatusChange(this.$route.query.id)
     this.getList();
-    this.getSplitStatusChange(this.listQuery.id)
+    this.getSplitStatusChange(this.listQuery.id);
   },
   methods: {
-    getSplitStatusChange(id){
-      splitStatusChange(id).then(
-        res => {
-          let arr = []
-           //arr = [...new Set(res.data)];  
-           arr = res.data;  
+    getSplitStatusChange(id) {
+      splitStatusChange(id).then(res => {
+        let arr = [];
+        //arr = [...new Set(res.data)];
+        arr = res.data;
         for (let i = 0; i < arr.length; i++) {
           this.statusList.push({ label: arr[i], value: arr[i] });
         }
-        }
-      );
+      });
     },
     getList() {
       this.listLoading = true;

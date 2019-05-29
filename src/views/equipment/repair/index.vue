@@ -12,19 +12,16 @@
         >查询结果</el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="设备名称：">
-            <el-input v-model="listQuery.deviceTypeName" placeholder="请输入设备名称" size="small"></el-input>
+        <el-form :inline="true" :model="listQuery" size="small">
+          <el-form-item label="设备名称：" >
+            <el-input v-model="listQuery.deviceTypeName" placeholder="请输入设备名称" size="small" style="width:150px"></el-input>
           </el-form-item>
 
-          <el-form-item label="设备型号：">
-            <el-input v-model="listQuery.modelNumber" placeholder="请输入设备型号" size="small"></el-input>
+          <el-form-item label="设备型号：" >
+            <el-input v-model="listQuery.modelNumber" placeholder="请输入设备型号" size="small" style="width:150px"> </el-input>
           </el-form-item>
-        </el-form>
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-
           <el-form-item label="状态：">
-            <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:178px">
+            <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:150px" clearable="true">
               <el-option label="待处理" value="0"></el-option>
               <el-option label="维修中" value="1"></el-option>
               <el-option label="已修改" value="2"></el-option>
@@ -38,7 +35,7 @@
           </el-form-item>
 
           <el-form-item label="维修等级：">
-            <el-select v-model="listQuery.faultLevel" placeholder="请选择维修等级" style="width:178px">
+            <el-select v-model="listQuery.faultLevel" placeholder="请选择维修等级" style="width:150px"  clearable="true">
               <el-option label="维修" value="0"></el-option>
               <el-option label="整机更换" value="1"></el-option>
             </el-select>
@@ -199,8 +196,7 @@
       <el-table :data="deviceData">
         <el-table-column property="id" label="设备ID" width="150"></el-table-column>
         <el-table-column property="deviceNumber" label="设备编号" width="150"></el-table-column>
-        <el-table-column property="deviceUseState" label="状态" width="150" >
-        </el-table-column>
+        <el-table-column property="deviceUseState" label="状态" width="150"></el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
@@ -212,11 +208,11 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-     <el-dialog title="详情" :visible.sync="dialogWuLiuVisible" width="30%">
+    <el-dialog title="详情" :visible.sync="dialogWuLiuVisible" width="30%">
       <el-form>
         <!-- <el-form-item label-width="120" label="设备编号">
           <el-input v-model="refuseReason"></el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label-width="120" label="物流编号">
           <el-input v-model="wuLiuNumber"></el-input>
         </el-form-item>
@@ -237,7 +233,7 @@ import {
   agreeDeviceChangingApply,
   agreeDeviceChangedApply
 } from "@/api/equipmentRepair";
-import { listByModelNumber} from "@/api/equipmentDetail";
+import { listByModelNumber } from "@/api/equipmentDetail";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
@@ -265,7 +261,7 @@ export default {
         modelNumber: null,
         deviceTypeName: null,
         faultLevel:null,
-        id:null,
+        id: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -319,13 +315,13 @@ export default {
       dialogRefuseVisible: false,
       dialogExchangeVisible: false,
       dialogDistributionVisible: false,
-      dialogWuLiuVisible:false,
+      dialogWuLiuVisible: false,
       selectedOptions: [],
       refuseReason: null,
       maintainId: null,
-      wuLiuNumber:null,
-      newDeviceId:null,
-      exchangeManagerId:null,
+      wuLiuNumber: null,
+      newDeviceId: null,
+      exchangeManagerId: null,
       options: regionDataPlus, //全国的地理信息
       listLoading: false //临时修改了一下
     };
@@ -345,7 +341,10 @@ export default {
         this.pageSize = response.data.pageSize;
       });
     },
-    searchDeviceMaintainList(){
+    searchDeviceMaintainList() {
+      if(this.listQuery.faultLevel == ''){
+        this.listQuery.faultLevel = null
+      }
       this.getList();
     },
     //添加
@@ -491,24 +490,34 @@ export default {
       });
     },
     //未做
-    searchDeviceList(modelNumber){
-      listByModelNumber({modelNumber:modelNumber,pageSize:100,pageNum:1}).then(
-        response =>{
+    searchDeviceList(modelNumber) {
+      listByModelNumber({
+        modelNumber: modelNumber,
+        pageSize: 100,
+        pageNum: 1
+      }).then(response => {
         this.deviceData = response.data.list;
+        for (let i = 0; i < this.deviceData.length; i++) {
+          //thirdCategoryList[i].thirdType);
+          if(this.deviceData[i].deviceUseState === 0){
+            this.deviceData[i].deviceUseState = '未分配'
+          }
         }
-      );
+      });
     },
-    allocateDevice(){
-      agreeDeviceChangedApply({id:this.maintainId,exchangeManagerId:this.$store.state.user.id,
-      newDeviceId:this.newDeviceId,exchangeOrderNumber:this.wuLiuNumber}).then(
-        response => {
-          this.$message({
-            message: "已分配成功",
-            type: "success",
-            duration: 1000
-          });
-        }
-      );
+    allocateDevice() {
+      agreeDeviceChangedApply({
+        id: this.maintainId,
+        exchangeManagerId: this.$store.state.user.id,
+        newDeviceId: this.newDeviceId,
+        exchangeOrderNumber: this.wuLiuNumber
+      }).then(response => {
+        this.$message({
+          message: "已分配成功",
+          type: "success",
+          duration: 1000
+        });
+      });
     }
   }
 };
