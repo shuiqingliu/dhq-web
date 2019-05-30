@@ -19,20 +19,18 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.firstType" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
           <el-form-item label="一级类别：">
             <el-select
               v-model="listQuery.firstType"
               placeholder="请选择类别"
               @change="selectFirstCategory()"
+              style="width:150px"
             >
               <el-option
                 v-for="item in firstCategoryOptions"
-                :key="item.first_type"
+                :key="item.first_class"
                 :label="item.label"
-                :value="item.first_type"
+                :value="item.first_class"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -42,18 +40,20 @@
               v-model="listQuery.secondType"
               placeholder="请选择类别"
               @change="selectSecondCategory()"
+              style="width:150px"
             >
               <el-option
                 v-for="item in secondCategoryOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
+                style="width:150px"
               ></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.thirdType" placeholder="请选择类别">
+            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" style="width:150px">
               <el-option
                 v-for="item in thirdCategoryOptions"
                 :key="item.value"
@@ -67,7 +67,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>课程类型列表</span>
       <el-button class="btn-add" @click="addCourseInstance()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
@@ -92,12 +92,8 @@
           </template>
         </el-table-column>
         <el-table-column label="内容" align="center">
-          <template slot-scope="scope">{{scope.row.courseContent}}</template>
-        </el-table-column>
-        <el-table-column label="特色" align="center" width="70">
           <template slot-scope="scope">
-            <span v-if="scope.row.specialState === 0" style="color: #37B328">特色</span>
-            <span v-else style="color:red">非特色</span>
+            <el-button type="text" @click="courseContent=scope.row.courseContent;openCourseContent()">查看</el-button>
           </template>
         </el-table-column>
         <el-table-column label="课长" align="center" width="70">
@@ -115,11 +111,11 @@
         <el-table-column label="类别编号" align="center" width="80">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>一级分类: {{ scope.row.courseType.firstType }}</p>
-              <p>二级分类: {{ scope.row.courseType.secondType }}</p>
-              <p>三级分类: {{ scope.row.courseType.thirdType }}</p>
+              <p>一级分类: {{ scope.row.courseClass.firstClass }}</p>
+              <p>二级分类: {{ scope.row.courseClass.secondClass }}</p>
+              <p>三级分类: {{ scope.row.courseClass.thirdClass}}</p>
               <div slot="reference" class="name-wrapper">
-                <el-button type="text">{{ scope.row.courseType.id }}</el-button>
+                <el-button type="text">{{ scope.row.courseClass.id }}</el-button>
               </div>
             </el-popover>
           </template>
@@ -146,7 +142,7 @@
         <el-table-column label="简介" align="center" width="70">
           <!-- <template slot-scope="scope">{{scope.row.description}}</template> -->
           <template slot-scope="scope">
-            <el-button type="text" @click="description=scope.row.description;open()">详情</el-button>
+            <el-button type="text" @click="description=scope.row.description;openDescription()">详情</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="150">
@@ -237,7 +233,8 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       dialogVisible: false,
-      description: null
+      description: null,
+      courseContent:null
     };
   },
   created() {
@@ -383,6 +380,7 @@ export default {
     //选择一级列表以后
     selectFirstCategory() {
       this.secondCategoryOptions = [];
+      this.thirdCategoryOptions = [];
       //加载二级列表
       getListByCategory({
         firstType: this.listQuery.firstType,
@@ -394,7 +392,7 @@ export default {
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondType);
+          arr.push(secondCategoryList[i].secondClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -420,7 +418,7 @@ export default {
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdType);
+          arr.push(thirdCategoryList[i].thirdClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -430,13 +428,18 @@ export default {
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
     },
-    open() {
+    openDescription() {
       this.$alert(this.description, "课程简介");
+    },
+    openCourseContent() {
+      this.$alert(this.courseContent, "课程内容");
     },
     resetSearchConditions(){
       this.listQuery.firstType=null
       this.listQuery.secondType=null
       this.listQuery.thirdType=null
+      this.secondCategoryOptions=[]
+      this.thirdCategoryOptions=[]
     }
   }
 };

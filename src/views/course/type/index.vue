@@ -19,11 +19,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <!-- <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword1" placeholder="品牌名称/关键字"></el-input>
-          </el-form-item>-->
           <el-form-item label="一级类别：">
-            <el-select v-model="listQuery.firstType" placeholder="请选择类别"  @change="selectFirstCategory()">
+            <el-select v-model="listQuery.firstType" placeholder="请选择类别"  @change="selectFirstCategory()" style="width:150px">
               <el-option
                 v-for="item in firstCategoryOptions"
                 :key="item.value"
@@ -32,9 +29,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="二级类别：">
-            <el-select v-model="listQuery.secondType" placeholder="请选择类别"  @change="selectSecondCategory()">
+            <el-select v-model="listQuery.secondType" placeholder="请选择类别"  @change="selectSecondCategory()" style="width:150px">
               <el-option
                 v-for="item in secondCategoryOptions"
                 :key="item.value"
@@ -45,7 +41,7 @@
           </el-form-item>
 
           <el-form-item label="三级类别：">
-            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" >
+            <el-select v-model="listQuery.thirdType" placeholder="请选择类别" style="width:150px">
               <el-option
                 v-for="item in thirdCategoryOptions"
                 :key="item.value"
@@ -59,7 +55,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>课程类别列表</span>
       <el-button class="btn-add" @click="addCourseType()" size="mini">添加</el-button>
     </el-card>
     <div class="table-container">
@@ -76,13 +72,13 @@
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="一级类别" align="center">
-          <template slot-scope="scope">{{scope.row.firstType}}</template>
+          <template slot-scope="scope">{{scope.row.firstClass}}</template>
         </el-table-column>
         <el-table-column label="二级类别" align="center">
-          <template slot-scope="scope">{{scope.row.secondType}}</template>
+          <template slot-scope="scope">{{scope.row.secondClass}}</template>
         </el-table-column>
         <el-table-column label="三级类别" align="center">
-          <template slot-scope="scope">{{scope.row.thirdType}}</template>
+          <template slot-scope="scope">{{scope.row.thirdClass}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -278,7 +274,7 @@ export default {
         let firstCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < firstCategoryList.length; i++) {
-          arr.push(firstCategoryList[i].firstType);
+          arr.push(firstCategoryList[i].firstClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -290,13 +286,14 @@ export default {
     //选择一级列表以后
     selectFirstCategory(){
       this.secondCategoryOptions = [];
+      this.thirdCategoryOptions = [];
         //加载二级列表
         getListByCategory({firstType : this.listQuery.firstType,secondType:null,thirdType:null,pageSize:100}).then(response => {
          // this.firstCategoryOptions = [];
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondType);
+          arr.push(secondCategoryList[i].secondClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -317,7 +314,7 @@ export default {
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdType);
+          arr.push(thirdCategoryList[i].thirdClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -327,10 +324,13 @@ export default {
         })
         this.listQuery.thirdType = null;//将上一次三级分类选中的结果置为空。
     },
+    //条件重置
     resetSearchConditions(){
       this.listQuery.firstType=null
       this.listQuery.secondType=null
       this.listQuery.thirdType=null
+      this.secondCategoryOptions = []
+      this.thirdCategoryOptions = []
     }
   }
 };
