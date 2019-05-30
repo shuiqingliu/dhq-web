@@ -1,14 +1,14 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="courseType" :rules="rules" ref="courseTypeForm" label-width="150px">
-      <el-form-item label="一级类别：" prop="firstType">
-        <el-input v-model="courseType.firstType"></el-input>
+      <el-form-item label="一级类别：" prop="firstClass">
+        <el-input v-model="courseType.firstClass"></el-input>
       </el-form-item>
-      <el-form-item label="二级类别：" prop="secondType">
-        <el-input v-model="courseType.secondType"></el-input>
+      <el-form-item label="二级类别：" prop="secondClass">
+        <el-input v-model="courseType.secondClass"></el-input>
       </el-form-item>
-      <el-form-item label="三级类别：" prop="thirdType">
-        <el-input v-model="courseType.thirdType"></el-input>
+      <el-form-item label="三级类别：" prop="thirdClass">
+        <el-input v-model="courseType.thirdClass"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('courseTypeForm')">提交</el-button>
@@ -35,9 +35,9 @@ import {
 } from "@/api/courseType";
 //默认信息
 const defaultCourseType = {
-  firstType: "XXX",
-  secondType: "YYY",
-  thirdType: "ZZZ"
+  firstClass: "XXX",
+  secondClass: "YYY",
+  thirdClass: "ZZZ"
 };
 export default {
   name: "CourseTypeDetail",
@@ -51,13 +51,13 @@ export default {
     return {
       courseType: Object.assign({}, defaultCourseType),
       rules: {
-        firstType: [
+        firstClass: [
           { required: true, message: "请输入单一节类别", trigger: "blur" }
         ],
-        secondType: [
+        secondClass: [
           { required: true, message: "请输入二级类别", trigger: "blur" }
         ],
-        thirdType: [
+        thirdClass: [
           { required: true, message: "请输入三级类别", trigger: "blur" }
         ]
       },
