@@ -18,9 +18,12 @@
           </el-form-item>
           <el-form-item label="状态：">
             <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:178px">
-              <el-option label="维修中" value="1"></el-option>
-              <el-option label="已维修" value="2"></el-option>
-              <el-option label="维修失败" value="8"></el-option>
+              <el-option
+                v-for="item in dealStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -50,7 +53,7 @@
         <el-table-column label="故障类型" align="center">
           <template slot-scope="scope">{{applyReasonList[scope.row.applyReason]}}</template>
         </el-table-column>
-        <el-table-column label="操作" align="center" >
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -83,9 +86,19 @@
         </el-form-item>
         <div class="block">
           <span>起始时间:</span>
-          <el-date-picker v-model="value1" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <el-date-picker
+            v-model="value1"
+            type="datetime"
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          ></el-date-picker>
           <span>至</span>
-          <el-date-picker v-model="value2" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <el-date-picker
+            v-model="value2"
+            type="datetime"
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          ></el-date-picker>
         </div>
         <el-form-item label="故障原因分析与结果评定" :label-width="formLabelWidth">
           <el-input v-model="repairForm.failureAnalysisResultEvaluation" auto-complete="off"></el-input>
@@ -99,7 +112,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="repairSuccess()">维修成功</el-button>
-        <!-- <el-button @click="dialogMaintainVisible = false">维修失败</el-button> -->
+        <el-button @click="dialogMaintainVisible = false">维修失败</el-button>
         <el-button @click="dialogMaintainVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -145,6 +158,11 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
+      dealStatusOptions: [
+        { value: 1, label: "维修中" },
+        { value: 2, label: "已维修" },
+        { value: 8, label: "维修失败" }
+      ],
       listMaintainManagerQuery: {
         province: null,
         city: null,
@@ -207,8 +225,8 @@ export default {
       },
       options: regionDataPlus, //全国的地理信息
       listLoading: false, //临时修改了一下
-      value1:'',
-      value2:''
+      value1: "",
+      value2: ""
     };
   },
   created() {
@@ -275,9 +293,9 @@ export default {
       this.getList();
     },
     repairSuccess() {
-      this.repairForm.maintainStartTime = this.value1
-      this.repairForm.maintainEndTime = this.value2
-      this.repairForm.id = this.maintainId
+      this.repairForm.maintainStartTime = this.value1;
+      this.repairForm.maintainEndTime = this.value2;
+      this.repairForm.id = this.maintainId;
 
       this.$confirm("是否提交？", "提示", {
         confirmButtonText: "确定",

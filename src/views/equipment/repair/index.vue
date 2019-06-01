@@ -13,29 +13,46 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small">
-          <el-form-item label="设备名称：" >
-            <el-input v-model="listQuery.deviceTypeName" placeholder="请输入设备名称" size="small" style="width:150px"></el-input>
+          <el-form-item label="设备类型名称：">
+            <el-input
+              v-model="listQuery.deviceTypeName"
+              placeholder="请输入设备类型名称"
+              size="small"
+              style="width:150px"
+            ></el-input>
           </el-form-item>
 
-          <el-form-item label="设备型号：" >
-            <el-input v-model="listQuery.modelNumber" placeholder="请输入设备型号" size="small" style="width:150px"> </el-input>
+          <el-form-item label="设备型号：">
+            <el-input
+              v-model="listQuery.modelNumber"
+              placeholder="请输入设备型号"
+              size="small"
+              style="width:150px"
+            ></el-input>
           </el-form-item>
           <el-form-item label="状态：">
-            <el-select v-model="listQuery.dealStatus" placeholder="请选择状态" style="width:150px" clearable="true">
-              <el-option label="待处理" value="0"></el-option>
-              <el-option label="维修中" value="1"></el-option>
-              <el-option label="已修改" value="2"></el-option>
-              <el-option label="换货中" value="3"></el-option>
-              <el-option label="已拒绝" value="4"></el-option>
-              <el-option label="已解决" value="5"></el-option>
-              <el-option label="已收货" value="6"></el-option>
-              <el-option label="已换货" value="7"></el-option>
-              <el-option label="维修失败" value="8"></el-option>
+            <el-select
+              v-model="listQuery.dealStatus"
+              placeholder="请选择状态"
+              style="width:150px"
+              clearable="true"
+            >
+              <el-option
+                v-for="item in dealStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="维修等级：">
-            <el-select v-model="listQuery.faultLevel" placeholder="请选择维修等级" style="width:150px"  clearable="true">
+            <el-select
+              v-model="listQuery.faultLevel"
+              placeholder="请选择维修等级"
+              style="width:150px"
+              clearable="true"
+            >
               <el-option label="维修" value="0"></el-option>
               <el-option label="整机更换" value="1"></el-option>
             </el-select>
@@ -91,7 +108,7 @@
         <el-table-column label="联系人" align="center">
           <template slot-scope="scope">{{scope.row.linkman}}</template>
         </el-table-column>
-        <el-table-column label="联系电话" align="center">
+        <el-table-column label="联系电话" align="center" width="120">
           <template slot-scope="scope">{{scope.row.contactPhone}}</template>
         </el-table-column>
         <el-table-column label="维修等级" align="center">
@@ -252,7 +269,7 @@ export default {
         shopLocationCity: null,
         shopLocationDistrict: null,
         shopName: null,
-        dealStatus: null,
+        dealStatus: 0,
         maintainManagerId: null,
         exchangeManagerId: null,
         firstCategory: null,
@@ -260,7 +277,7 @@ export default {
         thirdCategory: null,
         modelNumber: null,
         deviceTypeName: null,
-        faultLevel:null,
+        faultLevel: null,
         id: null,
         pageNum: 1,
         pageSize: 5
@@ -272,6 +289,17 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
+      dealStatusOptions: [
+        { label: "待处理", value: 0 },
+        { label: "维修中", value: 1 },
+        { label: "已维修", value: 2 },
+        { label: "换货中", value: 3 },
+        { label: "已拒绝", value: 4 },
+        { label: "已解决", value: 5 },
+        { label: "已收货", value: 6 },
+        { label: "已换货", value: 7 },
+        { label: "维修失败", value: 8 }
+      ],
       gridData: [
         {
           date: "2016-05-02",
@@ -342,8 +370,8 @@ export default {
       });
     },
     searchDeviceMaintainList() {
-      if(this.listQuery.faultLevel == ''){
-        this.listQuery.faultLevel = null
+      if (this.listQuery.faultLevel == "") {
+        this.listQuery.faultLevel = null;
       }
       this.getList();
     },
@@ -489,7 +517,6 @@ export default {
         });
       });
     },
-    //未做
     searchDeviceList(modelNumber) {
       listByModelNumber({
         modelNumber: modelNumber,
@@ -499,8 +526,8 @@ export default {
         this.deviceData = response.data.list;
         for (let i = 0; i < this.deviceData.length; i++) {
           //thirdCategoryList[i].thirdType);
-          if(this.deviceData[i].deviceUseState === 0){
-            this.deviceData[i].deviceUseState = '未分配'
+          if (this.deviceData[i].deviceUseState === 0) {
+            this.deviceData[i].deviceUseState = "未分配";
           }
         }
       });
@@ -518,6 +545,7 @@ export default {
           duration: 1000
         });
       });
+      this.getMaintain();
     }
   }
 };
