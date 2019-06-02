@@ -100,7 +100,6 @@ export default {
      const f = node.parent.data.label
      //此时添加的一级类别
      if(f == null){
-         this
      }
      //const gf = node.parent.parent.label
      alert(f == null)
