@@ -2,7 +2,7 @@ import request from '@/utils/request'
 //获取课程列表
 export function fetchList(params) {
   return request({
-    url:'/course/list',
+    url:'/courseType/list',
     method:'get',
     params:params
   })
@@ -10,7 +10,7 @@ export function fetchList(params) {
 //创建课程
 export function createCourseInstance(data) {
   return request({
-    url:'/course/add',
+    url:'/courseType/add',
     method:'post',
     data:data
   })
@@ -18,7 +18,7 @@ export function createCourseInstance(data) {
 //修改课程
 export function updateCourseInstance(id,data) {
   return request({
-    url:'/course/update/' + id,
+    url:'/courseType/update/' + id,
     method:'post',
     data:data
   })
@@ -26,21 +26,21 @@ export function updateCourseInstance(id,data) {
 //删除课程
 export function deleteCourseInstance(id) {
   return request({
-    url:'/course/delete?id='+id,
+    url:'/courseType/delete?id='+id,
     method:'get',
   })
 }
 //批量删除课程
 export function batchDeleteCourseInstance(ids) {
   return request({
-    url:'/course/delete/batch?ids='+ids,
+    url:'/courseType/delete/batch?ids='+ids,
     method:'post',
   })
 }
 //根据id获取获取课程信息
 export function getCourseInstance(id) {
   return request({
-    url:'/course/get?id='+id,
+    url:'/courseType/get?id='+id,
     method:'get'
   })
 }
@@ -48,7 +48,7 @@ export function getCourseInstance(id) {
 //更新状态
 export function updateStatus(id,params) {
   return request({
-    url:'/course/update/status/'+id,
+    url:'/courseType/update/status/'+id,
     method:'post',
     params:params
   })
@@ -57,14 +57,14 @@ export function updateStatus(id,params) {
 //获取一级列表
 export function getFirstCategory(){
   return request({
-    url:'/course/getFirstType',
+    url:'/courseType/getFirstType',
     method:'get'
   })
 }
 //获取二级列表
 export function getSecondCategory(){
   return request({
-    url:'/course/getSecondType',
+    url:'/courseType/getSecondType',
     method:'get'
   })
 }
@@ -72,7 +72,7 @@ export function getSecondCategory(){
 //获取三级列表
 export function getThirdCategory(){
   return request({
-    url:'/course/getThirdType',
+    url:'/courseType/getThirdType',
     method:'get'
   })
 }

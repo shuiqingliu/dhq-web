@@ -335,7 +335,7 @@ export default {
     getEquipmentDetail(index, row) {
       this.$router.push({
         path: "/equipment/equipmentDetail",
-        query: { modelNumber: row.modelNumber, name: row.name }
+        query: { deviceTypeId: row.id}
       });
     },
     open() {
