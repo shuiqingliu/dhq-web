@@ -98,8 +98,7 @@ export default {
       name:'',
       operateType: null,
       listQuery: {
-        modelNumber: null,
-        name: null,
+        deviceTypeId:null,
         deviceUseState: null,
         pageNum: 1,
         pageSize: 5
@@ -121,10 +120,10 @@ export default {
     };
   },
   created() {
-    this.listQuery.modelNumber = this.$route.query.modelNumber;
-    this.listQuery.name = this.$route.query.name;
+    this.listQuery.deviceTypeId = this.$route.query.deviceTypeId;
+   // this.listQuery.name = this.$route.query.name;
     this.getList();
-    this.name = this.$route.query.name;
+    //this.name = this.$route.query.name;
   },
   methods: {
     getList() {

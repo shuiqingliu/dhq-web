@@ -72,12 +72,6 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="特色课程：">
-        <el-radio-group v-model="courseInstance.specialState">
-          <el-radio :label="0">是</el-radio>
-          <el-radio :label="1">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item label="线上/线下：">
         <el-radio-group v-model="courseInstance.online">
           <el-radio :label="0">线上</el-radio>
@@ -139,8 +133,7 @@ const defaultCourseInstance = {
   timesOfClass: null,
   countsOfClass: null,
   typeId: null,
-  recommendationCoefficient: null,
-  specialState: 0
+  recommendationCoefficient: null
 };
 export default {
   name: "CourseInstanceDetail",
@@ -192,12 +185,12 @@ export default {
     if (this.isEdit) {
       getCourseInstance(this.$route.query.id).then(response => {
         this.courseInstance = response.data;
-        this.courseInstance.typeId = response.data.courseType.id;
-        this.listQuery.firstType = response.data.courseType.firstType;
+        this.courseInstance.typeId = response.data.courseClass.id;
+        this.listQuery.firstType = response.data.courseClass.firstClass;
         this.selectFirstCategory();
-        this.listQuery.secondType = response.data.courseType.secondType;
+        this.listQuery.secondType = response.data.courseClass.secondClass;
         this.selectSecondCategory();
-        this.listQuery.thirdType = response.data.courseType.thirdType;
+        this.listQuery.thirdType = response.data.courseClass.thirdClass;
       });
     } else {
       this.courseInstance = Object.assign({}, defaultCourseInstance);
@@ -276,7 +269,7 @@ export default {
         let firstCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < firstCategoryList.length; i++) {
-          arr.push(firstCategoryList[i].firstType);
+          arr.push(firstCategoryList[i].firstClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -288,6 +281,7 @@ export default {
     //选择一级列表以后
     selectFirstCategory() {
       this.secondCategoryOptions = [];
+      this.thirdCategoryOptions = [];
       //加载二级列表
       getListByCategory({
         firstType: this.listQuery.firstType,
@@ -299,7 +293,7 @@ export default {
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondType);
+          arr.push(secondCategoryList[i].secondClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -325,7 +319,7 @@ export default {
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdType);
+          arr.push(thirdCategoryList[i].thirdClass);
         }
         //去重
         arr = [...new Set(arr)];
