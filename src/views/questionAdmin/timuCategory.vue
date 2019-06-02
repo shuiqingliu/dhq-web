@@ -304,15 +304,14 @@
     //   }
     // },
     created() {
-      
+    
      this.getList();
     },
     methods: {
-
-
       getList() {
         this.listLoading = false;
         fetchZhishidian(this.listQuery).then(response => {
+         
             this.listLoading = true;
             // if(listQuery.knowledgePoint){
             // listQuery.knowledge_point = listQuery.knowledgePoint
