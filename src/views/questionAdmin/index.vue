@@ -38,11 +38,16 @@
         </div>
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" >
-            <el-tag type="success">{{nianji[$route.query.row.grade-1].label}}</el-tag>
-            <el-tag type="success">{{$route.query.row.subject}}</el-tag>
-            <el-tag type="success">{{$route.query.row.difficultyLevel}}题</el-tag>
-            <el-tag type="success">{{$route.query.row.knowledgePoint}}</el-tag>
-           <!-- {{$route.query.row}} -->
+            <el-form-item>
+              <el-tag type="success">{{nianji[$route.query.row.grade-1].label}}</el-tag>
+              <el-tag type="success">{{$route.query.row.subject}}</el-tag>
+              <el-tag type="success">{{$route.query.row.difficultyLevel}}题</el-tag>
+              <el-tag type="success">{{$route.query.row.knowledgePoint}}</el-tag>
+            </el-form-item>
+            <el-form-item style="float:right">
+              <el-button type="primary" @click="handleReturn" >返回</el-button>
+            </el-form-item>
+
           </el-form>
         </div>
     </el-card>
@@ -92,7 +97,7 @@
               <el-button
               type="primary"
                 size="mini"
-                @click="edit = true;handleShow(scope.row)">查看
+                @click="edit = true;handleShow(scope.row)">详情
               </el-button>
               <el-button
               type="danger"
@@ -591,6 +596,23 @@
   
     created() {
       console.log(this.$route.query.row)
+      //添加的时候默认添加到本组
+      //选择初始化
+      this.selectForm.grade = this.$route.query.row.grade;
+      this.selectForm.difficultyLevel = this.$route.query.row.difficultyLevel
+      this.selectForm.subject = this.$route.query.row.subject
+      this.selectForm.knowledgePoint = this.$route.query.row.knowledgePoint
+      //填空初始化
+      this.tiankongForm.grade = this.$route.query.row.grade;
+      this.tiankongForm.difficultyLevel = this.$route.query.row.difficultyLevel
+      this.tiankongForm.subject = this.$route.query.row.subject
+      this.tiankongForm.knowledgePoint = this.$route.query.row.knowledgePoint
+      //简答初始化
+      this.jiandaForm.grade = this.$route.query.row.grade;
+      this.jiandaForm.difficultyLevel = this.$route.query.row.difficultyLevel
+      this.jiandaForm.subject = this.$route.query.row.subject
+      this.jiandaForm.knowledgePoint = this.$route.query.row.knowledgePoint
+
      this.listQuery.grade = this.$route.query.row.grade;
      this.listQuery.difficulty_level = this.$route.query.row.difficultyLevel;
      this.listQuery.subject = this.$route.query.row.subject;
@@ -763,15 +785,15 @@
         }else{
           this.jiandaQuesDialog = true;
         }
-        this.selectForm = {
+        // this.selectForm = {
   
-        };
-        this.jiandaForm = {
+        // };
+        // this.jiandaForm = {
      
-        };
-        this.tiankongForm = {
+        // };
+        // this.tiankongForm = {
     
-        }
+        // }
      },
      handleAddXuanze(){
       this.addQuesDialog = false;
@@ -857,6 +879,9 @@
               })
             }
         })
+    },
+    handleReturn(){
+      this.$router.back(-1)
     }
      
     }
