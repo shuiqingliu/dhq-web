@@ -53,6 +53,17 @@ export function maintainDevice(params) {
   })
 }
 
+export function maintainFailure(params) {
+  return request({
+    url:'/deviceMaintain/maintainFailure',
+    method:'get',
+    params:params,
+    headers:{
+      'Content-Type':'text/plain;charset=UTF-8'
+    }
+  })
+}
+
 export function agreeDeviceChangedApply(params) {
   return request({
     url:'/deviceMaintain/agreeDeviceChangedApply',
