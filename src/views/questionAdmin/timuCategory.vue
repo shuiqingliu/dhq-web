@@ -5,14 +5,7 @@
         <div>
           <i class="el-icon-search"></i>
           <span>筛选搜索</span>
-          <el-button
-            style="float: right;margin-top:100px"
-            @click="searchUserList()"
-            
-            type="primary"
-            size="small">
-            搜索
-          </el-button>
+         
         </div>
         <div style="margin-top:15px">
 <el-form :inline="true" :model="listQuery" size="small" >
@@ -49,6 +42,16 @@
                     :value="item.value">
                   </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item>
+               <el-button
+           
+            @click="searchUserList()"
+            
+            type="primary"
+            size="small">
+            搜索
+          </el-button>
             </el-form-item>
           </el-form>
         </div>
