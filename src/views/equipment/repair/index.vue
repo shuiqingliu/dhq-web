@@ -309,7 +309,7 @@ export default {
         { label: "维修失败", value: 8 }
       ],
       a:{
-        0:[false,false,false,false],//待处理
+        0:[false,false,false,true],//待处理
         1:[true,true,true,true],//维修中
         2:[true,true,true,true],//已维修
         3:[true,true,false,false],//换货中
