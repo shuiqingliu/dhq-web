@@ -319,6 +319,10 @@ export default {
   },
   watch:{
     dateValue : function(ne, old){
+      if(ne == null){
+        this.listQuery = {}
+        this.getData()
+      }
       this.listQuery.startTime = getFormatDate(ne[0])
       this.listQuery.startDate = getFormatDate(ne[0])
       this.listQuery.endTime = getFormatDate(ne[1])
@@ -434,6 +438,12 @@ export default {
           
           ]
       }
+      var ysb = {
+        columns: ['月份', '设备数'],
+          rows: [
+          
+          ]
+      }
 
       SBDQ(this.listQuery).then(response => {
         // console.log(response.data.length)
@@ -483,6 +493,13 @@ export default {
         mdsbwx.rows.reverse()
         this.sbwxmd = mdsbwx
       })
+      SBY({year:this.year}).then(response =>{
+        for(var i = 0; i < 12 && i < response.data.length; i++){
+          var v = response.data[i]
+          ysb.rows.push({ '月份': i+1+'月', '设备数': v.deviceNumber})
+        }
+        this.sby = ysb
+      })
 
       //财务统计数据
       var dtcw = {
@@ -498,6 +515,12 @@ export default {
           
           ]
         }
+      var ycw = {
+        columns: ['月份', '利润'],
+        rows: [
+        
+        ]
+      }
       //财务地区
       CWDQ(this.listQuery).then(response =>{
         for(var i = 0; i < response.data.length; i++){
@@ -517,6 +540,13 @@ export default {
           
           mdcw.rows.reverse()
           this.cwmd = mdcw   
+        })
+        CWY({year:this.year}).then(response =>{
+          for(var i = 0; i < 12 && i < response.data.length; i++){
+            var v = response.data[i]
+            ycw.rows.push({ '月份': i+1+'月', '利润': v.profit})
+          }
+          this.cwy = ycw
         })
         //线上课
         var xlxsk = {

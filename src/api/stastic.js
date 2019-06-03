@@ -74,6 +74,14 @@ export function SBWXMD(params) {
     params:params
   })
 }
+//设备月
+export function SBY(params) {
+  return request({
+    url:'/deviceStatic/findDeviceNumberByYear',
+    method:'get',
+    params:params
+  })
+}
 
 //财务地区
 export function CWDQ(params) {
@@ -87,6 +95,14 @@ export function CWDQ(params) {
 export function CWMD(params) {
   return request({
     url:'/financialStatic/findOfflineProfitTopTenShop',
+    method:'get',
+    params:params
+  })
+}
+//财务月
+export function CWY(params) {
+  return request({
+    url:'/financialStatic/findProfitOfMonthByYear',
     method:'get',
     params:params
   })
