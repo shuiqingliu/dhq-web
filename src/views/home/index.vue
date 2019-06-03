@@ -9,20 +9,24 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          
-          
            <el-form-item class="ml">
-                   
-                    <el-date-picker
-                    v-model="dateValue"
-                    type="daterange"
-                    align="right"
-                    unlink-panels
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    :picker-options="pickerOptions">
-                    </el-date-picker>
+              <el-date-picker
+              v-model="dateValue"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions">
+              </el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-date-picker
+              v-model="y"
+              type="year"
+              placeholder="选择年">
+            </el-date-picker>
           </el-form-item>
          
         </el-form>
@@ -32,25 +36,62 @@
     <el-card style="margin-top:15px" shadow="never">
         <el-row :gutter="12">
        <el-col :span="6">
-        <el-card shadow="hover" @click.native="showkc" class="blue" >
-          课程统计
+        <el-card shadow="hover" @click.native="showkc" >
+          <el-row>
+            <el-col :span="6">
+              <svg-icon icon-class="order" >
+              </svg-icon>
+            </el-col>
+            <el-col :span="18">
+              <el-row style="margin-bottom:5px">课程统计</el-row>
+              <el-row>总课程数：{{kcn}}</el-row>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showsb" class="blue">
-          设备统计
+        <el-card shadow="hover" @click.native="showsb" >
+          <el-row>
+            <el-col :span="6">
+              <svg-icon icon-class="order" >
+              </svg-icon>
+            </el-col>
+            <el-col :span="18">
+              <el-row style="margin-bottom:5px">设备统计</el-row>
+              <el-row>总设备数：{{sbn}}</el-row>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
-      <el-col :span="6" >
-        <el-card shadow="hover"  @click.native="showcw" class="blue">
-          财务统计
+      <el-col :span="6">
+        <el-card shadow="hover" @click.native="showcw" >
+          <el-row>
+            <el-col :span="6">
+              <svg-icon icon-class="order" >
+              </svg-icon>
+            </el-col>
+            <el-col :span="18">
+              <el-row style="margin-bottom:5px">财务统计</el-row>
+              <el-row>总利润：{{cwn}}</el-row>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
-      <el-col :span="6" >
-        <el-card shadow="hover"  @click.native="showxsk" class="blue">
-          线上课统计
+      <el-col :span="6">
+        <el-card shadow="hover" @click.native="showxsk" >
+          <el-row>
+            <el-col :span="6">
+              <svg-icon icon-class="order" >
+              </svg-icon>
+            </el-col>
+            <el-col :span="18">
+              <el-row style="margin-bottom:5px">线上课统计</el-row>
+              <el-row>总课程数：{{xskn}}</el-row>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
+      
     </el-row>
     </el-card>
   
@@ -242,7 +283,7 @@
 
 
 <script>
-import {KCXL, KCDQ, KCMD, KCY, SBDQ, SBQS, SBMD, SBWXQS, SBWXMD, SBY, CWDQ, CWMD,CWY, XSKQS,XSKY} from '@/api/stastic'
+import {KCN, KCXL, KCDQ, KCMD, KCY, SBN, SBDQ, SBQS, SBMD, SBWXQS, SBWXMD, SBY, CWN, CWDQ, CWMD,CWY, XSKN,XSKQS,XSKY} from '@/api/stastic'
 import {getFormatDate} from '@/utils/getFormatString';
 export default {
   data() {
@@ -255,11 +296,17 @@ export default {
       }
     }
     return {
+      //总数
+      kcn:0,
+      sbn:0,
+      cwn:0,
+      xskn:0,
       pickerOptions:[],
       //时间区间
       dateValue: '',
       //年份
-      year:0,
+      y:'',
+      year: 0,
       //控制各个模块的显示
       kc: true,
       sb: false,
@@ -322,11 +369,22 @@ export default {
       if(ne == null){
         this.listQuery = {}
         this.getData()
+        return 
       }
       this.listQuery.startTime = getFormatDate(ne[0])
       this.listQuery.startDate = getFormatDate(ne[0])
       this.listQuery.endTime = getFormatDate(ne[1])
       this.listQuery.endDate = getFormatDate(ne[1])
+      this.getData()
+    },
+    y: function(ne, old){
+      if(ne == null){
+        this.listQuery = {}
+        this.year = new Date.getFullYear()
+        this.getData()
+        return 
+      }
+      this.year = ne.getFullYear()
       this.getData()
     }
   },
@@ -334,6 +392,19 @@ export default {
     this.year = new Date().getFullYear()
     // alert(this.year)
     this.getData()
+    KCN().then(response=>{
+      this.kcn = response.data;
+    })
+    SBN().then(response=>{
+      this.sbn = response.data;
+    })
+    CWN().then(response=>{
+      this.cwn = response.data.totalOfflineProfit;
+    })
+    XSKN().then(response=>{
+      this.xskn = response.data;
+    })
+    
   },
   methods:{
   
@@ -615,6 +686,14 @@ export default {
 </script>
 
 <style>
+  /* .tag{
+    background-color: #3399CC;
+    color:#fff;
+  }
+  .tag:hover{
+    background-color:  rgb(3, 136, 202);
+  
+  } */
   .mt30{
     margin-top:30px;
   }
@@ -699,6 +778,8 @@ export default {
     border: 1px solid #DCDFE6;
     padding: 20px;
     height: 100px;
+    padding: 20px 40px;
+    
   }
 
   .total-icon {

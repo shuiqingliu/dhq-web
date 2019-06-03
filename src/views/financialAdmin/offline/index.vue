@@ -109,8 +109,8 @@ export default {
       },
       listQuery: {
         shopID: 0,
-        startDate:'2019-05-01',
-        endDate:'2019-05-19',
+        startDate:null,
+        endDate:null,
         pageNum: 1,
         pageSize: 5
       },

@@ -38,7 +38,7 @@
       </el-row>
       </div>
     </div>
-       <div class="statistics-layout">
+    <div class="statistics-layout">
       <div class="layout-title">本月指标</div>
       <el-row>
         <el-col :span="4">
