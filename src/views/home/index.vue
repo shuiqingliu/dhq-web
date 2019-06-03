@@ -1,8 +1,36 @@
 
 <template>
   <div class="app-container">
- 
-    <el-row :gutter="12">
+     <el-card class="filter-container" shadow="never">
+      <div>
+        <i class="el-icon-search"></i>
+        <span>日期筛选</span>
+        
+      </div>
+      <div style="margin-top: 15px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+          
+          
+           <el-form-item class="ml">
+                   
+                    <el-date-picker
+                    v-model="dateValue"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions">
+                    </el-date-picker>
+          </el-form-item>
+         
+        </el-form>
+       
+      </div>
+    </el-card>
+    <el-card style="margin-top:15px" shadow="never">
+        <el-row :gutter="12">
        <el-col :span="6">
         <el-card shadow="hover" @click.native="showkc" class="blue" >
           课程统计
@@ -24,6 +52,8 @@
         </el-card>
       </el-col>
     </el-row>
+    </el-card>
+  
     <!-- 课程相关统计 -->
     <div class="kc mt30"  v-if="kc">
       <div class="un-handle-layout">
@@ -107,6 +137,30 @@
            </el-row>
             
          </div>
+
+         <div class="un-handle-layout">
+         <div class="layout-title">设备维修情况</div>
+         <div class="un-handle-content">
+           <el-row :gutter="20">
+             <el-col :span="12">
+               <el-card shadow="hover">
+                  <div class="top-10">
+                      <span>设备维修排名</span>
+                      <ve-bar :data="sbwxqs" ></ve-bar>
+                  </div>
+               </el-card>
+               
+             </el-col>
+           
+            <el-col :span="12">
+              <el-card shadow="hover">
+                <span>门店设备维修排名</span>
+                <ve-bar :data="sbwxmd" ></ve-bar>
+              </el-card>
+            </el-col>
+           </el-row>
+         </div>
+         </div>
       </div>
 
      <div class="un-handle-layout">
@@ -188,7 +242,8 @@
 
 
 <script>
-import {KCXL, KCDQ, KCMD, SBDQ, SBQS, SBMD} from '@/api/stastic'
+import {KCXL, KCDQ, KCMD, KCY, SBDQ, SBQS, SBMD, SBWXQS, SBWXMD, SBY, CWDQ, CWMD,CWY, XSKQS,XSKY} from '@/api/stastic'
+import {getFormatDate} from '@/utils/getFormatString';
 export default {
   data() {
     this.chartSettings = {
@@ -200,6 +255,11 @@ export default {
       }
     }
     return {
+      pickerOptions:[],
+      //时间区间
+      dateValue: '',
+      //年份
+      year:0,
       //控制各个模块的显示
       kc: true,
       sb: false,
@@ -227,14 +287,14 @@ export default {
       kcdq:{},
       kcmd:{},
       kcy: {
-        columns: ['月份', '课程数'],
+        columns: ['月份', '课程销量'],
         rows: [
-          { '月份': '1月', '课程数': 4121},
-          { '月份': '2月', '课程数': 1223},
-          { '月份': '3月', '课程数': 2123},
-          { '月份': '4月', '课程数': 4123 },
-          { '月份': '5月', '课程数': 4123 },
-          { '月份': '6月', '课程数': 4123 },
+          { '月份': '1月', '课程销量': 4121},
+          { '月份': '2月', '课程销量': 1223},
+          { '月份': '3月', '课程销量': 2123},
+          { '月份': '4月', '课程销量': 4123 },
+          { '月份': '5月', '课程销量': 4123 },
+          { '月份': '6月', '课程销量': 4123 },
         ]
       },
       //设备统计数据
@@ -243,6 +303,8 @@ export default {
       sbdq:{},
       sbmd:{},
       sby:{}, 
+      sbwxqs:{},
+      sbwxmd:{},
       //财务统计数据
       cwdt:{},
       cwdq:{},
@@ -255,14 +317,22 @@ export default {
       nian: 2019
     };
   },
-  watch: {
-
+  watch:{
+    dateValue : function(ne, old){
+      this.listQuery.startTime = getFormatDate(ne[0])
+      this.listQuery.startDate = getFormatDate(ne[0])
+      this.listQuery.endTime = getFormatDate(ne[1])
+      this.listQuery.endDate = getFormatDate(ne[1])
+      this.getData()
+    }
   },
   created(){
+    this.year = new Date().getFullYear()
+    // alert(this.year)
     this.getData()
   },
   methods:{
-    
+  
     getData(){
       //课程数据获取
       var tmpdt = {
@@ -279,6 +349,12 @@ export default {
       }
       var tmpmd = {
         columns: ['门店名', '课程销量'],
+        rows: [
+        
+        ]
+      }
+      var tmpy = {
+        columns: ['月份', '课程销量'],
         rows: [
         
         ]
@@ -306,8 +382,9 @@ export default {
         tmpxl.rows.reverse()
         this.kcxl = tmpxl
       })
+      //课程门店
       KCMD(this.listQuery).then(response => {
-        // console.log(response.data)
+
          for(var i = 0; i < 10 && i < response.data.list.length; i++){
           var v = response.data.list[i]
           tmpmd.rows.push({ '门店名': v.shopName, '课程销量': v.courseCount})
@@ -316,6 +393,16 @@ export default {
         tmpmd.rows.reverse()
         this.kcmd = tmpmd   
       })
+      //课程月
+      KCY({year:this.year}).then(response =>{
+        for(var i = 0; i < 12 && i < response.data.list.length; i++){
+          var v = response.data.list[i]
+          tmpy.rows.push({ '月份': i+1+'月', '课程销量': v.count})
+        }
+        console.log(tmpy)
+        this.kcy = tmpy
+      })
+
       //设备数据
       var dtsb = {
           columns: ['位置', '设备数'],
@@ -334,7 +421,20 @@ export default {
           rows: [
           
           ]
-        }
+      }
+      var qssbwx  = {
+          columns: ['设备名', '维修数量'],
+          rows: [
+          
+          ]
+      }
+      var mdsbwx  = {
+          columns: ['门店名', '维修数量'],
+          rows: [
+          
+          ]
+      }
+
       SBDQ(this.listQuery).then(response => {
         // console.log(response.data.length)
          for(var i = 0; i < response.data.length; i++){
@@ -365,7 +465,92 @@ export default {
         mdsb.rows.reverse()
         this.sbmd = mdsb   
       })
+      SBWXQS(this.listQuery).then(response => {
+        for(var i = 0; i < 10 && i < response.data.length; i++){
+          var v = response.data[i]
+          qssbwx.rows.push({ '设备名': v.modelNumberAndName, '维修数量': v.totalNumber})
+        }
+        
+        qssbwx.rows.reverse()
+        this.sbwxqs = qssbwx
+      })
+      SBWXMD(this.listQuery).then(response => {
+        for(var i = 0; i < 10 && i < response.data.length; i++){
+          var v = response.data[i]
+          mdsbwx.rows.push({ '门店名': v.shopName, '维修数量': v.totalShopNumber})
+        }
+        
+        mdsbwx.rows.reverse()
+        this.sbwxmd = mdsbwx
+      })
+
+      //财务统计数据
+      var dtcw = {
+          columns: ['位置', '利润'],
+            rows: [
+            
+            ]
+          }
+
+      var mdcw  = {
+          columns: ['门店名', '利润'],
+          rows: [
+          
+          ]
+        }
+      //财务地区
+      CWDQ(this.listQuery).then(response =>{
+        for(var i = 0; i < response.data.length; i++){
+              var v = response.data[i]
+            // console.log(v)
+              dtcw.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '利润': v.total_order_offline_profit})
+            }
+            this.cwdt = dtcw
+            this.cwdq = dtcw
+          })
+        CWMD(this.listQuery).then(response => {
+        // console.log(response.data)
+          for(var i = 0; i < 10 && i < response.data.length; i++){
+            var v = response.data[i]
+            mdcw.rows.push({ '门店名': v.shopName, '利润': v.total_order_offline_profit})
+          }
+          
+          mdcw.rows.reverse()
+          this.cwmd = mdcw   
+        })
+        //线上课
+        var xlxsk = {
+          columns: ['课程名', '销量'],
+          rows: [
+          
+          ]
+        }
+        var yxsk = {
+          columns: ['月份', '课程销量'],
+          rows: [
+          
+          ]
+        }
+      XSKQS(this.listQuery).then(response =>{
+        console.log(response)
+        for(var i = 0; i < 10 && i < response.data.list.length; i++){
+          var v = response.data.list[i]
+          xlxsk.rows.push({ '课程名': v.courseName, '销量': v.count})
+        }
+        
+        xlxsk.rows.reverse()
+        this.xskxl = xlxsk
+      })
+      //线上课月
+      XSKY({year:this.year}).then(response =>{
+        for(var i = 0; i < 12 && i < response.data.length; i++){
+          var v = response.data[i]
+          yxsk.rows.push({ '月份': i+1+'月', '课程销量': v.count})
+        }
+        this.xsky = yxsk
+      })
     }
+      
     ,
     handleClick(){
       // alert(1)
@@ -471,11 +656,7 @@ export default {
   .box-card {
     width: 480px;
   }
-  .app-container {
-    margin-top: 40px;
-    margin-left: 120px;
-    margin-right: 120px;
-  }
+
 
   .address-layout {
   }
