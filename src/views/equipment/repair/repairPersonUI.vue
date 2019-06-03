@@ -41,11 +41,31 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column label="维修编号" align="center">
+        <!-- <el-table-column label="维修编号" align="center">
           <template slot-scope="scope">{{scope.row.maintainCode}}</template>
         </el-table-column>
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">{{ scope.row.oldDeviceNumber }}</template>
+        </el-table-column> -->
+        <el-table-column label="维修编号" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              @click="getRepairInfo(scope.$index, scope.row)"
+            >{{scope.row.maintainCode}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="设备编号" align="center">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>编号: {{ scope.row.oldDeviceNumber }}</p>
+              <p>型号: {{ scope.row.modelNumber }}</p>
+              <p>设备类型: {{ scope.row.deviceTypeName }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-button type="text">{{ scope.row.oldDeviceNumber }}</el-button>
+              </div>
+            </el-popover>
+          </template>
         </el-table-column>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">{{dealStatusList[scope.row.dealStatus]}}</template>
@@ -59,6 +79,7 @@
               size="mini"
               type="warning"
               @click="maintainId = scope.row.id,dialogMaintainVisible = true"
+              :disabled="a[scope.row.dealStatus]"
             >维修</el-button>
           </template>
         </el-table-column>
@@ -112,7 +133,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="repairSuccess()">维修成功</el-button>
-        <el-button @click="dialogMaintainVisible = false">维修失败</el-button>
+        <el-button @click="repairFaild()">维修失败</el-button>
         <el-button @click="dialogMaintainVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -194,6 +215,12 @@ export default {
         "已换货",
         "维修失败"
       ],
+      // a:[true,false,false],
+      a:{
+        1:false,//维修中
+        2:true,//已维修
+        8:true,//维修失败
+      },
       list: [],
       applyReasonList: [
         "操作失误",
@@ -292,7 +319,29 @@ export default {
       this.listQuery.pageNum = val;
       this.getList();
     },
+    //维修成功
     repairSuccess() {
+      this.repairForm.maintainStartTime = this.value1;
+      this.repairForm.maintainEndTime = this.value2;
+      this.repairForm.id = this.maintainId;
+
+      this.$confirm("是否提交？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        maintainDevice(this.repairForm).then(response => {
+          this.$message({
+            message: "提交成功",
+            type: "success",
+            duration: 1000
+          });
+          this.getList();
+        });
+      });
+    },
+    //维修失败
+    repairFaild(){
       this.repairForm.maintainStartTime = this.value1;
       this.repairForm.maintainEndTime = this.value2;
       this.repairForm.id = this.maintainId;

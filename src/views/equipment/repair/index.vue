@@ -72,7 +72,7 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column label="维修编号" align="center">
+        <el-table-column label="维修编号" align="center" width="150">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -80,7 +80,7 @@
             >{{scope.row.maintainCode}}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="设备编号" align="center">
+        <el-table-column label="设备编号" align="center" width="100">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>编号: {{ scope.row.oldDeviceNumber }}</p>
@@ -130,22 +130,29 @@
               size="mini"
               type="warning"
               @click="maintainId = scope.row.id;searchMaintainPeople(),dialogMaintainVisible = true"
+              :disabled="a[scope.row.dealStatus][0]"
             >维修</el-button>
             <el-button
               size="mini"
               type="warning"
               @click="maintainId = scope.row.id,dialogExchangeVisible=true"
+              :disabled="a[scope.row.dealStatus][1]"
+
             >换货</el-button>
             <el-button
               size="mini"
               type="danger"
               @click="maintainId = scope.row.id;dialogRefuseVisible = true"
+              :disabled="a[scope.row.dealStatus][2]"
+
             >拒绝</el-button>
             <el-button
               size="mini"
               type="success"
               @click="maintainId = scope.row.id;exchangeManagerId = scope.row.exchangeManagerId;
               dialogDistributionVisible = true;searchDeviceList(scope.row.modelNumber)"
+              :disabled="a[scope.row.dealStatus][3]"
+
             >分配</el-button>
           </template>
         </el-table-column>
@@ -163,13 +170,16 @@
         :total="total"
       ></el-pagination>
     </div>
-    <el-dialog title="维修人员列表" :visible.sync="dialogMaintainVisible">
-      <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+    <el-dialog title="维修人员列表" :visible.sync="dialogMaintainVisible" width="60%">
+      <!-- <el-cascader size="medium" :options="options" v-model="selectedOptions">
+      </el-cascader> -->
+      <el-input v-model="listMaintainManagerQuery.location" placeholder="请输入地址" style="width:200px"></el-input>
       <el-button type="primary" @click="searchMaintainPeople()">查询维修人员</el-button>
       <el-table :data="gridData">
         <el-table-column property="id" label="ID" width="150"></el-table-column>
-        <el-table-column property="name" label="姓名" width="150"></el-table-column>
+        <el-table-column property="username" label="姓名" width="150"></el-table-column>
         <el-table-column property="phone" label="电话" width="150"></el-table-column>
+        <el-table-column property="address" label="地址" width="150"></el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
@@ -283,9 +293,7 @@ export default {
         pageSize: 5
       },
       listMaintainManagerQuery: {
-        province: null,
-        city: null,
-        distinct: null,
+        location: null,
         pageNum: 1,
         pageSize: 5
       },
@@ -300,6 +308,18 @@ export default {
         { label: "已换货", value: 7 },
         { label: "维修失败", value: 8 }
       ],
+      a:{
+        0:[false,false,false,false],//待处理
+        1:[true,true,true,true],//维修中
+        2:[true,true,true,true],//已维修
+        3:[true,true,false,false],//换货中
+        4:[true,true,true,true],//已拒绝
+        5:[true,true,true,true],//已解决
+        6:[true,true,true,true],//已收货
+        7:[true,true,true,true],//已换货
+        8:[true,true,true,true],//维修失败
+      },
+     // daichuli:[],
       gridData: [
         {
           date: "2016-05-02",
@@ -430,30 +450,30 @@ export default {
       this.getMaintain();
     },
     searchMaintainPeople() {
-      let length = this.selectedOptions.length;
-      this.listMaintainManagerQuery.province =
-        CodeToText[this.selectedOptions[0]];
-      //alert(this.listQuery.province)
-      if (length === 1) {
-        this.listMaintainManagerQuery.province = null;
-      }
-      if (length === 2) {
-        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
-        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
-        this.listMaintainManagerQuery.city = null;
-        this.listMaintainManagerQuery.district = null;
-      }
-      if (length === 3) {
-        this.listMaintainManagerQuery.city =
-          CodeToText[this.selectedOptions[1]];
-        if (this.selectedOptions[2] == "") {
-          this.listMaintainManagerQuery.district = null;
-        } else {
-          this.listMaintainManagerQuery.district =
-            CodeToText[this.selectedOptions[2]];
-        }
-      }
-      this.listMaintainManagerQuery.pageNum = 1;
+      // let length = this.selectedOptions.length;
+      // this.listMaintainManagerQuery.province =
+      //   CodeToText[this.selectedOptions[0]];
+      // //alert(this.listQuery.province)
+      // if (length === 1) {
+      //   this.listMaintainManagerQuery.province = null;
+      // }
+      // if (length === 2) {
+      //   // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+      //   // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+      //   this.listMaintainManagerQuery.city = null;
+      //   this.listMaintainManagerQuery.district = null;
+      // }
+      // if (length === 3) {
+      //   this.listMaintainManagerQuery.city =
+      //     CodeToText[this.selectedOptions[1]];
+      //   if (this.selectedOptions[2] == "") {
+      //     this.listMaintainManagerQuery.district = null;
+      //   } else {
+      //     this.listMaintainManagerQuery.district =
+      //       CodeToText[this.selectedOptions[2]];
+      //   }
+      // }
+      // this.listMaintainManagerQuery.pageNum = 1;
       this.getMaintain();
     },
     getMaintain() {
@@ -476,7 +496,7 @@ export default {
             type: "success",
             duration: 1000
           });
-          this.getMaintain();
+          this.getList();
         });
       });
     },
@@ -495,7 +515,7 @@ export default {
             type: "success",
             duration: 1000
           });
-          this.getMaintain();
+          this.getList();
         });
       });
     },
@@ -513,7 +533,7 @@ export default {
             type: "success",
             duration: 1000
           });
-          this.getMaintain();
+          this.getList();
         });
       });
     },
@@ -545,7 +565,7 @@ export default {
           duration: 1000
         });
       });
-      this.getMaintain();
+      this.getList();
     }
   }
 };

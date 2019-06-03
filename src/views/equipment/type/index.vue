@@ -94,7 +94,7 @@ export default {
     append(node,data) {
     this.addEventdialogVisible = true
      //console.log(node.parent.data.label);
-     alert(node.data.label)
+     //alert(node.data.label)
      //获取当前节点的值
      const son = node.data.label
      const f = node.parent.data.label
@@ -102,7 +102,7 @@ export default {
      if(f == null){
      }
      //const gf = node.parent.parent.label
-     alert(f == null)
+     //alert(f == null)
      //const gf = node.parent.data.label
       //alert(p == null || p == '')
     //   if(f == null){
