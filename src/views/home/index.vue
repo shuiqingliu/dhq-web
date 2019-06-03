@@ -248,8 +248,8 @@ export default {
   data() {
     this.chartSettings = {
       mapGrid: {
-        left: 100,
-        right: 100,
+        left: 300,
+        right: 300,
         top: 10,
         bottom: 10
       }
