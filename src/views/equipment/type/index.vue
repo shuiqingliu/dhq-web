@@ -26,7 +26,7 @@
       >
         <el-form ref="addEventForm" :model="addEventForm" :rules="addEventNodeRules">
           <el-form-item label="类别名称" prop="name">
-            <el-input v-model="addEventForm.name" name="name"></el-input>
+            <el-input v-model="deviceClassName" ></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -73,7 +73,8 @@ export default {
           id: 0,
           secondCategory: null,
           thirdCategory: null
-      }
+      },
+      deviceClassName:null,
     };
   },
   created() {
@@ -93,6 +94,7 @@ export default {
 
     append(node,data) {
     this.addEventdialogVisible = true
+    //alert("哈哈")
      //console.log(node.parent.data.label);
      //alert(node.data.label)
      //获取当前节点的值
@@ -100,6 +102,8 @@ export default {
      const f = node.parent.data.label
      //此时添加的一级类别
      if(f == null){
+       this.addEventForm.firstCategory = son
+       
      }
      //const gf = node.parent.parent.label
      //alert(f == null)
@@ -108,17 +112,17 @@ export default {
     //   if(f == null){
     //       console.log("我是爷爷")
     //   }
-      const newChild = {label: "testtest", children: [] };
-      if (!data.children) {
-        this.$set(data, "children", []);
-      }
-      data.children.push(newChild);
+      // const newChild = {label: "testtest", children: [] };
+      // if (!data.children) {
+      //   this.$set(data, "children", []);
+      // }
+      // data.children.push(newChild);
     },
 
-    addEventFormSubmitBtn(form) {
+    addEventFormSubmitBtn() {
       // console.log(this.addEventForm)
-      if (this.addEventForm.name && this.addEventForm.leader) {
-        addInstitution(this.addEventForm).then(() => {
+      if (this.deviceClassName !== null) {
+        createEquipmentType(this.addEventForm).then(() => {
           this.addEventdialogVisible = false;
           this.$message({
             message: "添加成功",
