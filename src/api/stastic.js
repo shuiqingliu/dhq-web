@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 //课程数据
+//课程数量
+export function KCN() {
+  return request({
+    url:'/OfflineCourseStatistic/sumCountOfOfflineCourse',
+    method:'get'
+    
+  })
+}
 //1.课程课程
 export function KCXL(params) {
     return request({
@@ -33,7 +41,14 @@ export function KCY(params) {
     params:params
   })
 }
-
+//设备数量
+export function SBN() {
+  return request({
+    url:'/deviceStatic/findTotalNumberOfDevice',
+    method:'get'
+    
+  })
+}
 //设备地区
 export function SBDQ(params) {
     return request({
@@ -82,7 +97,14 @@ export function SBY(params) {
     params:params
   })
 }
-
+//财务总数
+export function CWN() {
+  return request({
+    url:'/financialStatic/totalProfitAndIncome',
+    method:'get'
+    
+  })
+}
 //财务地区
 export function CWDQ(params) {
   return request({
@@ -107,7 +129,14 @@ export function CWY(params) {
     params:params
   })
 }
-
+//线上课
+export function XSKN() {
+  return request({
+    url:'/OnlineCourseStatistic/getSumCountOfOnlineCourse',
+    method:'get'
+    
+  })
+}
 //线上课前10
 export function XSKQS(params) {
   return request({
