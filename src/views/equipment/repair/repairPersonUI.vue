@@ -146,7 +146,8 @@ import {
   // agreeDeviceMaintainApply,
   // refuseApply,
   // agreeDeviceChangingApply,
-  maintainDevice
+  maintainDevice,
+  maintainFailure
 } from "@/api/equipmentRepair";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 
@@ -257,7 +258,7 @@ export default {
     };
   },
   created() {
-    //listQuery.maintainManagerId = this.$store.state.user.id
+    listQuery.maintainManagerId = this.$store.state.user.id
     this.getList();
   },
   methods: {
@@ -351,7 +352,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        maintainDevice(this.repairForm).then(response => {
+        maintainFailure(this.repairForm).then(response => {
           this.$message({
             message: "提交成功",
             type: "success",
