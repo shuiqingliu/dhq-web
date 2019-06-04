@@ -332,6 +332,7 @@ export default {
         type: "warning"
       }).then(() => {
         maintainDevice(this.repairForm).then(response => {
+          this.dialogMaintainVisible = false
           this.$message({
             message: "提交成功",
             type: "success",
@@ -353,6 +354,7 @@ export default {
         type: "warning"
       }).then(() => {
         maintainFailure(this.repairForm).then(response => {
+          this.dialogMaintainVisible = false
           this.$message({
             message: "提交成功",
             type: "success",
