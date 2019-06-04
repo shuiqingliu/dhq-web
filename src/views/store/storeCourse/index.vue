@@ -78,7 +78,7 @@
           <el-form-item label="开课：">
             <el-select v-model="shopParam.state" placeholder="是否开课">
               <el-option label="正在开设的课程" value="生效"></el-option>
-              <el-option label="以关闭的课程" value="废弃"></el-option>
+              <el-option label="已关闭的课程" value="废弃"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
