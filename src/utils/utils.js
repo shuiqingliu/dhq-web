@@ -19,10 +19,9 @@ export const initMenu = (router, store)=> {
         }
         router.options.routes.push(notFound)
         
-        //sessionStorage.setItem('routes',JSON.stringify(router.options.routes))
-      
-       
-        // console.log(router.options.routes)
+        // console.log(router.options.routes[2])
+        store.commit('SET_P', router.options.routes[2].path + '/'+ router.options.routes[2].children[0].path)
+        
     }
   })
 }
