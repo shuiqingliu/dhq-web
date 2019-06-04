@@ -40,6 +40,16 @@ export function deleteEquipmentType(id) {
     method:'get',
   })
 }
+
+//根据设备类别批量删除
+export function batchDeleteEquipmentClass(params) {
+  return request({
+    url:'/DeviceClass/delete/batch',
+    method:'get',
+    params:params
+  })
+}
+
 //批量删除设备类型
 export function batchDeleteEquipmentType(ids) {
   return request({
