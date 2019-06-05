@@ -9,7 +9,8 @@ const user = {
     roles: [],
     permis:[],
     routes:[],
-    id:''
+    id:'',
+    p:''
   },
 
   mutations: {
@@ -33,6 +34,9 @@ const user = {
     },
     SET_ID: (state, id) =>{
       state.id = id
+    },
+    SET_P: (state,path) =>{
+      state.p = path
     }
   },
 

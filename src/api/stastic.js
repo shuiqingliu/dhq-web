@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+//门店地区
+export function MDDQ(params) {
+  return request({
+    url:'/showShopCountByRegion',
+    method:'get',
+    params:params
+  })
+}
+
 //课程数据
 //课程数量
 export function KCN() {
