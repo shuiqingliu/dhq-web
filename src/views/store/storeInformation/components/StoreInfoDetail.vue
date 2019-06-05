@@ -169,6 +169,12 @@ export default {
             type: "warning"
           }).then(() => {
             if (this.isEdit) {
+              this.storeInfo.shopLocationProvince =
+                CodeToText[this.selectedOptions[0]];
+              this.storeInfo.shopLocationCity =
+                CodeToText[this.selectedOptions[1]];
+              this.storeInfo.shopLocationDistrict =
+                CodeToText[this.selectedOptions[2]];
               updateStoreInfo(this.$route.query.id, this.storeInfo).then(
                 response => {
                   this.$refs[formName].resetFields();
