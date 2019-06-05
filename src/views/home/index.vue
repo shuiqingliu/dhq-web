@@ -36,21 +36,21 @@
     <el-card style="margin-top:15px" shadow="never">
         <el-row :gutter="12">
        <el-col :span="6">
-        <el-card shadow="hover" @click.native="showkc" >
+        <el-card shadow="hover" @click.native="showkc" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
               </svg-icon>
             </el-col>
             <el-col :span="18">
-              <el-row style="margin-bottom:5px">课程统计</el-row>
+              <el-row style="margin-bottom:5px">课程/门店统计</el-row>
               <el-row>总课程数：{{kcn}}</el-row>
             </el-col>
           </el-row>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showsb" >
+        <el-card shadow="hover" @click.native="showsb" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -64,7 +64,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showcw" >
+        <el-card shadow="hover" @click.native="showcw" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -78,7 +78,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showxsk" >
+        <el-card shadow="hover" @click.native="showxsk" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -97,6 +97,12 @@
   
     <!-- 课程相关统计 -->
     <div class="kc mt30"  v-if="kc">
+      <div class="un-handle-layout">
+         <div class="layout-title">各省门店数据</div>
+         <div class="un-handle-content" >
+            <ve-map :data="mddq" :settings="chartSettings"></ve-map>
+         </div>
+      </div>
       <div class="un-handle-layout">
          <div class="layout-title">各省课程数据</div>
          <div class="un-handle-content" >
@@ -283,7 +289,7 @@
 
 
 <script>
-import {KCN, KCXL, KCDQ, KCMD, KCY, SBN, SBDQ, SBQS, SBMD, SBWXQS, SBWXMD, SBY, CWN, CWDQ, CWMD,CWY, XSKN,XSKQS,XSKY} from '@/api/stastic'
+import {MDN,MDDQ,KCN, KCXL, KCDQ, KCMD, KCY, SBN, SBDQ, SBQS, SBMD, SBWXQS, SBWXMD, SBY, CWN, CWDQ, CWMD,CWY, XSKN,XSKQS,XSKY} from '@/api/stastic'
 import {getFormatDate} from '@/utils/getFormatString';
 export default {
   data() {
@@ -302,6 +308,8 @@ export default {
       cwn:0,
       xskn:0,
       pickerOptions:[],
+      //门店地区
+      mddq:{},
       //时间区间
       dateValue: '',
       //年份
@@ -434,6 +442,25 @@ export default {
         
         ]
       }
+      var dt = {
+        columns: ['位置', '门店数'],
+        rows: [
+        
+        ]
+      }
+      MDDQ(this.listQuery).then(response => {
+      //  console.log(response)
+        //console.log(response.data.list)
+        // alert(1)
+        response.data.forEach(v=>{
+          // console.log(v)
+          dt.rows.push({ '位置': v.province.substring(0,v.province.length-1), '门店数': v.count})
+        })
+        
+
+        this.mddq = dt;
+       // console.log(tmp)
+      })
       KCDQ(this.listQuery).then(response => {
       //  console.log(response)
         //console.log(response.data.list)
@@ -694,6 +721,11 @@ export default {
     background-color:  rgb(3, 136, 202);
   
   } */
+  .but:hover{
+    background-color: #3399CC;
+    color:#fff;
+    cursor: pointer;
+  }
   .mt30{
     margin-top:30px;
   }
