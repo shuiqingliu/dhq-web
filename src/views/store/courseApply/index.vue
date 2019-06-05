@@ -18,6 +18,7 @@
               v-model="listQuery.province"
               placeholder="省/直辖市"
               @change="selectedProvince()"
+              style="width:140px"
             >
               <el-option
                 v-for="item in provinceOptions"
@@ -29,7 +30,7 @@
           </el-form-item>
 
           <el-form-item label="市/市辖区">
-            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()">
+            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()" style="width:140px">
               <el-option
                 v-for="item in cityOptions"
                 :key="item.value"
@@ -40,7 +41,7 @@
           </el-form-item>
 
           <el-form-item label="区/县">
-            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()">
+            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()" style="width:140px">
               <el-option
                 v-for="item in districtOptions"
                 :key="item.value"
@@ -52,7 +53,7 @@
         </el-form>
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="门店名：">
-            <el-select v-model="listQuery.shopName" placeholder="请选择门店名">
+            <el-select v-model="listQuery.shopName" placeholder="请选择门店名" style="width:140px"> 
               <el-option
                 v-for="item in shopOptions"
                 :key="item.value"
@@ -61,17 +62,22 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="处理状态">
+          <el-form-item label="处理状态：">
             <el-select
               v-model="listQuery.applyStatus"
-              placeholder="请选择处理状态"
+              placeholder="请选择状态"
+              style="width:140px"
+              clearable="true"
             >
-              <el-option label="未处理" value="未处理"></el-option>
-              <el-option label="已同意" value="已同意"></el-option>
-              <el-option label="已拒绝" value="申请失败"></el-option>
+              <el-option
+                v-for="item in dealStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
+
         </el-form>
       </div>
     </el-card>
@@ -84,11 +90,9 @@
         ref="equipmentTable"
         :data="list"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -98,19 +102,19 @@
         <el-table-column label="课程名" align="center" width="100">
           <template slot-scope="scope">{{scope.row.courseName}}</template>
         </el-table-column>
-        <el-table-column label="申请单价" align="center" width="100">
+        <el-table-column label="申请单价" align="center" width="80">
           <template slot-scope="scope">{{scope.row.applyPrice}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center">
+        <el-table-column label="申请原因" align="center" width="110">
           <template slot-scope="scope">{{scope.row.applyReason}}</template>
         </el-table-column>
         <el-table-column label="申请人" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyPerson}}</template>
         </el-table-column>
-        <el-table-column label="申请状态" align="center" width="120">
-          <template slot-scope="scope">{{scope.row.applyStatus}}</template>
+        <el-table-column label="申请状态" align="center" width="100">
+          <template slot-scope="scope">{{applyStatusList[scope.row.applyStatus]}}</template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center" width="130">
+        <el-table-column label="申请时间" align="center" width="155">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="附件" align="center" width="100">
@@ -119,26 +123,23 @@
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>-->
-        <el-table-column label="操作" align="center" width="150">
+        <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="danger"
               @click="rejectApply(scope.$index, scope.row)"
-              v-if="scope.row.applyStatus == '未处理'"
             >拒绝</el-button>
             <el-button
               size="mini"
               type="success"
               @click="handleApply(scope.$index, scope.row)"
-              v-if="scope.row.applyStatus == '未处理'"
             >同意</el-button>
             <el-button
               size="mini"
               type="info"
                @click="rejectReason=scope.row.remark;open()"
-              v-if="scope.row.applyStatus == '申请失败'"
-            >查看拒绝原因</el-button>
+            >拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -207,7 +208,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
-        applyStatus: "未处理",
+        applyStatus:1,
         pageNum: 1,
         pageSize: 5
       },
@@ -222,7 +223,17 @@ export default {
       dialogVisible: false,
       reason: null,
       applyId: null,
-      rejectReason:null
+      rejectReason:null,
+      dealStatusOptions: [
+        { label: "总部未处理", value: 1 },
+        { label: "总部审核通过", value: 3 },
+        { label: "总部审核不通过", value: 4 }
+      ],
+      applyStatusList:{
+        1:"未审核",
+        3:"通过",
+        4:"未通过"
+      }
     };
   },
   created() {
@@ -240,9 +251,6 @@ export default {
         this.totalPage = response.data.totalPage;
         this.pageSize = response.data.pageSize;
       });
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
     },
     //拒绝申请
     rejectApply(index, row) {
@@ -386,7 +394,7 @@ export default {
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
-      this.listQuery.applyStatus='未处理'
+      this.listQuery.applyStatus=1
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];
