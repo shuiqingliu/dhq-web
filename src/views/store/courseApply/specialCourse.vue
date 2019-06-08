@@ -18,6 +18,7 @@
               v-model="listQuery.province"
               placeholder="省/直辖市"
               @change="selectedProvince()"
+              style="width:140px"
             >
               <el-option
                 v-for="item in provinceOptions"
@@ -29,7 +30,7 @@
           </el-form-item>
 
           <el-form-item label="市/市辖区">
-            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()">
+            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()" style="width:140px">
               <el-option
                 v-for="item in cityOptions"
                 :key="item.value"
@@ -40,7 +41,7 @@
           </el-form-item>
 
           <el-form-item label="区/县">
-            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()">
+            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()" style="width:140px">
               <el-option
                 v-for="item in districtOptions"
                 :key="item.value"
@@ -52,7 +53,7 @@
         </el-form>
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="门店名：">
-            <el-select v-model="listQuery.shopName" placeholder="请选择门店名">
+            <el-select v-model="listQuery.shopName" placeholder="请选择门店名" style="width:140px"> 
               <el-option
                 v-for="item in shopOptions"
                 :key="item.value"
@@ -61,14 +62,21 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="处理状态">
-            <el-select v-model="listQuery.applyStatus" placeholder="请选择处理状态">
-              <el-option label="未处理" value="未处理"></el-option>
-              <el-option label="已同意" value="已同意"></el-option>
-              <el-option label="已拒绝" value="申请失败"></el-option>
+          <el-form-item label="处理状态：">
+            <el-select
+              v-model="listQuery.applyStatus"
+              placeholder="请选择状态"
+              style="width:140px"
+            >
+              <el-option
+                v-for="item in dealStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
+
         </el-form>
       </div>
     </el-card>
@@ -81,11 +89,9 @@
         ref="equipmentTable"
         :data="list"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -95,27 +101,39 @@
         <el-table-column label="课程名" align="center" width="100">
           <template slot-scope="scope">{{scope.row.courseName}}</template>
         </el-table-column>
-        <el-table-column label="课程描述" align="center" width="100">
+        <el-table-column label="课程描述" align="center" width="80">
           <template slot-scope="scope">{{scope.row.description}}</template>
         </el-table-column>
-        <el-table-column label="时长" align="center" width="100">
+        <el-table-column label="时长" align="center" width="80">
           <template slot-scope="scope">{{scope.row.timesOfClass}}</template>
         </el-table-column>
-        <el-table-column label="课程数" align="center" width="100">
+        <el-table-column label="课程数" align="center" width="80">
           <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
-        </el-table-column>
-        <el-table-column label="申请价格" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.applyPrice}}</template>
-        </el-table-column>
-        <el-table-column label="课程内容" align="center">
-          <template slot-scope="scope">{{scope.row.courseContent}}</template>
-        </el-table-column>
-        <el-table-column label="申请时间" align="center" width="130">
-          <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="附件" align="center" width="100">
           <template slot-scope="scope">{{scope.row.attachment}}</template>
         </el-table-column>
+        <el-table-column label="申请价格" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.applyPrice}}</template>
+        </el-table-column>
+        <el-table-column label="课程内容" align="center" width="100">
+          <template slot-scope="scope">
+            <el-button type="text" @click="courseContent=scope.row.courseContent;open()">详情</el-button>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="申请原因" align="center" width="110">
+          <template slot-scope="scope">{{scope.row.applyReason}}</template>
+        </el-table-column>
+        <el-table-column label="申请人" align="center" width="100">
+          <template slot-scope="scope">{{scope.row.applyPerson}}</template>
+        </el-table-column> -->
+        <el-table-column label="申请状态" align="center" width="100">
+          <template slot-scope="scope">{{applyStatusList[scope.row.applyStatus]}}</template>
+        </el-table-column>
+        <el-table-column label="申请时间" align="center" width="155">
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
+        </el-table-column>
+        
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>-->
@@ -123,35 +141,37 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              type="success"
+              @click="agree(scope.$index, scope.row)"
+              :disabled="a[scope.row.applyStatus][1]"
+            >同意</el-button>
+
+            <el-button
+              size="mini"
               type="danger"
               @click="rejectApply(scope.$index, scope.row)"
-              v-if="scope.row.applyStatus == '未处理'"
+              :disabled="a[scope.row.applyStatus][0]"
             >拒绝</el-button>
-            <el-button
-              size="mini"
-              type="success"
-              @click="agreeApply(scope.$index, scope.row)"
-              v-if="scope.row.applyStatus == '未处理'"
-            >同意</el-button>
-            <el-button
+            
+            <!-- <el-button
               size="mini"
               type="info"
-              @click="rejectReason=scope.row.headOpinion;open()"
-              v-if="scope.row.applyStatus == '申请失败'"
-            >查看拒绝原因</el-button>
+               @click="rejectReason=scope.row.remark;open()"
+               :disabled="a[scope.row.applyStatus][2]"
+            >拒绝原因</el-button> -->
           </template>
         </el-table-column>
       </el-table>
 
-      <el-dialog
-        title="拒绝原因"
-        :visible.sync="rejectDialogVisible"
-        width="30%"
-        :before-close="handleClose"
-      >
+      <el-dialog title="拒绝原因" :visible.sync="rejectDialogVisible" width="30%" :before-close="handleClose">
         <el-form>
-          <el-form-item label-width="120">
-            <el-input v-model="reason" type="textarea"></el-input>
+          <el-form-item label-width="120" label="管理员意见"> 
+            <el-input v-model="headOpinion" type="textarea" style="width:300px"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form>
+          <el-form-item label-width="120" label="拒绝理由">
+            <el-input v-model="reason" type="textarea" style="width:300px"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -159,37 +179,25 @@
           <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
-
-      <el-dialog
-        title="同意"
-        :visible.sync="agreeDialogVisible"
-        width="30%"
-        :before-close="handleClose"
-      >
+      <el-dialog title="同意" :visible.sync="agreeDialogVisible" width="30%" :before-close="handleClose">
         <el-form>
-          <el-form-item label-width="120" label="课程编号:">
-            <el-input v-model="reason" placeholder="请问该课程指定编号" style="width:60%"></el-input>
+          <el-form-item label-width="120" label="课程类型编号">
+            <el-input v-model="courseTypeNumber" style="width:300px"></el-input>
           </el-form-item>
-          <el-form-item label="课程类型：">
-            <el-select v-model="listQuery.shopName" placeholder="请选择课程类型">
-              <el-option
-                v-for="item in shopOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+        </el-form>
+        <el-form>
+          <el-form-item label-width="120" label="管理员意见"> 
+            <el-input v-model="headOpinion" type="textarea" style="width:300px"></el-input>
           </el-form-item>
-          <el-form-item label="线上/线下：">
-            <el-radio-group v-model="online">
-              <el-radio :label="1">线上</el-radio>
-              <el-radio :label="0">线下</el-radio>
-            </el-radio-group>
+        </el-form>
+        <el-form>
+          <el-form-item label-width="120" label="remark">
+            <el-input v-model="reason" type="textarea" style="width:300px"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="agreeDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleDialogConfirm(),agreeDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="handleApply(),agreeDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -245,7 +253,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
-        applyStatus: "未处理",
+        applyStatus:1,
         pageNum: 1,
         pageSize: 5
       },
@@ -258,11 +266,29 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       rejectDialogVisible: false,
-      agreeDialogVisible: false,
+      agreeDialogVisible:false,   
       reason: null,
       applyId: null,
-      rejectReason: null,
-      online:0
+     // rejectReason:null,
+      courseTypeNumber:null,
+      dealStatusOptions: [
+        { label: "总部未处理", value: 1 },
+        { label: "总部审核通过", value: 3 },
+        { label: "总部审核不通过", value: 4 }
+      ],
+      applyStatusList:{
+        1:"未审核",
+        3:"通过",
+        4:"未通过"
+      },
+      a:{
+        1:[false,false,true],//总部未处理
+        3:[true,true,true],//总部审核通过
+        4:[true,true,false],//总部审核不通过
+      },
+      ordinaryCourse:true,
+      specialCourse:false,
+      courseContent:null,
     };
   },
   created() {
@@ -281,22 +307,17 @@ export default {
         this.pageSize = response.data.pageSize;
       });
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
     //拒绝申请
     rejectApply(index, row) {
       this.rejectDialogVisible = true;
-      this.reason = row.remark;
+      //this.reason = row.remark;
       this.applyId = row.id;
     },
     //同意申请
-    agreeApply(index, row) {
+    agree(index,row){
       this.agreeDialogVisible = true;
-      this.reason = row.remark;
-      this.applyId = row.id;
+      this.applyId = row.id
     },
-
     //确认
     handleDialogConfirm() {
       this.$confirm("确定要拒绝吗?", "提示", {
@@ -305,26 +326,32 @@ export default {
         type: "warning"
       }).then(() => {
         // rejectDeviceApply(this.applyId,this.reason).then(
-        rejectApply(this.applyId, this.reason).then(response => {
+        rejectApply({id:this.applyId, remark:this.reason,headOpinion:this.headOpinion}).then(response => {
+          this.getList();
           this.$message({
             message: "已拒绝",
             type: "success",
             duration: 1000
           });
-          this.getList();
         });
       });
     },
-    //处理申请
-    handleApply(index, row) {
-      agreeApply(row.id).then(response => {
+    //确认同意申请
+    handleApply() {
+      this.$confirm("确定同意申请吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+      agreeApply({id:this.applyId, remark:this.reason,headOpinion:this.headOpinion,courseTypeNumber:this.courseTypeNumber}).then(response => {
+        this.getList();
         this.$message({
-          message: "已处理",
+          message: "已同意",
           type: "success",
           duration: 1000
         });
       });
-      this.getList();
+      });  
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -347,6 +374,23 @@ export default {
     searchApplyList() {
       this.listQuery.pageNum = 1;
       this.getList();
+    },
+    batchDeleteEquipmentInstance(ids) {
+      this.$confirm("是否要删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        //let params = new URLSearchParams();
+        //params.append("ids", ids);
+        batchDeleteEquipmentInstance(ids).then(response => {
+          this.getList();
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        });
+      });
     },
     //获取已开设学能通门店的省份;
     getProvince() {
@@ -407,15 +451,18 @@ export default {
       }),
         (this.listQuery.shopName = null);
     },
+    // open() {
+    //   this.$alert(this.rejectReason, "拒绝原因");
+    // },
     open() {
-      this.$alert(this.rejectReason, "拒绝原因");
+      this.$alert(this.courseContent, "课程内容");
     },
-    resetSearchConditions() {
+    resetSearchConditions(){
       this.listQuery.province = null;
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
-      this.listQuery.applyStatus = "未处理";
+      this.listQuery.applyStatus=1
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];

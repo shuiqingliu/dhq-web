@@ -8,9 +8,9 @@ export function fetchList(params) {
   })
 }
 //同意设备申请
-export function agreeApply(id) {
+export function agreeApply(id,remark) {
   return request({
-    url: '/shopCourse/applyCourse?id='+id,
+    url: '/shopCourse/applyCourse?id=' + id + "&xntResponseOpinion=" + remark,
     method: 'get',
   })
 }
@@ -19,7 +19,7 @@ export function agreeApply(id) {
 //拒绝申请
 export function rejectApply(id, remark) {
   return request({
-    url: '/shopCourse/refuseApplyCourse?id=' + id + "&remark=" + remark,
+    url: '/shopCourse/refuseApplyCourse?id=' + id + "&xntResponseOpinion=" + remark,
     method: 'get',
   })
 }
