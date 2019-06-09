@@ -18,9 +18,10 @@ export function agreeApply(params) {
 
 
 //拒绝申请
-export function rejectApply(id, remark) {
+export function rejectApply(params) {
   return request({
-    url: '/shopCourse/refuseSpecialApplyCourse?id=' + id + "&remark=" + remark,
+    url: '/shopCourse/refuseSpecialApplyCourse',
     method: 'get',
+    params:params
   })
 }

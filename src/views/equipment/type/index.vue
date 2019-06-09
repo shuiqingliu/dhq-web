@@ -49,7 +49,7 @@ import {
   queryDeviceClass,
   batchDeleteEquipmentClass
 } from "@/api/equipmentType";
-import { fetchList } from "@/api/equipmentType";
+import { fetchListTree } from "@/api/equipmentType";
 export default {
   data() {
     const validateName = (rule, value, callback) => {
@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     getDeviceClass() {
-      fetchList().then(resp => {
+      fetchListTree().then(resp => {
         this.data = resp.data;
       });
     },
