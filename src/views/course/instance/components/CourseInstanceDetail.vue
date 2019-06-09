@@ -219,7 +219,7 @@ export default {
                 this.$router.back();
               });
             } else {
-              alert(this.courseInstance.picture);
+              //alert(this.courseInstance.picture);
               createCourseInstance(this.courseInstance).then(response => {
                 this.$refs[formName].resetFields();
                 this.courseInstance = Object.assign({}, defaultCourseInstance);
