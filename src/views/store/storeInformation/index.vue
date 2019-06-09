@@ -14,11 +14,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader
-              size="medium"
-              :options="options"
-              v-model="selectedOptions"
-            ></el-cascader>
+            <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
           </el-form-item>
           <el-form-item label="输入店名：">
             <el-input
@@ -85,7 +81,7 @@
         <el-table-column label="详细地址" align="center">
           <template slot-scope="scope">{{scope.row.shopLocationDetail}}</template>
         </el-table-column>
-         <el-table-column label="备注" align="center" width="80">
+        <el-table-column label="备注" align="center" width="80">
           <!-- <template slot-scope="scope">{{scope.row.description}}</template> -->
           <template slot-scope="scope">
             <el-button type="text" @click="description=scope.row.shopDesc;open()">备注</el-button>
@@ -109,24 +105,21 @@
       </el-dialog>
     </div>
     <div class="batch-operate-container">
-      <el-select
-        size="small"
-        v-model="operateType" placeholder="批量操作">
+      <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        ></el-option>
       </el-select>
       <el-button
         style="margin-left: 20px"
         class="search-button"
         @click="handleBatchOperate()"
         type="primary"
-        size="small">
-        确定
-      </el-button>
+        size="small"
+      >确定</el-button>
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -143,7 +136,11 @@
   </div>
 </template>
 <script>
-import { fetchList, deleteStoreInfo ,batchDeleteStoreInfo} from "@/api/storeInformation";
+import {
+  fetchList,
+  deleteStoreInfo,
+  batchDeleteStoreInfo
+} from "@/api/storeInformation";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 export default {
   name: "storeInfoList",
@@ -186,7 +183,7 @@ export default {
       options: regionDataPlus, //全国的地理信息
       selectedOptions: [],
       dialogVisible: false,
-      description:null
+      description: null
     };
   },
   created() {
@@ -218,7 +215,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path: "/store/updateStoreInfo",
-        query: { id: row.id}
+        query: { id: row.id }
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     },
     //删除
@@ -236,7 +233,8 @@ export default {
           });
           this.getList();
         });
-      });6
+      });
+      6;
     },
     //处理改变分页
     handleSizeChange(val) {
@@ -251,26 +249,37 @@ export default {
     //查询
     searchStoreInfoList() {
       let length = this.selectedOptions.length;
-      this.listQuery.province = CodeToText[this.selectedOptions[0]];
-      //alert(this.listQuery.province)
-      if (length === 2) {
-        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
-        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
-        this.listQuery.city = null;
-        this.listQuery.district = null;
-      }
-      if (length === 3) {
-        this.listQuery.city = CodeToText[this.selectedOptions[1]];
-        if (this.selectedOptions[2] == "") {
+      // alert(length);
+      // alert(CodeToText[this.selectedOptions[0]]);
+      if (CodeToText[this.selectedOptions[0]] == "全部") {
+        this.listQuery.pageNum = 1;
+        this.listQuery.province=null,
+        this.getList();
+      } else {
+        this.listQuery.province = CodeToText[this.selectedOptions[0]];
+        //alert(this.listQuery.province)
+        if (length === 2) {
+          // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+          // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+          this.listQuery.city = null;
           this.listQuery.district = null;
-        } else {
-          this.listQuery.district = CodeToText[this.selectedOptions[2]];
         }
+        if (length === 3) {
+          this.listQuery.city = CodeToText[this.selectedOptions[1]];
+          if (this.selectedOptions[2] == "") {
+            this.listQuery.district = null;
+          } else {
+            this.listQuery.district = CodeToText[this.selectedOptions[2]];
+          }
+        }
+        //alert(this.listQuery.city)
+        //alert(this.listQuery.district)
+        this.listQuery.pageNum = 1;
+        this.getList();
       }
-      //alert(this.listQuery.city)
-      //alert(this.listQuery.district)
-      this.listQuery.pageNum = 1;
-      this.getList();
+      // this.listQuery.province=null,
+      //   this.listQuery.city=null,
+      //   this.listQuery.district=null
     },
     //处理批量操作
     handleBatchOperate() {
@@ -289,7 +298,7 @@ export default {
       }
       if (this.operateType === 0) {
         //删除
-        this.batchDeleteStoreInfo(ids.join(','));
+        this.batchDeleteStoreInfo(ids.join(","));
         //在这里重新写一个函数
       } else {
         this.$message({
@@ -300,7 +309,6 @@ export default {
       }
     },
     batchDeleteStoreInfo(ids) {
-
       this.$confirm("是否要删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

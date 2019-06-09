@@ -100,7 +100,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[15,25,30]"
         :current-page.sync="listQuery.pageNum"
         :total="total"
       ></el-pagination>
@@ -143,7 +143,7 @@ export default {
       listQuery: {
         status:0,
         pageNum: 1,
-        pageSize: 5
+        pageSize: 15
       },
       list: [],
       firstCategoryOptions: [
