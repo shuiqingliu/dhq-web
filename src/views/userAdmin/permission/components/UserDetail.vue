@@ -20,10 +20,11 @@
           
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户角色：">
+      <el-form-item label="用户角色：" required>
         <el-select
           v-model="checkedIds"
           multiple
+          
           filterable
           allow-create
           default-first-option
@@ -150,6 +151,14 @@
         
         console.log(this.user)
         this.$refs[formName].validate((valid) => {
+          if(this.checkedIds.length == 0){
+            this.$message({
+                message: '请至少选择一个角色！',
+                type: 'error',
+                duration:1000
+            });
+            return
+          }
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
