@@ -2,13 +2,13 @@
     <el-card class="form-container" shadow="never">
         <el-form :model="passParam" status-icon :rules="rules" ref="changePass" label-width="150px">
           <el-form-item label="原密码" prop="oldPassword">
-              <el-input type="password" v-model="passParam.oldPassword" auto-complete="off"></el-input>
+              <el-input type="password" v-model="passParam.oldPassword" placeholder="请输入原密码" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="newPassword">
-              <el-input type="password" v-model="passParam.newPassword" auto-complete="off"></el-input>
+              <el-input type="password" v-model="passParam.newPassword" placeholder="请输入 6～15 位密码" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="checkPassword">
-              <el-input type="password" v-model="passParam.checkPassword" auto-complete="off"></el-input>
+              <el-input type="password" v-model="passParam.checkPassword" placeholder="请再次输入密码" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item>
                 <el-button type="primary" @click="submitForm('changePass')">提交</el-button>
@@ -37,6 +37,8 @@ export default {
         var checkNew = (rule,value,callback) => {
             if(value === ''){
                 return callback(new Error("新密码不能为空"));
+            }else if(!/^[0-9A-Za-z]{6,15}$/.test(value)){
+                return callback(new Error('密码是 6 ～ 15位字符'));
             }else{
                 if(this.passParam.checkPassword !== ''){
                     this.$refs.changePass.validateField('checkPassword');
