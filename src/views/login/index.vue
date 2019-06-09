@@ -32,8 +32,8 @@
             <svg-icon icon-class="password" class="color-main"></svg-icon>
           </span>
             <span slot="suffix" @click="showPwd">
-            <svg-icon icon-class="eye" class="color-main"></svg-icon>
-          </span>
+              <svg-icon :icon-class="pwdType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px">
@@ -63,7 +63,7 @@
       };
       const validatePass = (rule, value, callback) => {
         if (value.length < 3) {
-          callback(new Error('密码不能小于3位'))
+          callback(new Error('密码不能小于6位'))
         } else {
           callback()
         }

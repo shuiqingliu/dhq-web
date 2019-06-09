@@ -2,6 +2,12 @@ import request from '@/utils/request'
 //获取设备类型列表
 export function fetchList() {
   return request({
+    url:'/DeviceClass/list',
+    method:'get',
+  })
+}
+export function fetchListTree() {
+  return request({
     url:'/DeviceClass/listTree',
     method:'get',
   })

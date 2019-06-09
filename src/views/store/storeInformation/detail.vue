@@ -2,7 +2,7 @@
   <el-card class="form-container" shadow="never">
     <el-form :model="storeInfo"  ref="storeInfoForm" label-width="150px">
       <el-form-item label="门店ID："  prop="managerId">
-        <el-input v-model="storeInfo.shopId"></el-input>
+        <el-input v-model="storeInfo.id"></el-input>
       </el-form-item>
       <el-form-item label="管理者ID："  prop="managerId">
         <el-input v-model="storeInfo.managerId"></el-input>

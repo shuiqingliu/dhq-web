@@ -23,6 +23,7 @@
               v-model="shopParam.province"
               placeholder="省/直辖市"
               @change="selectedProvince()"
+              style="width:140px"
             >
               <el-option
                 v-for="item in provinceOptions"
@@ -34,7 +35,7 @@
           </el-form-item>
 
           <el-form-item label="市/市辖区">
-            <el-select v-model="shopParam.city" placeholder="市/市辖区" @change="selectedCity()">
+            <el-select v-model="shopParam.city" placeholder="市/市辖区" @change="selectedCity()" style="width:140px">
               <el-option
                 v-for="item in cityOptions"
                 :key="item.value"
@@ -45,7 +46,7 @@
           </el-form-item>
 
           <el-form-item label="区/县">
-            <el-select v-model="shopParam.district" placeholder="区/县" @change="selectedDistrict()">
+            <el-select v-model="shopParam.district" placeholder="区/县" @change="selectedDistrict()" style="width:140px">
               <el-option
                 v-for="item in districtOptions"
                 :key="item.value"
@@ -57,7 +58,7 @@
         </el-form>
         <el-form :inline="true" :model="shopParam" size="small" label-width="140px">
           <el-form-item label="门店名：">
-            <el-select v-model="shopParam.shopName" placeholder="请选择门店名">
+            <el-select v-model="shopParam.shopName" placeholder="请选择门店名" style="width:140px">
               <el-option
                 v-for="item in shopOptions"
                 :key="item.value"
@@ -69,16 +70,16 @@
           </el-form-item>
 
           <el-form-item label="特色课：">
-            <el-select v-model="shopParam.specialState" placeholder="是否为特色课">
+            <el-select v-model="shopParam.specialState" placeholder="是否为特色课" style="width:140px">
               <el-option label="特色课" value="0"></el-option>
               <el-option label="非特色课" value="1"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="开课：">
-            <el-select v-model="shopParam.state" placeholder="是否开课">
+            <el-select v-model="shopParam.state" placeholder="是否开课" style="width:140px">
               <el-option label="正在开设的课程" value="生效"></el-option>
-              <el-option label="以关闭的课程" value="废弃"></el-option>
+              <el-option label="已关闭的课程" value="废弃"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -102,8 +103,7 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="门店编号" align="center" width="100">
+        <el-table-column label="门店课程编号" align="center" width="120">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="门店名" align="center" width="100">
@@ -135,17 +135,17 @@
             <img style="height: 70px" :src="scope.row.picture">
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="getDatail(scope.$index, scope.row)">详情</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" @click="getDatail(scope.$index, scope.row)">查看详情</el-button>
+            <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
       <el-dialog
         title="添加门店课程"
         :visible.sync="dialogVisible"
-        width="62%"
+        width="70%"
         :before-close="handleClose"
       >
         <div>
@@ -232,8 +232,7 @@
               <el-select
                 v-model="listQuery.firstType"
                 placeholder="一级类别"
-                clearable
-                style="width:150px"
+                style="width:100px"
                 @change="selectFirstCategory()"
               >
                 <el-option
@@ -288,7 +287,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="课程名：" label-width="80px">
-              <el-select v-model="addParam.courseId" placeholder="课程名" style="width:100px">
+              <el-select v-model="addParam.courseTypeId" placeholder="课程名" style="width:100px">
                 <el-option
                   v-for="item in courseOptions"
                   :key="item.value"
@@ -299,9 +298,17 @@
             </el-form-item>
           </el-form>
         </div>
+        <hr>
+        <div style="margin-top: 15px">
+          <el-form :inline="true" size="small" label-width="100px">
+            <el-form-item label="课程价格：" label-width="100px">
+              <el-input v-model="addParam.coursePrice" placeholder="请输入课程价格"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="resetSearchConditions(),dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addShopCourse">添加门店课程</el-button>
+          <el-button @click="resetSearchConditions(),dialogVisible = false">取 消</el-button>
         </div>
       </el-dialog>
     </div>
@@ -379,7 +386,8 @@ export default {
       courseOptions: [],
       addParam: {
         shopId: null,
-        courseId: null
+        courseTypeId: null,
+        coursePrice:null
       },
       total: null,
       listLoading: false, //临时修改了一下
@@ -485,11 +493,11 @@ export default {
         });
       });
     },
-    getFirstCategoryList() {
-      getFirstCategory().then(response => {
-        this.firstCategoryOptions = response.data;
-      });
-    },
+    // getFirstCategoryList() {
+    //   getFirstCategory().then(response => {
+    //     this.firstCategoryOptions = response.data;
+    //   });
+    // },
     //条件查询重置
     resetSearchConditions() {
       this.shopParam.province = null;
@@ -583,7 +591,7 @@ export default {
         let firstCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < firstCategoryList.length; i++) {
-          arr.push(firstCategoryList[i].firstType);
+          arr.push(firstCategoryList[i].firstClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -607,7 +615,7 @@ export default {
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondType);
+          arr.push(secondCategoryList[i].secondClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -633,7 +641,7 @@ export default {
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdType);
+          arr.push(thirdCategoryList[i].thirdClass);
         }
         //去重
         arr = [...new Set(arr)];
@@ -649,7 +657,7 @@ export default {
     },
 
     selectedOnline() {
-      this.addParam.courseId = null;
+      this.addParam.courseTypeId = null;
       this.courseOptions = [];
       courseInstanceFetch(this.listQuery).then(response => {
         let arr1 = [];
@@ -661,7 +669,7 @@ export default {
     },
     //#########+++++++++++++++++++++++++++++++++++++++++++
     addShopCourse() {
-      if (this.addParam.shopId != null && this.addParam.courseId != null) {
+      if (this.addParam.shopId != null && this.addParam.courseTypeId != null&&this.addParam.coursePrice != null) {
         addShopCourse(this.addParam).then(response => {
           this.$message({
             message: "提交成功",
@@ -670,7 +678,7 @@ export default {
           });
         });
       } else {
-        alert("请重新选择门店和课程");
+        alert("请重新选择门店和课程或输入价格");
       }
     },
     searchStoreCourseList() {
@@ -679,7 +687,7 @@ export default {
      getDatail(index, row) {
       this.$router.push({
         path: "/store/getStoreInfoDetail",
-        query: { id: row.id }
+        query: { id: row.shopId }
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     }
   }
