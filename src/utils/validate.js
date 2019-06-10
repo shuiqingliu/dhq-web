@@ -8,7 +8,8 @@ export function isExternal(path) {
 
 
 export function isvalidUsername(str) {
-  return true
+  const regex = /^[a-zA-Z][a-zA-Z_0-9][\u4e00-\u9fa5]{4,30}$/
+  return regex.test(str)
 }
 
 /* 合法uri*/
