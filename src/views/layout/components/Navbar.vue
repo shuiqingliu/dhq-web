@@ -8,11 +8,11 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
+        <!-- <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
           </el-dropdown-item>
-        </router-link>
+        </router-link> -->
         <el-dropdown-item divided>
           <span @click="changePassword" style="display:block;">修改密码</span>
         </el-dropdown-item>
