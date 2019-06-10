@@ -2,7 +2,7 @@
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
       <el-form-item label="角色名：" prop="description">
-        <el-input v-model="user.description"></el-input>
+        <el-input v-model="user.description" placeholder="支持中文、字母、数字、下划线,4-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="角色描述：">
         <el-input v-model="user.name"></el-input>
@@ -17,6 +17,7 @@
 </template>
 <script>
   import {createRole, updateRole,getRole} from '@/api/role'
+  import {isvalidUsername} from '@/utils/validate'
 
   const defaultuser={    
     name: '',
@@ -62,6 +63,15 @@
     methods: {
       onSubmit(formName) {
         console.log(this.user)
+        if(!isvalidUsername(this.user.name)){
+          this.$message({
+            message: '角色名有错误！',
+            type: 'error',
+            duration:1000
+          });
+          return
+        }
+
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
