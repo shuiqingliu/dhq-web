@@ -8,11 +8,11 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
+        <!-- <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
           </el-dropdown-item>
-        </router-link>
+        </router-link> -->
         <el-dropdown-item divided>
           <span @click="seeApply" style="display:block;">消息中心</span>
         </el-dropdown-item>

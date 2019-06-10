@@ -55,7 +55,7 @@
     name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
-        if (!isvalidUsername(value)) {
+        if (false) {
           callback(new Error('请输入正确的用户名'))
         } else {
           callback()
@@ -70,8 +70,8 @@
       };
       return {
         loginForm: {
-          username: 'xiaowang',
-          password: '123456'
+          username: '',
+          password: ''
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],

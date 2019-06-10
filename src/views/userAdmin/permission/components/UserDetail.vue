@@ -2,7 +2,7 @@
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
       <el-form-item label="用户名：" prop="username">
-        <el-input v-model="user.username"></el-input>
+        <el-input v-model="user.username" placeholder="支持中文、字母、数字、下划线，4-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="password" v-if='!isEdit'>
         <el-input v-model="user.password" show-password></el-input>
@@ -20,7 +20,7 @@
           
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="用户角色：">
+      <el-form-item label="用户角色：" required>
         <el-select
           v-model="checkedIds"
           multiple
@@ -63,6 +63,8 @@
   import {getOrganizations} from '@/api/institution'
   import {getRoles,addUserRole,updateUserRole} from '@/api/role'
   import {fmtRoles, fmtOrganization} from '@/utils/utils'
+  import {isvalidUsername} from '@/utils/validate'
+
   const defaultuser={    
     username: '',
     password: '',
@@ -99,7 +101,7 @@
           roleIds:''
         },
         user: {
-          username:'fsass',
+          username:'',
           password:'',
           phone: '',
           address: '',
@@ -134,7 +136,8 @@
           this.user = response.data;
           console.log(this.user)
           for(var u in response.data.roles){
-            this.checkedIds.push(response.data.roles[u]['id'])
+            //编辑室自动勾选用户角色
+            this.checkedIds.push({value:response.data.roles[u]['id'], label:response.data.roles[u]['id']})
             console.log(u)
           }
           // console.log(this.checkedIds)
@@ -147,9 +150,25 @@
    
     methods: {
       onSubmit(formName) {
-        
+        if(!isvalidUsername(user.username)){
+          this.$message({
+            message: '用户名格式有错误！',
+            type: 'error',
+            duration:1000
+          });
+          return
+        }
         console.log(this.user)
+        if(!isV)
         this.$refs[formName].validate((valid) => {
+          if(this.checkedIds.length == 0){
+            this.$message({
+                message: '请至少选择一个角色！',
+                type: 'error',
+                duration:1000
+            });
+            return
+          }
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
@@ -159,7 +178,11 @@
               if (this.isEdit) {
                 updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
-                  this.userRole.roleIds = this.checkedIds.join(',');
+                  var ids = []
+                  for(var i = 0; i < checkedIds.length; i++){
+                    ids.push(checkedIds[i]['value'])
+                  }
+                  this.userRole.roleIds = ids.join(',');
 
                   updateUserRole(this.userRole);
                   this.$message({
