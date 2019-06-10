@@ -22,6 +22,7 @@ export const initMenu = (router, store)=> {
         // console.log(router.options.routes[2])
         var p = router.options.routes[2].path + '/'+ router.options.routes[2].children[0].path;
         // store.commit('SET_P', )
+        
         router.push({path: p})
         
     }
