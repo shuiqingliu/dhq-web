@@ -14,6 +14,9 @@
           </el-dropdown-item>
         </router-link> -->
         <el-dropdown-item divided>
+          <span @click="seeApply" style="display:block;">消息中心</span>
+        </el-dropdown-item>
+        <el-dropdown-item divided>
           <span @click="changePassword" style="display:block;">修改密码</span>
         </el-dropdown-item>
         <el-dropdown-item divided>
@@ -52,6 +55,9 @@ export default {
     },
     changePassword(){
       this.$router.push({path:'/userAdmin/changePassword'})
+    },
+    seeApply(){
+      this.$router.push({path:'/store/seeApply'})
     }
   }
 }
