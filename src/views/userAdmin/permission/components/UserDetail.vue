@@ -5,7 +5,7 @@
         <el-input v-model="user.username" placeholder="支持中文、字母、数字、下划线，4-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="password" v-if='!isEdit'>
-        <el-input v-model="user.password" show-password></el-input>
+        <el-input v-model="user.password" type="password"></el-input>
       </el-form-item>
       <el-form-item label="手机号：">
         <el-input v-model="user.phone"></el-input>
@@ -150,7 +150,8 @@
    
     methods: {
       onSubmit(formName) {
-        if(!isvalidUsername(user.username)){
+        
+        if(isvalidUsername(this.user.username) == false){
           this.$message({
             message: '用户名格式有错误！',
             type: 'error',
@@ -159,7 +160,7 @@
           return
         }
         console.log(this.user)
-        if(!isV)
+        
         this.$refs[formName].validate((valid) => {
           if(this.checkedIds.length == 0){
             this.$message({
