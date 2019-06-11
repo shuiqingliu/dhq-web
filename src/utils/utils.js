@@ -6,7 +6,7 @@ export const initMenu = (router, store)=> {
   }
   // console.log(router)
   getMenuList().then(resp=> {
-    if (resp && resp.code == 200) {
+    if (resp && resp.code == 200 && router.options.routes.length <= 3) {
       
         var fmtRoutes = formatRoutes(resp.data);
         var notFound = [{path: '*', redirect: '/404', hidden: true}];
