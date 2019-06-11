@@ -91,6 +91,14 @@
         }
       },
       handleLogin() {
+        if(isvalidUsername(this.loginForm.username) == false){
+          this.$message({
+            message: '用户名格式有错误！',
+            type: 'error',
+            duration:1000
+          });
+          return
+        }
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true;

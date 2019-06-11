@@ -5,7 +5,7 @@
         <el-input v-model="user.username" placeholder="支持中文、字母、数字、下划线，4-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="password" v-if='!isEdit'>
-        <el-input v-model="user.password" show-password></el-input>
+        <el-input v-model="user.password" type="password"></el-input>
       </el-form-item>
       <el-form-item label="手机号：">
         <el-input v-model="user.phone"></el-input>
@@ -61,7 +61,7 @@
 <script>
   import {createUser, getUser, updateUser} from '@/api/userAdmin'
   import {getOrganizations} from '@/api/institution'
-  import {getRoles,addUserRole,updateUserRole} from '@/api/role'
+  import {getRoles,addUserRole,updateUserRole, getUserRole} from '@/api/role'
   import {fmtRoles, fmtOrganization} from '@/utils/utils'
   import {isvalidUsername} from '@/utils/validate'
 
@@ -132,15 +132,19 @@
         this.options = fmtRoles(response.data)
       })
       if (this.isEdit) {
+        getUserRole(this.$route.query.id).then(response => {
+          for(var u in response.data){
+            //编辑时自动勾选用户角色
+            this.checkedIds.push(response.data[u]['id'])
+            //console.log(u)
+          }
+        })
         getUser(this.$route.query.id).then(response => {
           this.user = response.data;
           console.log(this.user)
-          for(var u in response.data.roles){
-            //编辑室自动勾选用户角色
-            this.checkedIds.push({value:response.data.roles[u]['id'], label:response.data.roles[u]['id']})
-            console.log(u)
-          }
-          // console.log(this.checkedIds)
+          
+        
+          //console.log(this.checkedIds)
         });
        
       }else{
@@ -150,7 +154,8 @@
    
     methods: {
       onSubmit(formName) {
-        if(!isvalidUsername(user.username)){
+        
+        if(isvalidUsername(this.user.username) == false){
           this.$message({
             message: '用户名格式有错误！',
             type: 'error',
@@ -158,8 +163,9 @@
           });
           return
         }
-        console.log(this.user)
-        if(!isV)
+        //console.log(this.user)
+                         // console.log(this.checkedIds)
+
         this.$refs[formName].validate((valid) => {
           if(this.checkedIds.length == 0){
             this.$message({
@@ -179,8 +185,8 @@
                 updateUser(this.$route.query.id, this.user).then(response => {
                   this.$refs[formName].resetFields();
                   var ids = []
-                  for(var i = 0; i < checkedIds.length; i++){
-                    ids.push(checkedIds[i]['value'])
+                  for(var i = 0; i < this.checkedIds.length; i++){
+                    ids.push(this.checkedIds[i])
                   }
                   this.userRole.roleIds = ids.join(',');
 
