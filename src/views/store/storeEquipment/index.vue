@@ -19,13 +19,13 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区" style="width:230px"></el-cascader>
           </el-form-item>
           <el-form-item label="输入店名：">
             <el-input
               style="width: 203px"
               v-model="listQuery.shopName"
-              placeholder="门店名字"
+              placeholder="请输入门店名"
               size="medium"
             ></el-input>
           </el-form-item>
