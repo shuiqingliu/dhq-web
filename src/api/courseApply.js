@@ -23,3 +23,13 @@ export function rejectApply(id, remark) {
     method: 'get',
   })
 }
+
+
+
+export function sysmsg(params) {
+  return request({
+    url: '/sysmsg/listByTypeId',
+    method: 'get',
+    params:params
+  })
+}
