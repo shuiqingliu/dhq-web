@@ -44,17 +44,7 @@
   </div>
 </template>
 <script>
-import {
-  fetchList,
-  rejectDeviceApply
-  // deleteEquipmentInstance,
-  // batchDeleteEquipmentInstance,
-  // getFirstCategory,
-  // getSecondCategory,
-  // getThirdCategory
-} from "@/api/equipmentApply";
 
-import { fetchList as getListByCategory } from "@/api/equipmentType";
 import {sysmsg} from "@/api/courseApply"
 const defaultApply = {
   id: null,
