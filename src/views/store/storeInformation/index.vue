@@ -14,13 +14,13 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区"></el-cascader>
           </el-form-item>
           <el-form-item label="输入店名：">
             <el-input
               style="width: 203px"
               v-model="listQuery.shopName"
-              placeholder="门店名字"
+              placeholder="请输入门店名"
               size="medium"
             ></el-input>
           </el-form-item>
@@ -41,7 +41,7 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
+        <!-- <el-table-column type="selection" width="60" align="center"></el-table-column> -->
         <el-table-column label="门店编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -104,7 +104,7 @@
         </span>
       </el-dialog>
     </div>
-    <div class="batch-operate-container">
+    <!-- <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
@@ -120,7 +120,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -179,7 +179,7 @@ export default {
       ],
       total: null,
       listLoading: false, //临时修改了一下
-      multipleSelection: [],
+     // multipleSelection: [],
       options: regionDataPlus, //全国的地理信息
       selectedOptions: [],
       dialogVisible: false,
@@ -282,32 +282,32 @@ export default {
       //   this.listQuery.district=null
     },
     //处理批量操作
-    handleBatchOperate() {
-      if (this.multipleSelection < 1) {
-        this.$message({
-          message: "请选择一条记录",
-          type: "warning",
-          duration: 1000
-        });
-        return;
-      }
-      //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
-      let ids = [];
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        ids.push(this.multipleSelection[i].id);
-      }
-      if (this.operateType === 0) {
-        //删除
-        this.batchDeleteStoreInfo(ids.join(","));
-        //在这里重新写一个函数
-      } else {
-        this.$message({
-          message: "请选择批量操作类型",
-          type: "warning",
-          duration: 1000
-        });
-      }
-    },
+    // handleBatchOperate() {
+    //   if (this.multipleSelection < 1) {
+    //     this.$message({
+    //       message: "请选择一条记录",
+    //       type: "warning",
+    //       duration: 1000
+    //     });
+    //     return;
+    //   }
+    //   //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
+    //   let ids = [];
+    //   for (let i = 0; i < this.multipleSelection.length; i++) {
+    //     ids.push(this.multipleSelection[i].id);
+    //   }
+    //   if (this.operateType === 0) {
+    //     //删除
+    //     this.batchDeleteStoreInfo(ids.join(","));
+    //     //在这里重新写一个函数
+    //   } else {
+    //     this.$message({
+    //       message: "请选择批量操作类型",
+    //       type: "warning",
+    //       duration: 1000
+    //     });
+    //   }
+    // },
     batchDeleteStoreInfo(ids) {
       this.$confirm("是否要删除?", "提示", {
         confirmButtonText: "确定",
