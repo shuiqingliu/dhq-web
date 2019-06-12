@@ -221,7 +221,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
-        applyStatus:1,
+        applyStatus:0,
         pageNum: 1,
         pageSize: 5
       },
@@ -240,19 +240,19 @@ export default {
       applyId: null,
       rejectReason:null,
       dealStatusOptions: [
-        { label: "总部未处理", value: 1 },
-        { label: "总部审核通过", value: 3 },
-        { label: "总部审核不通过", value: 4 }
+        { label: "总部未处理", value: 0 },
+        { label: "总部审核通过", value: 2 },
+        { label: "总部审核不通过", value: 3 }
       ],
       applyStatusList:{
-        1:"未审核",
-        3:"通过",
-        4:"未通过"
+        0:"未审核",
+        2:"通过",
+        3:"未通过"
       },
       a:{
-        1:[false,false,true],//总部未处理
-        3:[true,true,true],//总部审核通过
-        4:[true,true,false],//总部审核不通过
+        0:[false,false,true],//总部未处理
+        2:[true,true,true],//总部审核通过
+        3:[true,true,false],//总部审核不通过
       },
       ordinaryCourse:true,
       specialCourse:false,

@@ -1,13 +1,15 @@
 <template>
   <div class="app-container">
     <el-card>
-      <div>
+      <div style="margin-bottom:30px;">
         <i class="el-icon-tickets"></i>
         <span>维修状态</span>
       </div>
+      <div>
       <el-steps :space="200" :active="statusList.length" finish-status="success">
         <el-step :title="item.value" v-for="item in statusList" :key="item.value"></el-step>
       </el-steps>
+      </div>
     </el-card>
 
     <el-card class="filter-container" shadow="never">
@@ -37,26 +39,26 @@
       <div>
         <el-form :inline="true" size="small" label-width="100px">
           <el-form-item label="报修单号：" style="80px">
-            <el-input style="width: 203px" size="small" v-model="obj.maintainCode"></el-input>
+            <el-input style="width: 203px" size="small" v-model="obj.maintainCode" readonly="true"></el-input>
           </el-form-item>
           <el-form-item label="报障人：">
-            <el-input style="width: 203px" size="small" v-model="obj.linkman"></el-input>
+            <el-input style="width: 203px" size="small" v-model="obj.linkman" readonly="true"></el-input>
           </el-form-item>
           <el-form-item label="时间：">
-            <el-input style="width: 203px" size="small" v-model="obj.applyTime"></el-input>
+            <el-input style="width: 203px" size="small" v-model="obj.applyTime" readonly="true"></el-input>
           </el-form-item>
         </el-form>
         <el-form :inline="true" size="small" label-width="100px">
           <el-form-item label="故障等级：">
-            <el-input style="width: 203px" size="small" v-model="obj.falutLevel"></el-input>
+            <el-input style="width: 203px" size="small" v-model="obj.falutLevel" readonly="true"></el-input>
           </el-form-item>
           <el-form-item label="故障现象：">
-            <el-input style="width: 203px" size="small" v-model="obj.description"></el-input>
+            <el-input style="width: 203px" size="small" v-model="obj.description" readonly="true"></el-input>
           </el-form-item>
         </el-form>
         <el-form :inline="true" size="small" label-width="100px">
           <el-form-item label="故障原因：">
-            <el-input style="width: 500px" size="small" type="textarea" v-model="obj.applyReason"></el-input>
+            <el-input style="width: 500px" size="small" type="textarea" v-model="obj.applyReason" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>

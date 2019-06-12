@@ -19,13 +19,13 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions"></el-cascader>
+            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区" style="width:230px"></el-cascader>
           </el-form-item>
           <el-form-item label="输入店名：">
             <el-input
               style="width: 203px"
               v-model="listQuery.shopName"
-              placeholder="门店名字"
+              placeholder="请输入门店名"
               size="medium"
             ></el-input>
           </el-form-item>
@@ -45,7 +45,6 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -98,7 +97,7 @@
         </div>
       </el-dialog>
     </div>
-    <div class="batch-operate-container">
+    <!-- <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
@@ -114,7 +113,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -153,7 +152,6 @@ export default {
           value: 0
         }
       ],
-      operateType: null,
       listQuery: {
         province: null,
         city: null,
@@ -245,54 +243,54 @@ export default {
       this.listQuery.pageNum = 1;
       this.getList();
     },
-    //处理批量操作
-    handleBatchOperate() {
-      console.log(this.multipleSelection);
-      console.log("娅娅");
-      if (this.multipleSelection < 1) {
-        this.$message({
-          message: "请选择一条记录",
-          type: "warning",
-          duration: 1000
-        });
-        return;
-      }
-      //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
-      let ids = [];
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        ids.push(this.multipleSelection[i].id);
-      }
-      console.log(ids);
-      if (this.operateType === 0) {
-        //删除
-        // this.deleteHomeAdvertise(ids);
-        //在这里重新写一个函数
-        this.batchDeleteEquipmentInstance(ids);
-      } else {
-        this.$message({
-          message: "请选择批量操作类型",
-          type: "warning",
-          duration: 1000
-        });
-      }
-    },
-    batchDeleteEquipmentInstance(ids) {
-      this.$confirm("是否要删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        //let params = new URLSearchParams();
-        //params.append("ids", ids);
-        batchDeleteEquipmentInstance(ids).then(response => {
-          this.getList();
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        });
-      });
-    },
+    // //处理批量操作
+    // handleBatchOperate() {
+    //   console.log(this.multipleSelection);
+    //   console.log("娅娅");
+    //   if (this.multipleSelection < 1) {
+    //     this.$message({
+    //       message: "请选择一条记录",
+    //       type: "warning",
+    //       duration: 1000
+    //     });
+    //     return;
+    //   }
+    //   //用来判断是选中了哪个批量操作!!!!!!!!!!!!!（这个没有实现批量删除）
+    //   let ids = [];
+    //   for (let i = 0; i < this.multipleSelection.length; i++) {
+    //     ids.push(this.multipleSelection[i].id);
+    //   }
+    //   console.log(ids);
+    //   if (this.operateType === 0) {
+    //     //删除
+    //     // this.deleteHomeAdvertise(ids);
+    //     //在这里重新写一个函数
+    //     this.batchDeleteEquipmentInstance(ids);
+    //   } else {
+    //     this.$message({
+    //       message: "请选择批量操作类型",
+    //       type: "warning",
+    //       duration: 1000
+    //     });
+    //   }
+    // },
+    // batchDeleteEquipmentInstance(ids) {
+    //   this.$confirm("是否要删除?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   }).then(() => {
+    //     //let params = new URLSearchParams();
+    //     //params.append("ids", ids);
+    //     batchDeleteEquipmentInstance(ids).then(response => {
+    //       this.getList();
+    //       this.$message({
+    //         type: "success",
+    //         message: "删除成功!"
+    //       });
+    //     });
+    //   });
+    // },
     getFirstCategoryList() {
       getFirstCategory().then(response => {
         this.firstCategoryOptions = response.data;
