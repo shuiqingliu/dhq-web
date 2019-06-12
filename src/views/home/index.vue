@@ -21,13 +21,7 @@
               :picker-options="pickerOptions">
               </el-date-picker>
           </el-form-item>
-          <el-form-item>
-            <el-date-picker
-              v-model="y"
-              type="year"
-              placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
+          
          
         </el-form>
        
@@ -140,7 +134,19 @@
       </div>
 
      <div class="un-handle-layout">
-         <div class="layout-title">课程销售趋势图</div>
+         <div class="layout-title">课程销售趋势图
+            <div style="float:right;margin-top:-10px">
+            <el-date-picker
+              v-model="y"
+              type="year"
+              placeholder="选择年">
+            </el-date-picker>
+            </div>
+            
+          
+
+         </div>
+         
          <div class="un-handle-content">
              <ve-line :data="kcy" ></ve-line>
          </div>
@@ -211,7 +217,15 @@
       </div>
 
      <div class="un-handle-layout">
-         <div class="layout-title">设备数趋势图</div>
+         <div class="layout-title">设备数趋势图
+           <div style="float:right;margin-top:-10px">
+            <el-date-picker
+              v-model="y"
+              type="year"
+              placeholder="选择年">
+            </el-date-picker>
+            </div>
+         </div>
          <div class="un-handle-content">
              <ve-line :data="sby" ></ve-line>
          </div>
@@ -249,7 +263,15 @@
       </div>
 
      <div class="un-handle-layout">
-         <div class="layout-title">每月利润图</div>
+         <div class="layout-title">每月利润图
+           <div style="float:right;margin-top:-10px">
+            <el-date-picker
+              v-model="y"
+              type="year"
+              placeholder="选择年">
+            </el-date-picker>
+            </div>
+         </div>
          <div class="un-handle-content">
              <ve-line :data="cwy" ></ve-line>
          </div>
@@ -277,7 +299,15 @@
       </div>
 
      <div class="un-handle-layout">
-         <div class="layout-title">线上课销量趋势图</div>
+         <div class="layout-title">线上课销量趋势图
+           <div style="float:right;margin-top:-10px">
+            <el-date-picker
+              v-model="y"
+              type="year"
+              placeholder="选择年">
+            </el-date-picker>
+            </div>
+         </div>
          <div class="un-handle-content">
              <ve-line :data="xsky" ></ve-line>
          </div>
