@@ -23,20 +23,18 @@
       </el-form-item>
       <!-- <el-form-item label="图片:">
         <single-upload v-model="equipmentInstance.picture"></single-upload>
-      </el-form-item>-->
-      <el-form-item label="证书文件">
+      </el-form-item> -->
+      <el-form-item label="图片:">
         <el-upload
-          ref="upload"
-          action
-          :http-request="handleFile"
-          :on-change="cert_path_file"
-          :multiple="false"
-          :limit="1"
-          :file-list="cert_path"
-          accept=".jpg"
+          class="avatar-uploader"
+          action="#"
+          :show-file-list="false"
+          :on-change="changeUpload"
+          :auto-upload="false"
+          :before-upload="beforeAvatarUpload"
         >
-          <el-button size="small" type="primary" @click="clearUploadedImage('upload')">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传.jpg文件</div>
+          <img v-if="depart.imageUrl" :src="depart.imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
       <el-form-item label="选择类别：">
@@ -111,6 +109,9 @@ import {
 } from "@/api/equipmentInstance";
 import { fetchList as getListByCategory } from "@/api/equipmentType";
 import SingleUpload from "@/components/Upload/singleUpload";
+const defaultDepart = {
+  imageUrl: ''
+};
 //默认信息
 const defaultEquipmentInstance = {
   id: 123,
@@ -118,7 +119,7 @@ const defaultEquipmentInstance = {
   name: "小米",
   price: 8888,
   useYear: 10,
-  //picture: "http:",
+  picture: "http:",
   description: "hahah",
   deviceClassId: 16
 };
@@ -159,7 +160,10 @@ export default {
         pageNum: 1,
         pageSize: 100
       },
-      cert_path: [],
+      depart:{
+        imageUrl:null,
+        departImg:null,
+      }
     };
   },
   created() {
@@ -182,20 +186,7 @@ export default {
   },
   methods: {
     onSubmit(formName) {
-       let form  = this.$refs[formName]; 
-        // 创建 FormData 对象
-        let formData = new FormData();
-        // 创建了 FormData 对象的时候传入了表单但是读不出来表单数据，不知道哪里的问题。所以下面用 append 方法添加参数，想打印出来看看的话可以 formData.get('id')
-        // 这里文件上传的字段一定要设置文件列表中的 raw 参数 this.cert_path[0].raw
-       // formData.append('cert_path', this.cert_path[0] ? this.cert_path[0].raw : '');
-        // let config = {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // };
-        //form.append('cert_path', this.cert_path[0] ? this.cert_path[0].raw : '')
-        //alert(form)
-        form.validate(valid => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
@@ -216,15 +207,7 @@ export default {
                 this.$router.back();
               });
             } else {
-              formData.append('id',this.equipmentInstance.id)
-              formData.append('modelNumber',this.equipmentInstance.modelNumber)
-              formData.append('name',this.equipmentInstance.name);
-              formData.append('price',this.equipmentInstance.price)
-              formData.append('useYear',this.equipmentInstance.useYear)
-              formData.append('description',this.equipmentInstance.description)
-              formData.append('deviceClassId',this.equipmentInstance.deviceClassId)
-              formData.append('image', this.cert_path[0] ? this.cert_path[0].raw : '');
-              createEquipmentInstance(formData).then(response => {
+              createEquipmentInstance(this.equipmentInstance).then(response => {
                 this.$refs[formName].resetFields();
                 this.equipmentInstance = Object.assign(
                   {},
@@ -328,25 +311,75 @@ export default {
       //this.$router.push({ path: "/equipment/instance" });
       this.$router.back();
     },
-    handleFile () { },
-    cert_path_file (file, fileList) {
-      // 证书上传组件 on-change 事件
-      this.cert_path = fileList;
-    },
-    clearUploadedImage (type) {
-      // 重新选择文件时清空文件列表
-      if (type === 'upload') {
-        this.$refs.upload.clearFiles();
-        this.cert_path = [];
-      } else if (type === 'upload1') {
-        this.$refs.upload1.clearFiles();
-        this.key_path = [];
+    init (depart) {
+      alert("init")
+      if (this.depart.departImg) {
+        this.depart.imageUrl = 'data:image/jpeg;base64,' + this.depart.departImg
+      } else {
+        this.depart.imageUrl = ''
       }
     },
+    beforeAvatarUpload (file) {
+      alert("before")
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    changeUpload: function (file, fileList) {
+      alert("change")
+      let reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          this.depart.imageUrl = e.target.result
+          this.depart = deepCopy(this.depart || defaultDepart)
+          // let document = JSON.parse(e.target.result)
+        } catch (err) {
+          console.log(`load JSON document from file error: ${err.message}`)
+          this.showSnackbar(`Load JSON document from file error: ${err.message}`, 4000)
+        }
+      }
+      reader.readAsDataURL(file.raw)
+    }
   }
 };
 </script>
 <style>
+.spacing {
+  margin-bottom: 22px !important;
+}
+.avatar-uploader
+  .el-upload {
+  border: 1px dashed
+    #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader
+  .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
 
 

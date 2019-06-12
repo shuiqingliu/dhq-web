@@ -99,7 +99,8 @@
         </el-table-column>
         <el-table-column label="图片" align="center" width="120">
           <template slot-scope="scope">
-            <img style="height: 70px" :src="scope.row.picture">
+            <!-- <img style="height: 70px" :src="scope.row.picture"> -->
+            <img style="height: 70px" :src="'http://10.103.250.120:2140/deviceType/showImage?id='+scope.row.id">
           </template>
         </el-table-column>
         <el-table-column label="单价￥" align="center" width="80">
