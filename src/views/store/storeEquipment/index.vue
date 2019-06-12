@@ -78,7 +78,7 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="danger" @click="deleteParam.shopDeviceid=scope.row.id,
-            deleteParam.deviceID=scope.row.deviceId,dialogVisible = true">删除</el-button>
+            deleteParam.deviceID=scope.row.deviceTypeId,dialogVisible = true">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,8 +86,8 @@
         <el-form :model="deleteParam" >
           <el-form-item label="回收途径" label-width='150px'>
             <el-select v-model="deleteParam.newSatus" placeholder="请选择活动区域">
-              <el-option label="报废" value="已报废"></el-option>
-              <el-option label="重新分配" value="未分配"></el-option>
+              <el-option label="报废" value="2"></el-option>
+              <el-option label="重新分配" value="0"></el-option>
             </el-select>
           </el-form-item>
         </el-form>

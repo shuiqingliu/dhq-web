@@ -246,11 +246,11 @@ export default {
       this.courseInstance = Object.assign({}, defaultCourseInstance);
     },
     handleRemove(file, fileList) {
-      alert(fileList[0]);
+     // alert(fileList[0]);
       console.log(file, fileList);
     },
     handlePreview(file) {
-      alert(fileList[0]);
+     // alert(fileList[0]);
       console.log(file);
     },
     handleUploadSuccess(res, file) {
@@ -331,7 +331,7 @@ export default {
     },
     selectThirdCategory() {
       fetchList(this.listQuery).then(response => {
-        alert(response.data.list[0].id);
+       // alert(response.data.list[0].id);
         this.courseInstance.typeId = response.data.list[0].id;
       });
     },

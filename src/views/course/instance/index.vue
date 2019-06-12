@@ -90,7 +90,7 @@
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
             <!-- <img style="height: 70px" :src="scope.row.picture"> -->
-            <img style="height: 70px" :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.picture">
+            <img style="height: 70px" :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.id">
           </template>
         </el-table-column>
         <el-table-column label="内容" align="center">
