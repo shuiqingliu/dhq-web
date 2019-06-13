@@ -393,6 +393,12 @@ export default {
       if (this.listQuery.faultLevel == "") {
         this.listQuery.faultLevel = null;
       }
+      if(this.listQuery.deviceTypeName == ""){
+        this.listQuery.deviceTypeName = null
+      }
+      if(this.listQuery.modelNumber == ""){
+        this.listQuery.modelNumber = null
+      }
       this.getList();
     },
     //添加
