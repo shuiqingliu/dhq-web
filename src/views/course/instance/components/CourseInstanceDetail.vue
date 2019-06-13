@@ -99,7 +99,7 @@
           <el-radio :label="0">下架</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-card v-show="courseInstance.online === 0">
+      <el-card v-show="courseInstance.online === 0 && !isEdit">
         <el-form-item label="第几课时">
           <el-input v-model.number="onlineCourseInfo.period"></el-input>
         </el-form-item>
