@@ -33,7 +33,9 @@
       </el-form-item>
       <el-form-item label="员工数量：">
          <el-input v-model="storeInfo.employeeNum"></el-input>
+         <el-button size="mini" type="primary" @click="action()">返回</el-button>
       </el-form-item>
+      
     </el-form>
   </el-card>
 </template>
@@ -50,6 +52,11 @@
         getStoreInfoById(this.$route.query.id).then(response => {
           this.storeInfo = response.data;
         });
+    },
+    methods:{
+      action(){
+      this.$router.back();
+      }
     }
   }
 </script>

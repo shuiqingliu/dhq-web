@@ -107,7 +107,9 @@
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="门店名" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.shopName}}</template>
+          <template slot-scope="scope">
+            <el-button size="mini" @click="getDatail(scope.$index, scope.row)">{{scope.row.shopName}}</el-button>
+            </template>
         </el-table-column>
         <el-table-column label="联系方式" align="center" width="150">
           <template slot-scope="scope">{{scope.row.shopPhone}}</template>
@@ -135,12 +137,12 @@
             <img style="height: 70px" :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.courseTypeId">
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <!-- <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="getDatail(scope.$index, scope.row)">查看详情</el-button>
-            <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-dialog
         title="添加门店课程"
