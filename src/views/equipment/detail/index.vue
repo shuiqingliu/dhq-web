@@ -51,10 +51,10 @@
         </el-table-column>
         <el-table-column label="使用状态" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.deviceUseState === 0" style="color: #37B328">已分配（正常）</span>
-            <span v-if="scope.row.deviceUseState === 1" style="color:#37B328">已分配（维修中）</span>
-            <span v-if="scope.row.deviceUseState === 2" style="color:red">未分配</span>
-            <span v-if="scope.row.deviceUseState === 3" style="color:red">已废弃</span>
+            <span v-if="scope.row.deviceUseState === 0" style="color: #37B328">未分配</span>
+            <span v-if="scope.row.deviceUseState === 1" style="color:#37B328">已分配</span>
+            <span v-if="scope.row.deviceUseState === 2" style="color:red">已报废</span>
+            <span v-if="scope.row.deviceUseState === 3" style="color:red">维修中</span>
           </template>
         </el-table-column>
         <el-table-column label="所属门店" align="center">

@@ -29,7 +29,7 @@
           ref="upload"
           action
           :http-request="handleFile"
-          :on-change="cert_path_file"
+          :on-change="img_path_file"
           :multiple="false"
           :limit="1"
           :file-list="img_path"
@@ -337,7 +337,7 @@ export default {
       this.$router.back();
     },
     handleFile () { },
-    cert_path_file (file, fileList) {
+    img_path_file (file, fileList) {
       // 证书上传组件 on-change 事件
       this.img_path = fileList;
     },
