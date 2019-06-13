@@ -1,8 +1,8 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="courseInstance" :rules="rules" ref="courseInstanceForm" label-width="150px">
-      <el-form-item label="课程编号：" prop="courseNumber">
-        <el-input v-model="courseInstance.courseNumber"></el-input>
+      <el-form-item label="课程编号：" prop="courseTypeNumber">
+        <el-input v-model="courseInstance.courseTypeNumber"></el-input>
       </el-form-item>
       <el-form-item label="课程名：" prop="name">
         <el-input v-model="courseInstance.name"></el-input>
@@ -10,20 +10,35 @@
       <el-form-item label="课程描述：" prop="description">
         <el-input v-model="courseInstance.description" type="textarea"></el-input>
       </el-form-item>
-      <el-form-item label="课程图片:">
-        <single-upload v-model="courseInstance.picture"></single-upload>
+      <el-form-item label="图片">
+        <el-upload
+          ref="upload"
+          action
+          :http-request="handleFile"
+          :on-change="img_path_file"
+          :multiple="false"
+          :limit="1"
+          :file-list="img_path"
+          accept=".jpg"
+        >
+          <el-button size="small" type="primary" @click="clearUploadedImage('upload')">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传.jpg文件</div>
+        </el-upload>
       </el-form-item>
+      <!-- <el-form-item label="课程图片:">
+        <single-upload v-model="courseInstance.picture"></single-upload>
+      </el-form-item>-->
       <el-form-item label="课长(分/每节):" prop="timesOfClass">
         <el-input v-model="courseInstance.timesOfClass" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="课时:" prop="countsOfClass">
-        <el-input v-model="courseInstance.countsOfClass" placeholder="请输入内容"></el-input>
+        <el-input v-model.number="courseInstance.countsOfClass" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="推荐指数:">
-        <el-input v-model="courseInstance.recommendationCoefficient" placeholder="请输入内容"></el-input>
+        <el-input v-model.number="courseInstance.recommendationCoefficient" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="价格：" prop="price">
-        <el-input v-model="courseInstance.price"></el-input>
+        <el-input v-model.number="courseInstance.price"></el-input>
       </el-form-item>
       <el-form-item label="课程内容：" prop="courseContent">
         <el-input v-model="courseInstance.courseContent" placeholder="请输入内容"></el-input>
@@ -84,6 +99,22 @@
           <el-radio :label="0">下架</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-card v-show="courseInstance.online === 0">
+        <el-form-item label="第几课时">
+          <el-input v-model.number="onlineCourseInfo.period"></el-input>
+        </el-form-item>
+        <el-form-item label="课时标题">
+          <el-input v-model="onlineCourseInfo.periodTitle"></el-input>
+        </el-form-item>
+        <el-form-item label="课时链接">
+          <el-input v-model="onlineCourseInfo.periodContent"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="pre()">上一个</el-button>
+          <el-button type="primary" @click="next()">下一个</el-button>
+          <el-button type="primary" @click="falseSubmit()">确定</el-button>
+        </el-form-item>
+      </el-card>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('courseInstanceForm')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('courseInstanceForm')">重置</el-button>
@@ -121,18 +152,18 @@ import {
 
 //默认信息
 const defaultCourseInstance = {
-  courseNumber: null,
+  courseTypeNumber: null,
   courseContent: null,
   description: null,
   id: 0,
   name: null,
-  online: 0,
-  picture: null,
+  online: 1,
+  // picture: null,
   price: null,
   status: 1,
   timesOfClass: null,
   countsOfClass: null,
-  typeId: null,
+  courseClassId: null,
   recommendationCoefficient: null
 };
 export default {
@@ -148,7 +179,7 @@ export default {
     return {
       courseInstance: Object.assign({}, defaultCourseInstance),
       rules: {
-        courseNumber: [
+        courseTypeNumber: [
           { required: true, message: "请输入课程名", trigger: "blur" }
         ],
         name: [{ required: true, message: "请输入课程名", trigger: "blur" }],
@@ -161,7 +192,7 @@ export default {
         courseContent: [
           { required: true, message: "请输入课程内容", trigger: "blur" }
         ],
-        typeId: [
+        courseClassId: [
           { required: true, message: "请输入课程所属类型", trigger: "blur" }
         ],
         price: [{ required: true, message: "请输入价格", trigger: "blur" }]
@@ -177,7 +208,17 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
-      dialogVisible: false
+      onlineCourseInfo: {
+        courseOnlinId: 0,
+        id: 0,
+        period: null,
+        periodTitle: "xxxx",
+        periodContent: null
+      },
+      dialogVisible: false,
+      onlineCourseList: [],
+      listSize: null,
+      img_path: [],
     };
   },
   created() {
@@ -185,7 +226,7 @@ export default {
     if (this.isEdit) {
       getCourseInstance(this.$route.query.id).then(response => {
         this.courseInstance = response.data;
-        this.courseInstance.typeId = response.data.courseClass.id;
+        this.courseInstance.courseClassId = response.data.courseClass.id;
         this.listQuery.firstType = response.data.courseClass.firstClass;
         this.selectFirstCategory();
         this.listQuery.secondType = response.data.courseClass.secondClass;
@@ -198,6 +239,9 @@ export default {
   },
   methods: {
     onSubmit(formName) {
+      // let form  = this.$refs[formName];
+      // 创建 FormData 对象
+      let formData = new FormData();
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
@@ -205,6 +249,12 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
+            let obj = {"courseOnlineContentList":this.onlineCourseList,"courseParam":this.courseInstance}
+              formData.append("courseTypeOnlineItem",JSON.stringify(obj))
+              formData.append(
+                "image",
+                this.img_path[0] ? this.img_path[0].raw : ""
+              );
             if (this.isEdit) {
               updateCourseInstance(
                 this.$route.query.id,
@@ -218,9 +268,8 @@ export default {
                 });
                 this.$router.back();
               });
-            } else {
-              //alert(this.courseInstance.picture);
-              createCourseInstance(this.courseInstance).then(response => {
+            } else {  
+              createCourseInstance(formData).then(response => {
                 this.$refs[formName].resetFields();
                 this.courseInstance = Object.assign({}, defaultCourseInstance);
                 this.$message({
@@ -246,11 +295,11 @@ export default {
       this.courseInstance = Object.assign({}, defaultCourseInstance);
     },
     handleRemove(file, fileList) {
-     // alert(fileList[0]);
+      // alert(fileList[0]);
       console.log(file, fileList);
     },
     handlePreview(file) {
-     // alert(fileList[0]);
+      // alert(fileList[0]);
       console.log(file);
     },
     handleUploadSuccess(res, file) {
@@ -331,12 +380,120 @@ export default {
     },
     selectThirdCategory() {
       fetchList(this.listQuery).then(response => {
-       // alert(response.data.list[0].id);
-        this.courseInstance.typeId = response.data.list[0].id;
+        // alert(response.data.list[0].id);
+        this.courseInstance.courseClassId = response.data.list[0].id;
       });
     },
     returnToStoreInformation() {
       this.$router.push({ path: "/course/instance" });
+    },
+    falseSubmit() {
+      this.onlineCourseList.push({
+        courseOnlinId: 0,
+        id: 0,
+        period: this.onlineCourseInfo.period,
+        periodTitle: this.onlineCourseInfo.periodTitle,
+        periodContent: this.onlineCourseInfo.periodContent
+      });
+      this.listSize = this.onlineCourseList.length;
+      this.onlineCourseInfo = {
+        period: null,
+        periodTitle: null,
+        periodContent: null
+      };
+    },
+    pre() {
+      if (this.listSize == this.onlineCourseList.length + 1) {
+        this.listSize -= 1;
+      }
+      if (this.listSize != null && this.listSize != 0) {
+        this.onlineCourseInfo.period = this.onlineCourseList[
+          this.listSize - 1
+        ].period;
+        this.onlineCourseInfo.periodTitle = this.onlineCourseList[
+          this.listSize - 1
+        ].periodTitle;
+        this.onlineCourseInfo.periodContent = this.onlineCourseList[
+          this.listSize - 1
+        ].periodContent;
+        this.listSize = this.listSize - 1;
+      } else {
+        alert("前面没有了");
+      }
+    },
+    next() {
+      //alert(this.listSize)
+      if (this.listSize == 0) {
+        this.listSize += 1;
+      }
+      if (
+        this.listSize != null &&
+        this.listSize <= this.onlineCourseList.length
+      ) {
+        this.onlineCourseInfo.period = this.onlineCourseList[
+          this.listSize - 1
+        ].period;
+        this.onlineCourseInfo.periodTitle = this.onlineCourseList[
+          this.listSize - 1
+        ].periodTitle;
+        this.onlineCourseInfo.periodContent = this.onlineCourseList[
+          this.listSize - 1
+        ].periodContent;
+        this.listSize = this.listSize + 1;
+      } else {
+        alert("后面没有了");
+        this.onlineCourseInfo = {
+          period: null,
+          periodTitle: null,
+          periodContent: null
+        };
+      }
+    },
+    handleFile() {},
+    img_path_file(file, fileList) {
+      // 证书上传组件 on-change 事件
+      this.img_path = fileList;
+    },
+    clearUploadedImage(type) {
+      // 重新选择文件时清空文件列表
+      if (type === "upload") {
+        this.$refs.upload.clearFiles();
+        this.img_path = [];
+      } else if (type === "upload1") {
+        this.$refs.upload1.clearFiles();
+        this.key_path = [];
+      }
+    },
+    objectToFormData(obj, form,namespace) {
+      
+      const fd = form || new FormData();
+      let formKey;
+
+      for (var property in obj) {
+        if (obj.hasOwnProperty(property)) {
+          let key = Array.isArray(obj) ? "[]" : `[${property}]`;
+          if (namespace) {
+            formKey = namespace + key;
+          } else {
+            formKey = property;
+          }
+
+          // if the property is an object, but not a File, use recursivity.
+          if (
+            typeof obj[property] === "object" &&
+            !(obj[property] instanceof File)
+          ) {
+            alert("afadfa")
+            this.objectToFormData(obj[property], fd, formKey)
+            //objectToFormData();
+          } else {
+            // if it's a string or a File object
+            fd.append(formKey, obj[property]);
+          }
+        }
+      }
+
+      return fd;
     }
   }
 };
