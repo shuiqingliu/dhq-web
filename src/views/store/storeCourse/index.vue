@@ -72,7 +72,7 @@
           <el-form-item label="特色课：">
             <el-select v-model="shopParam.specialState" placeholder="是否为特色课" style="width:140px">
               <el-option label="特色课" value="0"></el-option>
-              <el-option label="非特色课" value="1"></el-option>
+              <!-- <el-option label="非特色课" value="1"></el-option> -->
             </el-select>
           </el-form-item>
 
