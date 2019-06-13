@@ -47,7 +47,9 @@
           <template slot-scope="scope">{{scope.row.agreeTime}}</template>
         </el-table-column>
         <el-table-column label="废弃日期" align="center">
-          <template slot-scope="scope" >{{scope.row.abandonedTime == null? "暂无": scope.row.abandonedTime}}</template>
+          <template
+            slot-scope="scope"
+          >{{scope.row.abandonedTime == null? "暂无": scope.row.abandonedTime}}</template>
         </el-table-column>
         <el-table-column label="使用状态" align="center">
           <template slot-scope="scope">
@@ -62,8 +64,17 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              @click="handleUpdate(scope.$index, scope.row)"
+              :disabled="a[scope.row.deviceUseState][0]"
+            >编辑</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              :disabled="a[scope.row.deviceUseState][1]"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +94,7 @@
   </div>
 </template>
 <script>
-import { fetchList , deleteEquipmentDetail} from "@/api/equipmentDetail";
+import { fetchList, deleteEquipmentDetail } from "@/api/equipmentDetail";
 
 export default {
   name: "equipmentDetailList",
@@ -95,10 +106,10 @@ export default {
           value: 0
         }
       ],
-      name:'',
+      name: "",
       operateType: null,
       listQuery: {
-        deviceTypeId:null,
+        deviceTypeId: null,
         deviceUseState: null,
         pageNum: 1,
         pageSize: 5
@@ -114,14 +125,20 @@ export default {
       firstCategoryOptions: [],
       secondCategoryOptions: [],
       thirdCategoryOptions: [],
-      deviceTypeId:null,
+      deviceTypeId: null,
       total: null,
-      listLoading: false //临时修改了一下
+      listLoading: false, //临时修改了一下
+      a: {
+        0: [false, false], //未分配
+        1: [true, true], //已分配
+        2: [true, true], //已报废
+        3: [true, true] //维修中
+      }
     };
   },
   created() {
     this.listQuery.deviceTypeId = this.$route.query.deviceTypeId;
-   // this.listQuery.name = this.$route.query.name;
+    // this.listQuery.name = this.$route.query.name;
     this.getList();
     //this.name = this.$route.query.name;
   },
@@ -139,12 +156,11 @@ export default {
       });
     },
     //添加
-    addEquipmentDetail(index,row) {
-      this.$router.push({ 
-      path: "/equipment/addEquipmentDetail" ,
-      query: { deviceTypeId : this.deviceTypeId}
+    addEquipmentDetail(index, row) {
+      this.$router.push({
+        path: "/equipment/addEquipmentDetail",
+        query: { deviceTypeId: this.deviceTypeId }
       });
-      
     },
     //更新
     handleUpdate(index, row) {
