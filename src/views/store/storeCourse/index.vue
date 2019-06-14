@@ -70,8 +70,8 @@
           </el-form-item>
 
           <el-form-item label="特色课：">
-            <el-select v-model="shopParam.specialState" placeholder="是否为特色课" style="width:140px">
-              <el-option label="特色课" value="0"></el-option>
+            <el-select v-model="shopParam.specialState" placeholder="是否为特色课" style="width:140px" clearable="true">
+              <el-option label="特色课" value="特色课"></el-option>
               <!-- <el-option label="非特色课" value="1"></el-option> -->
             </el-select>
           </el-form-item>
@@ -128,7 +128,7 @@
         </el-table-column>
         <el-table-column label="特色课" align="center" width="90">
           <template slot-scope="scope">
-            <span v-if="scope.row.specialState === 0" style="color: #37B328">特色课</span>
+            <span v-if="scope.row.firstClass === '特色课'" style="color: #37B328">特色课</span>
             <span v-else style="color:red">非特色课</span>
           </template>
         </el-table-column>
@@ -684,6 +684,9 @@ export default {
       }
     },
     searchStoreCourseList() {
+      if(this.shopParam.specialState == ""){
+        this.shopParam.specialState=null
+      }
       this.getList();
     },
      getDatail(index, row) {

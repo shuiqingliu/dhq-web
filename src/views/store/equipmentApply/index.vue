@@ -41,11 +41,11 @@
         <el-table-column label="编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="门店ID" align="center" width="150">
-          <template slot-scope="scope">{{scope.row.shopId}}</template>
+        <el-table-column label="门店名" align="center" width="110">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
-        <el-table-column label="设备类别ID" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.deviceClassId}}</template>
+        <el-table-column label="设备类别" align="center" width="200">
+          <template slot-scope="scope">{{scope.row.className}}</template>
         </el-table-column>
         <el-table-column label="设备型号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.modelNumber}}</template>
