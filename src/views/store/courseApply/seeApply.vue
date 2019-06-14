@@ -28,8 +28,11 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column label="门店ID" align="center">
+        <el-table-column label="门店ID" align="center" width="150">
           <template slot-scope="scope">{{scope.row.typeId}}</template>
+        </el-table-column>
+        <el-table-column label="门店名" align="center" width="150">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
         <el-table-column label="信息" align="center">
           <template slot-scope="scope">{{scope.row.message}}</template>
