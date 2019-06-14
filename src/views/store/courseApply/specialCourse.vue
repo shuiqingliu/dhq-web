@@ -188,8 +188,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="rejectDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
+          <el-button @click="rejectDialogVisible = false,setNull()">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false,setNull()">确 定</el-button>
         </div>
       </el-dialog>
       <el-dialog
@@ -214,8 +214,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="agreeDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleApply(),agreeDialogVisible = false">确 定</el-button>
+          <el-button @click="agreeDialogVisible = false,setNull()">取 消</el-button>
+          <el-button type="primary" @click="handleApply(),agreeDialogVisible = false,setNull()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -306,7 +306,8 @@ export default {
       },
       ordinaryCourse: true,
       specialCourse: false,
-      courseContent: null
+      courseContent: null,
+      headOpinion:null
     };
   },
   created() {
@@ -493,6 +494,11 @@ export default {
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];
+    },
+    setNull(){
+      this.headOpinion=null
+      this.reason=null
+      this.remark=null
     }
   }
 };
