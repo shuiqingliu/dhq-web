@@ -242,6 +242,7 @@ export default {
       // let form  = this.$refs[formName];
       // 创建 FormData 对象
       let formData = new FormData();
+      let formDataForEdit = new FormData();
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
@@ -256,9 +257,14 @@ export default {
                 this.img_path[0] ? this.img_path[0].raw : ""
               );
             if (this.isEdit) {
+              formDataForEdit.append("courseParam",JSON.stringify(this.courseInstance))
+              formDataForEdit.append(
+                "image",
+                this.img_path[0] ? this.img_path[0].raw : ""
+              );
               updateCourseInstance(
                 this.$route.query.id,
-                this.courseInstance
+                formDataForEdit
               ).then(response => {
                 this.$refs[formName].resetFields();
                 this.$message({
