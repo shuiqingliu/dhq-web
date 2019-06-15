@@ -118,14 +118,14 @@
         <el-table-column label="附件" align="center" width="100">
           
           <template slot-scope="scope">
-            <a class="download" :href="scope.row.attachmentUrl" download="下载">
+            <a class="download" :href="scope.row.attachment" download="下载">
             <i
                 class="el-icon-download"
-                v-if="scope.row.attachmentUrl != null && scope.row.attachmentUrl != ''"
+                v-if="scope.row.attachment != null && scope.row.attachment != ''"
               ></i>
               <i
                 class="el-icon-minus"
-                v-if="scope.row.attachmentUrl == null || scope.row.attachmentUrl == ''"
+                v-if="scope.row.attachment == null || scope.row.attachment == ''"
               ></i>
             </a>
           </template>
