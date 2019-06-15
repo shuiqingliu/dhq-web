@@ -80,7 +80,7 @@
       >
         <!-- <el-table-column type="selection" align="center"></el-table-column> -->
         <el-table-column label="课程编号" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.courseNumber}}</template>
+          <template slot-scope="scope">{{scope.row.courseTypeNumber}}</template>
         </el-table-column>
         <el-table-column label="课程名" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
