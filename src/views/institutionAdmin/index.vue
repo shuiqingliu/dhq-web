@@ -68,7 +68,7 @@
                     size="tiny"
                     
                     >
-                    <el-form :model="detail" :rules="addEventNodeRules">
+                    <el-form :model="detail" :rules="addEventNodeRules" ref="detail">
                         <el-form-item label="机构名称" prop="name" >
                         <el-input v-model="detail.name" name="name"></el-input>
                         </el-form-item>
@@ -79,7 +79,11 @@
                         <el-input v-model="detail.description" name="description"></el-input>
                         </el-form-item>
                     </el-form>
-                    
+                    <!-- <span slot="footer" class="dialog-footer" >
+                        <el-button @click="addEventFormCancleBtn('detail')">取 消</el-button>
+                        <el-button type="primary" @click="addEventFormSubmitBtn('detail')">确 定</el-button>
+                    </span>
+                     -->
                 </el-dialog>
 
         </el-card>
