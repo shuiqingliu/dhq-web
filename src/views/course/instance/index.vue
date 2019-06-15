@@ -79,7 +79,7 @@
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" align="center"></el-table-column>
+        <!-- <el-table-column type="selection" align="center"></el-table-column> -->
         <el-table-column label="课程编号" align="center" width="100">
           <template slot-scope="scope">{{scope.row.courseNumber}}</template>
         </el-table-column>
@@ -165,7 +165,7 @@
       </el-dialog>
     </div>
 
-    <div class="batch-operate-container">
+    <!-- <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
@@ -181,7 +181,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background

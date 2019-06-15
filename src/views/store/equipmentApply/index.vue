@@ -53,8 +53,10 @@
         <el-table-column label="申请数量" align="center" width="100">
           <template slot-scope="scope">{{scope.row.applyNum}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center" width="200">
-          <template slot-scope="scope">{{scope.row.applyReason}}</template>
+        <el-table-column label="申请原因" align="center" width="100">
+          <template slot-scope="scope"  >
+            <el-button type="text" @click="applyReasonDetail=scope.row.applyReason;open()">详情</el-button>
+          </template>
         </el-table-column>
 
         <el-table-column label="申请状态" align="center" width="80">
@@ -179,7 +181,8 @@ export default {
       multipleSelection: [],
       dialogVisible: false,
       reason: null,
-      applyId: null
+      applyId: null,
+      applyReasonDetail:null
     };
   },
   created() {
@@ -278,7 +281,10 @@ export default {
           });
         });
       });
-    }
+    },
+    open() {
+      this.$alert(this.applyReasonDetail, "申请原因");
+    },
   }
 };
 </script>

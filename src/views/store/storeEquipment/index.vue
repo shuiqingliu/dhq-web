@@ -19,15 +19,21 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区" style="width:230px"></el-cascader>
+            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区"  @change="getShopName()"></el-cascader>
           </el-form-item>
-          <el-form-item label="输入店名：">
-            <el-input
-              style="width: 203px"
+          <el-form-item label="输入门店名：">
+            <el-select
               v-model="listQuery.shopName"
-              placeholder="请输入门店名"
-              size="medium"
-            ></el-input>
+              placeholder="请选择类别"
+              clearable
+            >
+              <el-option
+                v-for="item in shopNameList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -132,7 +138,8 @@
 import {
   fetchList,
   getStoreEquipmentById,
-  deleteStoreEquipment
+  deleteStoreEquipment,
+  getShopNameByLocation
   // deleteEquipmentInstance,
   // batchDeleteEquipmentInstance,
   // getFirstCategory,
@@ -140,7 +147,7 @@ import {
   // getThirdCategory
 } from "@/api/storeEquipment";
 
-import { fetchList as getListByCategory } from "@/api/equipmentType";
+import { fetchList as getListByCategory,} from "@/api/equipmentType";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 export default {
   name: "equipmentInstanceList",
@@ -174,7 +181,8 @@ export default {
       multipleSelection: [],
       options: regionDataPlus, //全国的地理信息
       selectedOptions: [],
-      dialogVisible:false
+      dialogVisible:false,
+      shopNameList:[]
     };
   },
   created() {
@@ -298,25 +306,34 @@ export default {
     },
     //查询
     searchStoreEquipmentList() {
+      if(this.listQuery.shopName == ""){
+        this.listQuery.shopName = null
+      }
       let length = this.selectedOptions.length;
-      this.listQuery.province = CodeToText[this.selectedOptions[0]];
-      //alert(this.listQuery.province)
-      if (length === 2) {
-        // this.listQuery.city=CodeToText[this.selectedOptions[1]];
-        // this.listQuery.district=CodeToText[this.selectedOptions[2]];
-        this.listQuery.city = null;
-        this.listQuery.district = null;
-      }
-      if (length === 3) {
-        this.listQuery.city = CodeToText[this.selectedOptions[1]];
-        if (this.selectedOptions[2] == "") {
+      // alert(length);
+      // alert(CodeToText[this.selectedOptions[0]]);
+      if (CodeToText[this.selectedOptions[0]] == "全部") {
+        this.listQuery.province=null
+      } else {
+        this.listQuery.province = CodeToText[this.selectedOptions[0]];
+        //alert(this.listQuery.province)
+        if (length === 2) {
+          // this.listQuery.city=CodeToText[this.selectedOptions[1]];
+          // this.listQuery.district=CodeToText[this.selectedOptions[2]];
+          this.listQuery.city = null;
           this.listQuery.district = null;
-        } else {
-          this.listQuery.district = CodeToText[this.selectedOptions[2]];
         }
+        if (length === 3) {
+          this.listQuery.city = CodeToText[this.selectedOptions[1]];
+          if (this.selectedOptions[2] == "") {
+            this.listQuery.district = null;
+          } else {
+            this.listQuery.district = CodeToText[this.selectedOptions[2]];
+          }
+        }
+        //alert(this.listQuery.city)
+        //alert(this.listQuery.district)
       }
-      //alert(this.listQuery.city)
-      //alert(this.listQuery.district)
       this.listQuery.pageNum = 1;
       this.getListById();
     },
@@ -338,6 +355,43 @@ export default {
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
+    },
+    getShopName(){
+      this.listQuery.shopName=null
+      this.shopNameList = []
+      let length = this.selectedOptions.length;
+      if (CodeToText[this.selectedOptions[0]] == "全部") {
+        this.listQuery.pageNum = 1;
+        this.listQuery.province=null,
+        this.getShopNameList()
+      } else {
+        this.listQuery.province = CodeToText[this.selectedOptions[0]];
+        if (length === 2) {
+          this.listQuery.city = null;
+          this.listQuery.district = null;
+        }
+        if (length === 3) {
+          this.listQuery.city = CodeToText[this.selectedOptions[1]];
+          if (this.selectedOptions[2] == "") {
+            this.listQuery.district = null;
+          } else {
+            this.listQuery.district = CodeToText[this.selectedOptions[2]];
+          }
+        }
+        this.listQuery.pageNum = 1;
+        this.getShopNameList()
+      }
+
+    },
+    getShopNameList(){
+      getShopNameByLocation(this.listQuery).then(
+          response => {
+            let list = response.data.list
+            for(let i = 0;i<list.length;i++){
+              this.shopNameList.push({label:list[i].shopName,value:list[i].shopName})
+            }
+          }
+        );
     }
   }
 };

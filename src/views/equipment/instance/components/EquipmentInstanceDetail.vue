@@ -202,13 +202,14 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            formData.append('id',this.equipmentInstance.id)
-              formData.append('modelNumber',this.equipmentInstance.modelNumber)
-              formData.append('name',this.equipmentInstance.name);
-              formData.append('price',this.equipmentInstance.price)
-              formData.append('useYear',this.equipmentInstance.useYear)
-              formData.append('description',this.equipmentInstance.description)
-              formData.append('deviceClassId',this.equipmentInstance.deviceClassId)
+            // formData.append('id',this.equipmentInstance.id)
+            //   formData.append('modelNumber',this.equipmentInstance.modelNumber)
+            //   formData.append('name',this.equipmentInstance.name);
+            //   formData.append('price',this.equipmentInstance.price)
+            //   formData.append('useYear',this.equipmentInstance.useYear)
+            //   formData.append('description',this.equipmentInstance.description)
+            //   formData.append('deviceClassId',this.equipmentInstance.deviceClassId)
+              formData.append("deviceTypeParam",JSON.stringify(this.equipmentInstance))
               formData.append('image', this.img_path[0] ? this.img_path[0].raw : '');
             if (this.isEdit) {
               updateEquipmentInstance(
