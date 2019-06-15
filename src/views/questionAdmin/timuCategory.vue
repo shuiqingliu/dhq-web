@@ -93,7 +93,7 @@
               <el-button
               type="primary"
                 size="mini"
-                @click="$router.push({path:'/scale/questionAdmin', query:{row:scope.row}})">查看
+                @click="$router.push({path:'/scale/questionAdmin', query:{row:scope.row, listQuery:listQuery}})">查看
               </el-button>
               
             </template>
@@ -307,7 +307,11 @@
     //   }
     // },
     created() {
-    
+    //  console.log(this.$router)
+      console.log(this.$route.query.listQuery)
+      if(this.$route.query.listQuery){
+        this.listQuery = this.$route.query.listQuery
+      }
      this.getList();
     },
     methods: {
