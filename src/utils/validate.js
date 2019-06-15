@@ -8,7 +8,7 @@ export function isExternal(path) {
 
 
 export function isvalidUsername(str) {
-  const regex = /^[a-zA-Z_0-9\u4e00-\u9fa5]{4,30}$/
+  const regex = /^[a-zA-Z_0-9\u4e00-\u9fa5]{2,30}$/
   return regex.test(str)
 }
 

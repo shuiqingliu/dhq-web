@@ -12,10 +12,9 @@
       </el-form-item>
       <el-form-item label="内容类型">
         <el-select v-model="content.typeId" placeholder="请选择内容类型">
-          <el-option label="Category_1" value="1"/>
-          <el-option label="Category_2" value="2"/>
-          <el-option label="Category_3" value="3"/>
-          <el-option label="Category_4" value="4"/>
+          <el-option label="推出新课程" value="1"/>
+          <el-option label="推出新设备" value="2"/>
+       
         </el-select>
       </el-form-item>
       <el-form-item label="封面">
@@ -26,7 +25,7 @@
           :file-list="fileList"
           name="test"
           class="upload-demo"
-          action="http://10.103.241.66:8085/upload/pic"
+          action="http://10.103.241.66:2140/upload/pic"
           list-type="picture">
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>

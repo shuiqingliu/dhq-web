@@ -68,7 +68,7 @@
                     size="tiny"
                     
                     >
-                    <el-form :model="detail" :rules="addEventNodeRules">
+                    <el-form :model="detail" :rules="addEventNodeRules" ref="detail">
                         <el-form-item label="机构名称" prop="name" >
                         <el-input v-model="detail.name" name="name"></el-input>
                         </el-form-item>
@@ -79,7 +79,11 @@
                         <el-input v-model="detail.description" name="description"></el-input>
                         </el-form-item>
                     </el-form>
-                    
+                    <!-- <span slot="footer" class="dialog-footer" >
+                        <el-button @click="addEventFormCancleBtn('detail')">取 消</el-button>
+                        <el-button type="primary" @click="addEventFormSubmitBtn('detail')">确 定</el-button>
+                    </span>
+                     -->
                 </el-dialog>
 
         </el-card>
@@ -88,6 +92,7 @@
 <script>
 import {fmtInsTree} from '@/utils/utils' 
 import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {isvalidUsername} from '@/utils/validate'
 export default {
     data(){
         const validateName = (rule, value, callback) => {
@@ -147,6 +152,14 @@ export default {
         addEventFormSubmitBtn(form){
             // console.log(this.addEventForm)
             if(this.addEventForm.name && this.addEventForm.leader){
+                if(!isvalidUsername(this.addEventForm.name) || !isvalidUsername(this.addEventForm.leader)){
+                    this.$message({
+                        message: '机构名或者机构领导格式不正确',
+                        type: 'error',
+                        duration: 1000
+                    });
+                    return ;
+                }
                 addInstitution(this.addEventForm).then(()=>{
                 this.addEventdialogVisible = false
                 this.$message({

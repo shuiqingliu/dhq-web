@@ -881,7 +881,7 @@
         })
     },
     handleReturn(){
-      this.$router.back(-1)
+      this.$router.push({path: '/scale/timuCategory',  query: { listQuery: this.$route.query.listQuery}})
     }
      
     }

@@ -13,13 +13,13 @@
       <el-form-item label="用户地址：">
         <el-input v-model="user.address"></el-input>
       </el-form-item>
-      <el-form-item label="用户状态：">
+      <!-- <el-form-item label="用户状态：">
         <el-radio-group v-model="user.status">
           <el-radio :label="0">无效</el-radio>
           <el-radio :label="1">有效</el-radio>
           
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="用户角色：" required>
         <el-select
           v-model="checkedIds"
