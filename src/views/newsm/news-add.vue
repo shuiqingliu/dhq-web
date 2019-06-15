@@ -10,13 +10,13 @@
       <el-form-item label="内容标题">
         <el-input v-model="content.title" placeholder="请输入内容标题"/>
       </el-form-item>
-      <!-- <el-form-item label="内容类型">
+      <el-form-item label="内容类型">
         <el-select v-model="content.typeId" placeholder="请选择内容类型">
           <el-option label="推出新课程" value="1"/>
           <el-option label="推出新设备" value="2"/>
        
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="封面">
         <el-upload
           :on-preview="handlePreview"
