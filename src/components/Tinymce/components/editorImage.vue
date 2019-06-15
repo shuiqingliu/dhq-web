@@ -5,14 +5,14 @@
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
       <el-upload
-        :multiple="true"
+        :multiple="false"
         :file-list="fileList"
         :show-file-list="true"
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         :action="actionUrl"
-        name="test"
+        name="file"
         class="editor-slide-upload"
         list-type="picture-card">
         <el-button size="small" type="primary">
@@ -45,7 +45,7 @@ export default {
       dialogVisible: false,
       listObj: {},
       fileList: [],
-      actionUrl: 'http://10.103.241.66:8085/upload/pic'
+      actionUrl: 'http://10.103.250.120:2140/upload/pic'
     }
   },
   mounted() {
@@ -58,10 +58,10 @@ export default {
     handleSubmit() {
       const arr = Object.keys(this.listObj).map(v => this.listObj[v]);
       console.log(arr);
-      if (!this.checkAllSuccess()) {
-        this.$message('Please wait for all images to be uploaded successfully. If there is a network problem, please refresh the page and upload again!')
-        return
-      }
+      // if (!this.checkAllSuccess()) {
+      //   this.$message('Please wait for all images to be uploaded successfully. If there is a network problem, please refresh the page and upload again!')
+      //   return
+      // }
       this.$emit('successCBK', arr);
       this.listObj = {};
       this.fileList = [];
@@ -71,7 +71,8 @@ export default {
         console.log(response);
       Object.keys(this.listObj).every(item => {
           this.listObj[item].hasSuccess = true;
-          this.listObj[item].url = response.data;
+          this.listObj[item].url = response.data.imgStr;
+          this.listObj[item].postfix = response.data.resource.postfix;
       });
       return response.data
     },

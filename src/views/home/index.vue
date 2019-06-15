@@ -21,6 +21,9 @@
               :picker-options="pickerOptions">
               </el-date-picker>
           </el-form-item>
+          <el-form-item>
+          
+          </el-form-item>
           
          
         </el-form>
@@ -484,7 +487,10 @@ export default {
         // alert(1)
         response.data.forEach(v=>{
           // console.log(v)
+          if(v.count != 0){
           dt.rows.push({ '位置': v.province.substring(0,v.province.length-1), '门店数': v.count})
+
+          }
         })
         
 
@@ -496,7 +502,9 @@ export default {
         //console.log(response.data.list)
         response.data.list.forEach(v=>{
           // console.log(v)
-          tmpdt.rows.push({ '位置': v.province.substring(0,v.province.length-1), '课程数': v.countOfCourse})
+          if(v.countOfCourse != 0){
+            tmpdt.rows.push({ '位置': v.province.substring(0,v.province.length-1), '课程数': v.countOfCourse})
+          }
         })
         
         this.kcdt = tmpdt
@@ -578,7 +586,10 @@ export default {
          for(var i = 0; i < response.data.length; i++){
           var v = response.data[i]
           // console.log(v)
+          if(v.totalNumber != 0){
           dtsb.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '设备数': v.totalNumber})
+
+          }
         }
         this.sbdt = dtsb
         this.sbdq = dtsb
@@ -654,7 +665,10 @@ export default {
         for(var i = 0; i < response.data.length; i++){
               var v = response.data[i]
             // console.log(v)
+              if(v.total_order_offline_profit != 0){
               dtcw.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '利润': v.total_order_offline_profit})
+
+              }
             }
             this.cwdt = dtcw
             this.cwdq = dtcw

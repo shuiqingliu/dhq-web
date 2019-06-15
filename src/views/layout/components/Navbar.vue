@@ -7,16 +7,16 @@
     <el-dropdown class="avatar-container" trigger="click">
       
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
+        <img class="user-avatar" src="@/assets/images/1.jpg">
         <i class="el-icon-caret-bottom"></i>
       </div>
       
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <!-- <router-link class="inlineBlock" to="/">
+        <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
           </el-dropdown-item>
-        </router-link> -->
+        </router-link>
         <el-dropdown-item divided>
           <span @click="seeApply" style="display:block;">消息中心</span>
           
