@@ -13,9 +13,8 @@
         <el-button
           style="float: right;margin-right: 15px"
           @click="resetSearchConditions()"
-          size="small">
-          重置
-        </el-button>
+          size="small"
+        >重置</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -90,12 +89,18 @@
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
             <!-- <img style="height: 70px" :src="scope.row.picture"> -->
-            <img style="height: 70px" :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.id">
+            <img
+              style="height: 70px"
+              :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.id"
+            >
           </template>
         </el-table-column>
         <el-table-column label="内容" align="center">
           <template slot-scope="scope">
-            <el-button type="text" @click="courseContent=scope.row.courseContent;openCourseContent()">查看</el-button>
+            <el-button
+              type="text"
+              @click="courseContent=scope.row.courseContent;openCourseContent()"
+            >查看</el-button>
           </template>
         </el-table-column>
         <el-table-column label="课长" align="center" width="70">
@@ -181,7 +186,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div> -->
+    </div>-->
     <div class="pagination-container">
       <el-pagination
         background
@@ -236,7 +241,7 @@ export default {
       multipleSelection: [],
       dialogVisible: false,
       description: null,
-      courseContent:null
+      courseContent: null
     };
   },
   created() {
@@ -275,8 +280,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
+      }).then(() => {
           updateStatus(row.id, { status: row.status }).then(response => {
             this.getList();
             this.$message({
@@ -436,12 +440,12 @@ export default {
     openCourseContent() {
       this.$alert(this.courseContent, "课程内容");
     },
-    resetSearchConditions(){
-      this.listQuery.firstType=null
-      this.listQuery.secondType=null
-      this.listQuery.thirdType=null
-      this.secondCategoryOptions=[]
-      this.thirdCategoryOptions=[]
+    resetSearchConditions() {
+      this.listQuery.firstType = null;
+      this.listQuery.secondType = null;
+      this.listQuery.thirdType = null;
+      this.secondCategoryOptions = [];
+      this.thirdCategoryOptions = [];
     }
   }
 };
