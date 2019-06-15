@@ -210,11 +210,11 @@
         width="30%"
         :before-close="handleClose"
       >
-        <el-form>
+        <!-- <el-form>
           <el-form-item label-width="120" label="课程类型编号">
             <el-input v-model="courseTypeNumber" style="width:300px"></el-input>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <el-form>
           <el-form-item label-width="120" label="总部意见">
             <el-input v-model="headOpinion" type="textarea" style="width:300px"></el-input>
