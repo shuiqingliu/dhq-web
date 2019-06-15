@@ -41,9 +41,9 @@
         <!-- <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column> -->
-        <el-table-column label="内容类型" align="center">
+        <!-- <el-table-column label="内容类型" align="center">
           <template slot-scope="scope">{{scope.row.category}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="内容标题" align="center">
           <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
