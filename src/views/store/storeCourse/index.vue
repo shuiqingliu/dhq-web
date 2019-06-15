@@ -72,14 +72,14 @@
           <el-form-item label="特色课：">
             <el-select v-model="shopParam.specialState" placeholder="是否为特色课" style="width:140px" clearable="true">
               <el-option label="特色课" value="特色课"></el-option>
-              <!-- <el-option label="非特色课" value="1"></el-option> -->
+              <el-option label="非特色课" value="非特色课"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="开课：">
-            <el-select v-model="shopParam.state" placeholder="是否开课" style="width:140px">
-              <el-option label="正在开设的课程" value="生效"></el-option>
-              <el-option label="已关闭的课程" value="废弃"></el-option>
+            <el-select v-model="shopParam.status" placeholder="是否开课" style="width:140px" clearable="true">
+              <el-option label="正在开设的课程" value=1></el-option>
+              <el-option label="已关闭的课程" value=0></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -106,12 +106,15 @@
         <el-table-column label="门店课程编号" align="center" width="120">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="门店名" align="center" width="100">
+        <el-table-column label="门店名" align="center" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="getDatail(scope.$index, scope.row)">{{scope.row.shopName}}</el-button>
             </template>
         </el-table-column>
-        <el-table-column label="联系方式" align="center" width="150">
+        <el-table-column label="价格" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.price}}</template>
+        </el-table-column>
+        <el-table-column label="联系方式" align="center" width="120">
           <template slot-scope="scope">{{scope.row.shopPhone}}</template>
         </el-table-column>
         <el-table-column label="详细地址" align="center" width="100">
@@ -267,7 +270,7 @@
                 v-model="listQuery.thirdType"
                 placeholder="三级类别"
                 style="width:100px"
-                @change="selectThirdCategory()"
+                @change="selectedOnline()"
               >
                 <el-option
                   v-for="item in thirdCategoryOptions"
@@ -277,7 +280,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label-width="80px" label="线上/线下">
+            <!-- <el-form-item label-width="80px" label="线上/线下">
               <el-select
                 v-model="listQuery.online"
                 placeholder="线上/线下"
@@ -287,7 +290,7 @@
                 <el-option label="线上" value="0"></el-option>
                 <el-option label="线下" value="1"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="课程名：" label-width="80px">
               <el-select v-model="addParam.courseTypeId" placeholder="课程名" style="width:100px">
                 <el-option
@@ -364,7 +367,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
-        state: "生效",
+        status:null,
         specialState: null,
         pageNum: 1,
         pageSize: 20
@@ -506,7 +509,7 @@ export default {
       this.shopParam.city = null;
       this.shopParam.district = null;
       this.shopParam.shopName = null;
-      this.shopParam.state = null;
+      this.shopParam.status = null;
       this.shopParam.specialState = null;
       this.cityOptions = [];
       this.districtOptions = [];
@@ -606,6 +609,7 @@ export default {
     selectFirstCategory() {
       this.secondCategoryOptions = [];
       this.thirdCategoryOptions = [];
+      this.courseOptions = [];
       //加载二级列表
       getListByCategory({
         firstType: this.listQuery.firstType,
@@ -628,10 +632,12 @@ export default {
       });
       this.listQuery.secondType = null; //将上一次二级分类选中的结果置为空。
       this.listQuery.thirdType = null; //将上一次二级分类选中的结果置为空。
+      this.addParam.courseTypeId = null;
     },
     //选择二级列表以后
     selectSecondCategory() {
       this.thirdCategoryOptions = [];
+      this.courseOptions = [];
       //加载二级列表
       getListByCategory({
         firstType: this.listQuery.firstType,
@@ -652,13 +658,15 @@ export default {
         }
       });
       this.listQuery.thirdType = null; //将上一次三级分类选中的结果置为空。
+      this.addParam.courseTypeId = null;
     },
 
-    selectThirdCategory() {
-      this.listQuery.online = null;
-    },
+    // selectThirdCategory() {
+    //   this.listQuery.online = null;
+    // },
 
     selectedOnline() {
+      this.listQuery.online = 1
       this.addParam.courseTypeId = null;
       this.courseOptions = [];
       courseInstanceFetch(this.listQuery).then(response => {
@@ -672,6 +680,7 @@ export default {
     //#########+++++++++++++++++++++++++++++++++++++++++++
     addShopCourse() {
       if (this.addParam.shopId != null && this.addParam.courseTypeId != null&&this.addParam.coursePrice != null) {
+        this.dialogVisible = false
         addShopCourse(this.addParam).then(response => {
           this.$message({
             message: "提交成功",
@@ -686,6 +695,9 @@ export default {
     searchStoreCourseList() {
       if(this.shopParam.specialState == ""){
         this.shopParam.specialState=null
+      }
+      if(this.shopParam.status == ""){
+        this.shopParam.status=null
       }
       this.getList();
     },

@@ -30,7 +30,12 @@
           </el-form-item>
 
           <el-form-item label="市/市辖区">
-            <el-select v-model="listQuery.city" placeholder="市/市辖区" @change="selectedCity()" style="width:140px">
+            <el-select
+              v-model="listQuery.city"
+              placeholder="市/市辖区"
+              @change="selectedCity()"
+              style="width:140px"
+            >
               <el-option
                 v-for="item in cityOptions"
                 :key="item.value"
@@ -41,7 +46,12 @@
           </el-form-item>
 
           <el-form-item label="区/县">
-            <el-select v-model="listQuery.district" placeholder="区/县" @change="selectedDistrict()" style="width:140px">
+            <el-select
+              v-model="listQuery.district"
+              placeholder="区/县"
+              @change="selectedDistrict()"
+              style="width:140px"
+            >
               <el-option
                 v-for="item in districtOptions"
                 :key="item.value"
@@ -53,7 +63,7 @@
         </el-form>
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="门店名：">
-            <el-select v-model="listQuery.shopName" placeholder="请选择门店名" style="width:140px"> 
+            <el-select v-model="listQuery.shopName" placeholder="请选择门店名" style="width:140px">
               <el-option
                 v-for="item in shopOptions"
                 :key="item.value"
@@ -63,11 +73,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="处理状态：">
-            <el-select
-              v-model="listQuery.applyStatus"
-              placeholder="请选择状态"
-              style="width:140px"
-            >
+            <el-select v-model="listQuery.applyStatus" placeholder="请选择状态" style="width:140px">
               <el-option
                 v-for="item in dealStatusOptions"
                 :key="item.value"
@@ -76,7 +82,6 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
         </el-form>
       </div>
     </el-card>
@@ -117,7 +122,26 @@
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="附件" align="center" width="100">
-          <template slot-scope="scope">{{scope.row.attachmentUrl}}</template>
+          <template slot-scope="scope">
+            <!-- <a
+              class="download"
+              href="http://10.103.250.120:2140/courseType/showImage?id=1029"
+              download
+              target="_blank"
+            >
+              
+            </a> -->
+            <i
+                class="el-icon-download"
+                v-if="scope.row.attachmentUrl != null && scope.row.attachmentUrl != ''"
+                   @click="downloadFile(scope.row.attachmentUrl,'fff')"
+
+              ></i>
+              <i
+                class="el-icon-minus"
+                v-if="scope.row.attachmentUrl == null || scope.row.attachmentUrl == ''"
+              ></i>
+          </template>
         </el-table-column>
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
@@ -139,14 +163,19 @@
             <el-button
               size="mini"
               type="info"
-               @click="rejectReason=scope.row.remark;open()"
-               :disabled="a[scope.row.applyStatus][2]"
+              @click="rejectReason=scope.row.xntResponseOpinion;open()"
+              :disabled="a[scope.row.applyStatus][2]"
             >拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-dialog title="拒绝原因" :visible.sync="rejectDialogVisible" width="30%" :before-close="handleClose">
+      <el-dialog
+        title="拒绝原因"
+        :visible.sync="rejectDialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
         <el-form>
           <el-form-item label-width="120">
             <el-input v-model="reason" type="textarea"></el-input>
@@ -157,7 +186,12 @@
           <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="同意备注" :visible.sync="agreeDialogVisible" width="30%" :before-close="handleClose">
+      <el-dialog
+        title="同意备注"
+        :visible.sync="agreeDialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
         <el-form>
           <el-form-item label-width="120">
             <el-input v-model="opinion" type="textarea"></el-input>
@@ -194,6 +228,7 @@ import {
   addShopCourse,
   deleteStoreCourse
 } from "@/api/storeCourse";
+import { createNamespacedHelpers } from 'vuex';
 
 const defaultApply = {
   id: null,
@@ -221,7 +256,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
-        applyStatus:0,
+        applyStatus: 0,
         pageNum: 1,
         pageSize: 5
       },
@@ -234,28 +269,28 @@ export default {
       listLoading: false, //临时修改了一下
       multipleSelection: [],
       rejectDialogVisible: false,
-      agreeDialogVisible:false,
+      agreeDialogVisible: false,
       reason: null,
-      opinion:null,
+      opinion: null,
       applyId: null,
-      rejectReason:null,
+      rejectReason: null,
       dealStatusOptions: [
         { label: "总部未处理", value: 0 },
         { label: "总部审核通过", value: 2 },
         { label: "总部审核不通过", value: 3 }
       ],
-      applyStatusList:{
-        0:"未审核",
-        2:"通过",
-        3:"未通过"
+      applyStatusList: {
+        0: "未审核",
+        2: "通过",
+        3: "未通过"
       },
-      a:{
-        0:[false,false,true],//总部未处理
-        2:[true,true,true],//总部审核通过
-        3:[true,true,false],//总部审核不通过
+      a: {
+        0: [false, false, true], //总部未处理
+        2: [true, true, true], //总部审核通过
+        3: [true, true, false] //总部审核不通过
       },
-      ordinaryCourse:true,
-      specialCourse:false,
+      ordinaryCourse: true,
+      specialCourse: false
     };
   },
   created() {
@@ -281,9 +316,9 @@ export default {
       this.applyId = row.id;
     },
     //同意申请
-    agree(index,row){
+    agree(index, row) {
       this.agreeDialogVisible = true;
-      this.applyId = row.id
+      this.applyId = row.id;
     },
 
     //确认
@@ -303,8 +338,6 @@ export default {
           });
         });
       });
-      
-
     },
     //确认同意申请
     handleApply() {
@@ -313,15 +346,15 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-      agreeApply(this.applyId,this.opinion).then(response => {
-        this.getList();
-        this.$message({
-          message: "已同意",
-          type: "success",
-          duration: 1000
+        agreeApply(this.applyId, this.opinion).then(response => {
+          this.getList();
+          this.$message({
+            message: "已同意",
+            type: "success",
+            duration: 1000
+          });
         });
       });
-      });  
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -424,15 +457,27 @@ export default {
     open() {
       this.$alert(this.rejectReason, "拒绝原因");
     },
-    resetSearchConditions(){
+    resetSearchConditions() {
       this.listQuery.province = null;
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
-      this.listQuery.applyStatus=1
+      this.listQuery.applyStatus = 1;
       this.cityOptions = [];
       this.districtOptions = [];
       this.shopOptions = [];
+    },
+    downloadFile(content,file_name) {
+      // let aTag = document.createElement("a");
+      // let blob = new Blob([content]); // 这个content是下载的文件内容，自己修改
+      // aTag.download = file_name; // 下载的文件名
+      // aTag.href = URL.createObjectURL(blob);
+      // aTag.click();
+      // URL.revokeObjectURL(blob);
+         let ele = document.createElement('a');
+          ele.setAttribute('href',content); //设置下载文件的url地址
+          ele.setAttribute('download' , 'download');//用于设置下载文件的文件名
+          ele.click();
     }
   }
 };

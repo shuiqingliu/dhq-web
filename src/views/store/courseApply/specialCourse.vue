@@ -118,7 +118,16 @@
         <el-table-column label="附件" align="center" width="100">
           
           <template slot-scope="scope">
-            <a class="download" href="http://img5.imgtn.bdimg.com/it/u=1340599058,3252378535&fm=26&gp=0.jpg" download="下载">下载</a>
+            <a class="download" :href="scope.row.attachmentUrl" download="下载">
+            <i
+                class="el-icon-download"
+                v-if="scope.row.attachmentUrl != null && scope.row.attachmentUrl != ''"
+              ></i>
+              <i
+                class="el-icon-minus"
+                v-if="scope.row.attachmentUrl == null || scope.row.attachmentUrl == ''"
+              ></i>
+            </a>
           </template>
         </el-table-column>
         <el-table-column label="申请价格" align="center" width="80">
