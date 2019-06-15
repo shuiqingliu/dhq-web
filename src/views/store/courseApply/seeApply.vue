@@ -127,7 +127,7 @@ export default {
       });
       }else if(row.typeId == 3){
         this.$router.push({
-        path: "/equipment/equipmentRepairInfo",//设备维修申请
+        path: "/equipment/repair",//设备维修申请
       });
       }
       
