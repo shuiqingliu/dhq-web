@@ -88,6 +88,7 @@
 <script>
 import {fmtInsTree} from '@/utils/utils' 
 import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {isvalidUsername} from '@/utils/validate'
 export default {
     data(){
         const validateName = (rule, value, callback) => {
@@ -147,6 +148,14 @@ export default {
         addEventFormSubmitBtn(form){
             // console.log(this.addEventForm)
             if(this.addEventForm.name && this.addEventForm.leader){
+                if(!isvalidUsername(this.addEventForm.name) || !isvalidUsername(this.addEventForm.leader)){
+                    this.$message({
+                        message: '机构名或者机构领导格式不正确',
+                        type: 'error',
+                        duration: 1000
+                    });
+                    return ;
+                }
                 addInstitution(this.addEventForm).then(()=>{
                 this.addEventdialogVisible = false
                 this.$message({
