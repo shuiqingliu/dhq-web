@@ -63,11 +63,9 @@
         ref="courseTable"
         :data="list"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
         v-loading="listLoading"
         border
       >
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -88,7 +86,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="batch-operate-container">
+    <!-- <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option
           v-for="item in operates"
@@ -104,7 +102,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -173,9 +171,6 @@ export default {
         this.totalPage = response.data.totalPage;
         this.pageSize = response.data.pageSize;
       });
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
     },
     //添加
     addCourseType() {

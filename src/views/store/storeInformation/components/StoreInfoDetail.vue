@@ -219,7 +219,9 @@ export default {
       this.storeInfo = Object.assign({}, defaultStoreInfo);
     },
     returnToStoreInformation() {
-      this.$router.push({ path: "/store/storeInformation" });
+      //this.$router.push({ path: "/store/storeInformation" });
+      this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
+
     }
   }
 };
