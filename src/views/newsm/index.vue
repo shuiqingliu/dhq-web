@@ -52,7 +52,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="dialogView=true;getContent(scope.row.title, scope.row.message)"
+              @click="dialogView=true;getContent(scope.row.resource,scope.row.title, scope.row.message)"
             >
             预览
             </el-button>
@@ -70,9 +70,14 @@
       </el-table>
       <el-dialog title="内容预览" 
       :visible.sync="dialogView" 
-     
-      width="80%">
-        <h1>{{content.title}}</h1>
+     width="100%"
+      >
+        <h1>内容封面</h1>
+        <p>
+         <img :src="'data:image'+content.resource.postfix+';base64,'+content.resource.resource"/>
+        </p>
+
+        <h1>内容标题：{{content.title}}</h1>
         <br>
         <div v-html="content.message"></div>
       
@@ -103,7 +108,12 @@
       return {
         content: {
           title: '',
-          message: ''
+          message: '',
+          resource: {
+            id: 18,
+            postfix: "jpg",
+            resource: ''
+          }
         },
         dialogView:false,
         listQuery: {
@@ -124,8 +134,9 @@
       this.getContentList();
     },
     methods: {
-      getContent(title, message){
-        // console.log(this.content)
+      getContent(resource,title, message){
+        console.log(resource)
+        this.content.resource = resource
         this.content.title = title
         this.content.message = message
       },
