@@ -115,10 +115,19 @@
         <el-table-column label="课程数" align="center" width="80">
           <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
         </el-table-column>
-        <el-table-column label="附件" align="center" width="100">
+        <el-table-column label="附件" align="center" width="80">
           
           <template slot-scope="scope">
-            <a class="download" href="http://img5.imgtn.bdimg.com/it/u=1340599058,3252378535&fm=26&gp=0.jpg" download="下载">下载</a>
+            <a class="download" :href="scope.row.attachment" download="下载">
+            <i
+                class="el-icon-download"
+                v-if="scope.row.attachment != null && scope.row.attachment != ''"
+              ></i>
+              <i
+                class="el-icon-minus"
+                v-if="scope.row.attachment == null || scope.row.attachment == ''"
+              ></i>
+            </a>
           </template>
         </el-table-column>
         <el-table-column label="申请价格" align="center" width="80">
@@ -137,6 +146,9 @@
         </el-table-column>-->
         <el-table-column label="申请状态" align="center" width="100">
           <template slot-scope="scope">{{applyStatusList[scope.row.applyStatus]}}</template>
+        </el-table-column>
+        <el-table-column label="总部意见" align="center">
+          <template slot-scope="scope">{{scope.row.headOpinion}}</template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="155">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
@@ -178,18 +190,18 @@
         :before-close="handleClose"
       >
         <el-form>
-          <el-form-item label-width="120" label="管理员意见">
+          <el-form-item label-width="120" label="拒绝理由">
             <el-input v-model="headOpinion" type="textarea" style="width:300px"></el-input>
           </el-form-item>
         </el-form>
-        <el-form>
+        <!-- <el-form>
           <el-form-item label-width="120" label="拒绝理由">
             <el-input v-model="reason" type="textarea" style="width:300px"></el-input>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <div slot="footer" class="dialog-footer">
-          <el-button @click="rejectDialogVisible = false,setNull()">取 消</el-button>
-          <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false,setNull()">确 定</el-button>
+          <el-button @click="rejectDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
       <el-dialog
@@ -198,24 +210,24 @@
         width="30%"
         :before-close="handleClose"
       >
-        <el-form>
+        <!-- <el-form>
           <el-form-item label-width="120" label="课程类型编号">
             <el-input v-model="courseTypeNumber" style="width:300px"></el-input>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <el-form>
-          <el-form-item label-width="120" label="管理员意见">
+          <el-form-item label-width="120" label="总部意见">
             <el-input v-model="headOpinion" type="textarea" style="width:300px"></el-input>
           </el-form-item>
         </el-form>
-        <el-form>
-          <el-form-item label-width="120" label="remark">
+        <!-- <el-form>
+          <el-form-item label-width="120" label="总部建议">
             <el-input v-model="reason" type="textarea" style="width:300px"></el-input>
           </el-form-item>
-        </el-form>
+        </el-form> -->
         <div slot="footer" class="dialog-footer">
-          <el-button @click="agreeDialogVisible = false,setNull()">取 消</el-button>
-          <el-button type="primary" @click="handleApply(),agreeDialogVisible = false,setNull()">确 定</el-button>
+          <el-button @click="agreeDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleApply(),agreeDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
     </div>

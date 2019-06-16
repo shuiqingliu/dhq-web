@@ -24,3 +24,12 @@ export function deleteStoreEquipment(params){
     params:params
   })
 }
+
+//根据地理信息获取门店名
+export function getShopNameByLocation(params) {
+  return request({
+    url:'/OrderOffline/listShopsOfRegion',
+    method:'get',
+    params:params
+  })
+}
