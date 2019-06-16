@@ -201,6 +201,9 @@ export default {
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
+      if(this.$route.query.listQuery){
+        this.listQuery = this.$route.query.listQuery
+      }
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
@@ -223,7 +226,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path: "/store/updateStoreInfo",
-        query: { id: row.id }
+        query: { id: row.id,listQuery:this.listQuery}
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     },
     //删除
