@@ -23,9 +23,9 @@
           :on-remove="handleRemove"
           :on-success="handleSuccess"
           :file-list="fileList"
-          name="test"
+          name="file"
           class="upload-demo"
-          action="http://10.103.241.66:2140/upload/pic"
+          action="http://10.103.250.120:2140/upload/pic"
           list-type="picture">
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -124,7 +124,7 @@ export default {
       console.log('change')
     },
     handleSuccess(res) {
-      this.newsPicture = res.data
+      this.content.coverId = res.data.resource.id
     },
     handleErr() {
       console.log('err')
