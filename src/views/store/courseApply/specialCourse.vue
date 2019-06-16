@@ -115,7 +115,7 @@
         <el-table-column label="课程数" align="center" width="80">
           <template slot-scope="scope">{{scope.row.countsOfClass}}</template>
         </el-table-column>
-        <el-table-column label="附件" align="center" width="100">
+        <el-table-column label="附件" align="center" width="80">
           
           <template slot-scope="scope">
             <a class="download" :href="scope.row.attachment" download="下载">
@@ -147,7 +147,7 @@
         <el-table-column label="申请状态" align="center" width="100">
           <template slot-scope="scope">{{applyStatusList[scope.row.applyStatus]}}</template>
         </el-table-column>
-        <el-table-column label="总部意见" align="center" width="100">
+        <el-table-column label="总部意见" align="center">
           <template slot-scope="scope">{{scope.row.headOpinion}}</template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="155">

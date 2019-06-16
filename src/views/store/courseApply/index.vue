@@ -109,7 +109,7 @@
         <el-table-column label="申请单价" align="center" width="80">
           <template slot-scope="scope">{{scope.row.applyPrice}}</template>
         </el-table-column>
-        <el-table-column label="申请原因" align="center" width="110">
+        <el-table-column label="申请原因" align="center">
           <template slot-scope="scope">{{scope.row.applyReason}}</template>
         </el-table-column>
         <el-table-column label="申请人" align="center" width="100">
@@ -121,7 +121,7 @@
         <el-table-column label="申请时间" align="center" width="155">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
-        <el-table-column label="附件" align="center" width="100">
+        <el-table-column label="附件" align="center" width="80">
           <template slot-scope="scope">
             <!-- <a
               class="download"
