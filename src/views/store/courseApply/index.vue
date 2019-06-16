@@ -186,7 +186,7 @@
           <el-button type="primary" @click="handleDialogConfirm(),rejectDialogVisible = false">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog
+      <!-- <el-dialog
         title="同意备注"
         :visible.sync="agreeDialogVisible"
         width="30%"
@@ -201,7 +201,7 @@
           <el-button @click="agreeDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="handleApply(),agreeDialogVisible = false">确 定</el-button>
         </div>
-      </el-dialog>
+      </el-dialog> -->
     </div>
     <div class="pagination-container">
       <el-pagination
@@ -317,8 +317,9 @@ export default {
     },
     //同意申请
     agree(index, row) {
-      this.agreeDialogVisible = true;
+     // this.agreeDialogVisible = true;
       this.applyId = row.id;
+      this.handleApply();
     },
 
     //确认
