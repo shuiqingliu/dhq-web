@@ -92,7 +92,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="门店名字" align="center">
+        <el-table-column label="门店名字" align="center" width="180">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>省/直辖市: {{ scope.row.shopLocationProvince }}</p>

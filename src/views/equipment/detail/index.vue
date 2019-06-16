@@ -15,10 +15,10 @@
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="设备使用状态：">
             <el-select v-model="listQuery.deviceUseState" placeholder="请选择状态" clearable="true">
-              <el-option label="已分配（正常）" value="0"></el-option>
-              <el-option label="已分配（维修中）" value="1"></el-option>
-              <el-option label="未分配" value="2"></el-option>
-              <el-option label="已废弃" value="3"></el-option>
+              <el-option label="未分配" value="0"></el-option>
+              <el-option label="已分配" value="1"></el-option>
+              <el-option label="已报废" value="2"></el-option>
+              <el-option label="维修中" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
