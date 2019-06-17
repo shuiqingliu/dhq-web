@@ -341,6 +341,8 @@ export default {
     },
     addStoreInfo() {
       this.$router.push({ path: "/store/addStoreInfo",query: {listQuery:this.listQuery}});
+      //this.$router.push({ path: "/store/addStoreInfo"});
+
     },
     open() {
       this.$alert(this.description, "备注详情");

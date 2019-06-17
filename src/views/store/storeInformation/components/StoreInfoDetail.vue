@@ -184,7 +184,7 @@ export default {
                     type: "success",
                     duration: 1000
                   });
-                  this.$router.back();
+                  this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
                 }
               );
             } else {
@@ -203,6 +203,7 @@ export default {
                   duration: 1000
                 });
               });
+              this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
             }
           });
         } else {
