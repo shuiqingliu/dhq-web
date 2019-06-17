@@ -340,7 +340,7 @@ export default {
       });
     },
     addStoreInfo() {
-      this.$router.push({ path: "/store/addStoreInfo" });
+      this.$router.push({ path: "/store/addStoreInfo",query: {listQuery:this.listQuery}});
     },
     open() {
       this.$alert(this.description, "备注详情");
