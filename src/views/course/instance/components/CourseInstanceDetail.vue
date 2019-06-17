@@ -391,7 +391,8 @@ export default {
       });
     },
     returnToStoreInformation() {
-      this.$router.push({ path: "/course/instance" });
+     // this.$router.push({ path: "/course/instance" });
+      this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
     },
     falseSubmit() {
       this.onlineCourseList.push({

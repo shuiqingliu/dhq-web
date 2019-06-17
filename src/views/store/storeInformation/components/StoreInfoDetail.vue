@@ -141,7 +141,8 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      getStoreInfoById(this.$route.query.id).then(response => {
+      getStoreInfoById(this.$route.query.id).then(
+        response => {
         this.selectedOptions.push(
           TextToCode[response.data.shopLocationProvince].code,
           TextToCode[response.data.shopLocationProvince][
@@ -183,7 +184,7 @@ export default {
                     type: "success",
                     duration: 1000
                   });
-                  this.$router.back();
+                  this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
                 }
               );
             } else {
@@ -201,6 +202,7 @@ export default {
                   type: "success",
                   duration: 1000
                 });
+                this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
               });
             }
           });

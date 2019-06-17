@@ -4,12 +4,12 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button style="float: right" @click="searchApplyList()" type="primary" size="small">查询结果</el-button>
+        <el-button style="float: right" @click="searchApplyList()" type="primary" size="small">筛选查询</el-button>
         <el-button
           style="float: right;margin-right: 15px"
-          @click="resetSearchConditions()"
+          @click="resetSearchConditions(),searchApplyList()"
           size="small"
-        >重置</el-button>
+        >查询全部未处理申请</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -146,7 +146,7 @@
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>-->
-        <el-table-column label="操作" align="center" width="250">
+        <el-table-column label="操作" align="center" width="270">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -165,7 +165,7 @@
               type="info"
               @click="rejectReason=scope.row.xntResponseOpinion;open()"
               :disabled="a[scope.row.applyStatus][2]"
-            >拒绝原因</el-button>
+            >查看拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>

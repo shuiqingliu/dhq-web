@@ -28,6 +28,7 @@
       <i class="el-icon-tickets"></i>
       <span>设备实例列表</span>
       <el-button class="btn-add" @click="addEquipmentDetail()" size="mini">添加</el-button>
+      <el-button class="btn-add" @click="returnLastLevel()" size="mini">返回上一级</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -200,6 +201,9 @@ export default {
     searchEquipmentDetailList() {
       this.listQuery.pageNum = 1;
       this.getList();
+    },
+    returnLastLevel(){
+      this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
     }
   }
 };
