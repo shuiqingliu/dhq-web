@@ -272,7 +272,7 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.back();
+                this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
               });
             } else {  
               createCourseInstance(formData).then(response => {
@@ -283,6 +283,7 @@ export default {
                   type: "success",
                   duration: 1000
                 });
+                this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
               });
             }
           });

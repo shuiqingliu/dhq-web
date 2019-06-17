@@ -222,7 +222,7 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.back();
+                this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
               });
             } else {
               // formData.append('id',this.equipmentInstance.id)
@@ -244,6 +244,7 @@ export default {
                   type: "success",
                   duration: 1000
                 });
+                this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
               });
             }
           });

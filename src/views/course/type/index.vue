@@ -9,12 +9,12 @@
           @click="searchCourseTypeList()"
           type="primary"
           size="small"
-        >查询结果</el-button>
+        >筛选查询</el-button>
         <el-button
           style="float: right;margin-right: 15px"
-          @click="resetSearchConditions()"
+          @click="resetSearchConditions(),searchCourseTypeList()"
           size="small">
-          重置
+          全部查询
         </el-button>
       </div>
       <div style="margin-top: 15px">

@@ -258,7 +258,9 @@ export default {
     };
   },
   created() {
-    listQuery.maintainManagerId = this.$store.state.user.id
+    //alert("hahah")
+    this.listQuery.maintainManagerId = this.$store.state.user.id
+  //  alert(this.$store.state.user.id)
     this.getList();
   },
   methods: {
