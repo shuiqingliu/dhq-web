@@ -21,12 +21,12 @@
     <p>------------------------------------------------------------</p>
     <h2 >题目</h2>
     <h3>选择题</h3>
-    <div v-for="(item,index) in list.scaleFactorInfoDTOArrayList" :key="index">
+    <div v-for="item in list.scaleFactorInfoDTOArrayList">
       <div v-if="item.name === '默认因子'">
-        <div v-for="(stem,index) in item.scaleEvaluationItemStemDTOArrayList" :key="index">
+        <div v-for="stem in item.scaleEvaluationItemStemDTOArrayList">
           <h4 v-if="stem.type === 1">
             {{stem.number}}.{{stem.stem}}<br>
-            <h4 v-for="(choice,index) in stem.scaleChoiceOptionDTOArrayList" :key="index">
+            <h4 v-for="choice in stem.scaleChoiceOptionDTOArrayList">
                 {{choice.number | choiceFilter}}.{{choice.content}}：分数 {{choice.score}}
             </h4>
           </h4>
@@ -38,6 +38,19 @@
       <div v-if="item.defaultFlag === 1">
         <div v-for="stem in item.scaleEvaluationItemStemDTOArrayList">
           <h4 v-if="stem.type === 2">
+            {{stem.number}}.{{stem.stem}}<br>
+            <h4 v-for="choice in stem.scaleChoiceOptionDTOArrayList">
+              {{choice.number | choiceFilter}}.{{choice.content}}：分数 {{choice.score}}
+            </h4>
+          </h4>
+        </div>
+      </div>
+    </div>
+    <h3>简答题</h3>
+    <div v-for="item in list.scaleFactorInfoDTOArrayList">
+      <div v-if="item.defaultFlag === 1">
+        <div v-for="stem in item.scaleEvaluationItemStemDTOArrayList">
+          <h4 v-if="stem.type === 3">
             {{stem.number}}.{{stem.stem}}<br>
             <h4 v-for="choice in stem.scaleChoiceOptionDTOArrayList">
               {{choice.number | choiceFilter}}.{{choice.content}}：分数 {{choice.score}}

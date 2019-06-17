@@ -69,3 +69,21 @@ export function updateArticle(data) {
     data
   })
 }
+export function fetchSavedScaleByScaleId(scaleId) {
+  return request({
+    url: 'scale/acquire-saved-scale-info-by-scale-id',
+    // url: 'scale/acquire-saved-scale-info-by-scale-id',
+    method: 'get',
+    params: {scaleId}
+  })
+}
+
+
+export function saveScale(data) {
+  return request({
+    url: 'scale/save-new-scale',
+    // url: 'scale/save-new-scale',
+    method: 'post',
+    data:data
+  })
+}
