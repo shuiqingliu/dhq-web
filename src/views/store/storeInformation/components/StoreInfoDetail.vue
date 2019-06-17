@@ -141,7 +141,8 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      getStoreInfoById(this.$route.query.id).then(response => {
+      getStoreInfoById(this.$route.query.id).then(
+        response => {
         this.selectedOptions.push(
           TextToCode[response.data.shopLocationProvince].code,
           TextToCode[response.data.shopLocationProvince][
