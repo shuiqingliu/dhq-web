@@ -776,9 +776,7 @@ export default {
     color:#fff;
     cursor: pointer;
   }
-  .but:hover{
-    
-  }
+  
   .mt30{
     margin-top:30px;
   }
@@ -786,7 +784,9 @@ export default {
     font-size: 13px;
     color: #999;
   }
-  
+  .but{
+    cursor: pointer;
+  }
   .bottom {
     margin-top: 13px;
     line-height: 12px;
