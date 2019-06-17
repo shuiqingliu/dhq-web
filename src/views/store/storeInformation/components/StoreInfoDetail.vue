@@ -202,8 +202,8 @@ export default {
                   type: "success",
                   duration: 1000
                 });
+                this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
               });
-              this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
             }
           });
         } else {
