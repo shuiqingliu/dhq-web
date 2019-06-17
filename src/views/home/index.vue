@@ -33,7 +33,8 @@
     <el-card style="margin-top:15px" shadow="never">
         <el-row :gutter="12">
        <el-col :span="6">
-        <el-card shadow="hover" @click.native="showkc" class="but">
+         
+        <el-card shadow="hover" :class="{active: state == 1}" @click.native="showkc" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -47,7 +48,8 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showsb" class="but">
+
+        <el-card shadow="hover"  :class="{active: state == 2}" @click.native="showsb" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -61,7 +63,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showcw" class="but">
+        <el-card shadow="hover" :class="{active: state == 3}" @click.native="showcw" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -75,7 +77,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover" @click.native="showxsk" class="but">
+        <el-card shadow="hover" :class="{active: state == 4}" @click.native="showxsk" class="but">
           <el-row>
             <el-col :span="6">
               <svg-icon icon-class="order" >
@@ -335,6 +337,7 @@ export default {
       }
     }
     return {
+      state:1,
       //总数
       kcn:0,
       sbn:0,
@@ -728,24 +731,28 @@ export default {
       // alert(1)
     },
     showkc(){
+      this.state = 1
       this.kc = true
       this.sb = false
       this.cw = false
       this.xsk = false
     },
     showsb(){
+      this.state = 2
       this.kc = false
       this.sb = true
       this.cw = false
       this.xsk = false
     },
     showcw(){
+      this.state = 3
       this.kc = false
       this.sb = false
       this.cw = true
       this.xsk = false
     },
     showxsk(){
+      this.state = 4
       this.kc = false
       this.sb = false
       this.cw = false
@@ -765,11 +772,13 @@ export default {
     background-color:  rgb(3, 136, 202);
   
   } */
-  .but:hover{
+  .active{
     background-color: #3399CC;
     color:#fff;
     cursor: pointer;
   }
+
+
   .mt30{
     margin-top:30px;
   }
@@ -777,7 +786,10 @@ export default {
     font-size: 13px;
     color: #999;
   }
-  
+
+  .but{
+    cursor: pointer;
+  }
   .bottom {
     margin-top: 13px;
     line-height: 12px;
