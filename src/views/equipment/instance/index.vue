@@ -199,6 +199,9 @@ export default {
     getList() {
       //this.listLoading = true;
       //this.listLoading = false;
+      if(this.$route.query.listQuery){
+        this.listQuery = this.$route.query.listQuery
+      }
       fetchList(this.listQuery).then(response => {
         // this.listLoading = false;
         this.list = response.data.list;
@@ -215,7 +218,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path: "/equipment/updateEquipmentInstance",
-        query: { id: row.id }
+        query: { id: row.id,listQuery:this.listQuery}
       });
     },
     //删除
@@ -336,7 +339,7 @@ export default {
     getEquipmentDetail(index, row) {
       this.$router.push({
         path: "/equipment/equipmentDetail",
-        query: { deviceTypeId: row.id}
+        query: { deviceTypeId: row.id,listQuery:this.listQuery}
       });
     },
     open() {

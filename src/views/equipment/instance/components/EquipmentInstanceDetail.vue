@@ -335,7 +335,9 @@ export default {
     },
     returnToEquipmentInstance() {
       //this.$router.push({ path: "/equipment/instance" });
-      this.$router.back();
+     // this.$router.back();
+     this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
+
     },
     handleFile () { },
     img_path_file (file, fileList) {
