@@ -9,12 +9,12 @@
           @click="searchCourseInstanceList()"
           type="primary"
           size="small"
-        >查询结果</el-button>
+        >筛选查询</el-button>
         <el-button
           style="float: right;margin-right: 15px"
-          @click="resetSearchConditions()"
+          @click="resetSearchConditions(),searchCourseInstanceList()"
           size="small"
-        >重置</el-button>
+        >全部查询</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -252,6 +252,9 @@ export default {
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
+      if(this.$route.query.listQuery){
+        this.listQuery = this.$route.query.listQuery
+      }
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
@@ -271,7 +274,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path: "/course/updateCourseInstance",
-        query: { id: row.id }
+        query: { id: row.id,listQuery:this.listQuery}
       });
     },
     //修改状态
