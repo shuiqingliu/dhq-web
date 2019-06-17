@@ -721,7 +721,8 @@ export default {
         this.addParam.coursePrice != null
       ) {
         this.dialogVisible = false;
-        addShopCourse(this.addParam).then(response => {
+        addShopCourse(this.addParam).then(
+          response => {
           this.$message({
             message: "提交成功",
             type: "success",

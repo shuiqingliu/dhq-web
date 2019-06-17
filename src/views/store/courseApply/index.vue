@@ -4,12 +4,12 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button style="float: right" @click="searchApplyList()" type="primary" size="small">查询结果</el-button>
+        <el-button style="float: right" @click="searchApplyList()" type="primary" size="small">筛选查询</el-button>
         <el-button
           style="float: right;margin-right: 15px"
-          @click="resetSearchConditions()"
+          @click="resetSearchConditions(),searchApplyList()"
           size="small"
-        >重置</el-button>
+        >查询全部未处理申请</el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
