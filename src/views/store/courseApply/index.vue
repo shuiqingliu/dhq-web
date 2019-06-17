@@ -146,7 +146,7 @@
         <!-- <el-table-column label="拒绝理由" align="center" >
           <template slot-scope="scope">{{scope.row.remark}}</template>
         </el-table-column>-->
-        <el-table-column label="操作" align="center" width="250">
+        <el-table-column label="操作" align="center" width="270">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -165,7 +165,7 @@
               type="info"
               @click="rejectReason=scope.row.xntResponseOpinion;open()"
               :disabled="a[scope.row.applyStatus][2]"
-            >拒绝原因</el-button>
+            >查看拒绝原因</el-button>
           </template>
         </el-table-column>
       </el-table>
