@@ -48,7 +48,10 @@
         </el-card>
       </el-col>
       <el-col :span="6">
+<<<<<<< HEAD
 
+=======
+>>>>>>> fb0a4c108514071e385de7cd0ae3b253dcec58b7
         <el-card shadow="hover"  :class="{active: state == 2}" @click.native="showsb" class="but">
           <el-row>
             <el-col :span="6">
@@ -777,8 +780,12 @@ export default {
     color:#fff;
     cursor: pointer;
   }
+<<<<<<< HEAD
 
 
+=======
+  
+>>>>>>> fb0a4c108514071e385de7cd0ae3b253dcec58b7
   .mt30{
     margin-top:30px;
   }
@@ -786,7 +793,10 @@ export default {
     font-size: 13px;
     color: #999;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> fb0a4c108514071e385de7cd0ae3b253dcec58b7
   .but{
     cursor: pointer;
   }
