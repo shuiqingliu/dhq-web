@@ -1,9 +1,9 @@
 <template>
   <el-card class="form-container" shadow="never">
     <el-form :model="courseInstance" :rules="rules" ref="courseInstanceForm" label-width="150px">
-      <el-form-item label="课程编号：" prop="courseTypeNumber">
+      <!-- <el-form-item label="课程编号：" prop="courseTypeNumber">
         <el-input v-model="courseInstance.courseTypeNumber"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="课程名：" prop="name">
         <el-input v-model="courseInstance.name"></el-input>
       </el-form-item>
@@ -152,7 +152,7 @@ import {
 
 //默认信息
 const defaultCourseInstance = {
-  courseTypeNumber: null,
+  //courseTypeNumber: null,
   courseContent: null,
   description: null,
   id: 0,
@@ -179,9 +179,9 @@ export default {
     return {
       courseInstance: Object.assign({}, defaultCourseInstance),
       rules: {
-        courseTypeNumber: [
-          { required: true, message: "请输入课程名", trigger: "blur" }
-        ],
+        // courseTypeNumber: [
+        //   { required: true, message: "请输入课程名", trigger: "blur" }
+        // ],
         name: [{ required: true, message: "请输入课程名", trigger: "blur" }],
         timesOfClass: [
           { required: true, message: "请输入课长", trigger: "blur" }
