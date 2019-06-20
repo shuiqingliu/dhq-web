@@ -268,7 +268,7 @@ export default {
     },
     //添加
     addCourseInstance() {
-      this.$router.push({ path: "/course/addCourseInstance" });
+      this.$router.push({ path: "/course/addCourseInstance",query: {listQuery:this.listQuery}});
     },
     //更新
     handleUpdate(index, row) {

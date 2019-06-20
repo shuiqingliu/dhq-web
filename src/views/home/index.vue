@@ -48,6 +48,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
+
         <el-card shadow="hover"  :class="{active: state == 2}" @click.native="showsb" class="but">
           <el-row>
             <el-col :span="6">
@@ -776,7 +777,6 @@ export default {
     color:#fff;
     cursor: pointer;
   }
-  
   .mt30{
     margin-top:30px;
   }

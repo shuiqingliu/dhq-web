@@ -212,7 +212,7 @@ export default {
     },
     //添加
     addEquipmentInstance() {
-      this.$router.push({ path: "/equipment/addEquipmentInstance" });
+      this.$router.push({ path: "/equipment/addEquipmentInstance",query: {listQuery:this.listQuery}});
     },
     //更新
     handleUpdate(index, row) {
