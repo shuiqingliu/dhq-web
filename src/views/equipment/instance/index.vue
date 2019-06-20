@@ -168,19 +168,19 @@ export default {
         pageSize: 5
       },
       list: [
-        {
-          id: 123,
-          modelNumber: "note3",
-          name: "小米",
-          price: 8888,
-          useYear: 10,
-          stock: 56,
-          picture: "http:",
-          description: "hahah",
-          firstCategory: "可移动",
-          secondCategory: "电子",
-          thirdCategory: "学能知识相关"
-        }
+        // {
+        //   id: 123,
+        //   modelNumber: "note3",
+        //   name: "小米",
+        //   price: 8888,
+        //   useYear: 10,
+        //   stock: 56,
+        //   picture: "http:",
+        //   description: "hahah",
+        //   firstCategory: "可移动",
+        //   secondCategory: "电子",
+        //   thirdCategory: "学能知识相关"
+        // }
       ],
       firstCategoryOptions: [],
       secondCategoryOptions: [],
@@ -197,13 +197,13 @@ export default {
   },
   methods: {
     getList() {
-      //this.listLoading = true;
+      this.listLoading = true;
       //this.listLoading = false;
       if(this.$route.query.listQuery){
         this.listQuery = this.$route.query.listQuery
       }
       fetchList(this.listQuery).then(response => {
-        // this.listLoading = false;
+         this.listLoading = false;
         this.list = response.data.list;
         this.total = response.data.total;
         this.totalPage = response.data.totalPage;

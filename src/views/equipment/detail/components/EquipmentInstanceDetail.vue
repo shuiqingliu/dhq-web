@@ -1,11 +1,6 @@
 <template>
   <el-card class="form-container" shadow="never">
-    <el-form
-      :model="equipmentDetail"
-      :rules="rules"
-      ref="equipmentDetailForm"
-      label-width="150px"
-    >
+    <el-form :model="equipmentDetail" :rules="rules" ref="equipmentDetailForm" label-width="150px">
       <!-- <el-form-item label="设备编号：" prop="firstCategory">
         <el-input v-model="equipmentDetail.id"></el-input>
       </el-form-item>-->
@@ -14,7 +9,7 @@
       </el-form-item>
       <!-- <el-form-item label="设备类型Id：">
         <el-input v-model="equipmentDetail.deviceTypeId"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="生产日期：">
         <el-date-picker v-model="equipmentDetail.produceDate" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
@@ -43,7 +38,7 @@ import {
 } from "@/api/equipmentDetail";
 //默认信息
 const defaultEquipmentDetail = {
-  deviceNumber:'1231231231',
+  deviceNumber: "1231231231",
   deviceTypeId: 1,
   deviceUseState: 0,
   id: 0,
@@ -61,7 +56,9 @@ export default {
     return {
       equipmentDetail: Object.assign({}, defaultEquipmentDetail),
       rules: {
-        deviceNumber:[{ required: true, message: "请输入设备编号", trigger: "blur" }],
+        deviceNumber: [
+          { required: true, message: "请输入设备编号", trigger: "blur" }
+        ]
         // price: [{ required: true, message: "请输入单价", trigger: "blur" }],
         // useYear: [
         //   { required: true, message: "请输入使用年限", trigger: "blur" }
@@ -70,7 +67,7 @@ export default {
         //   { required: true, message: "请输入设备所属类型", trigger: "blur" }
         // ]
       },
-      dialogVisible: false,
+      dialogVisible: false
     };
   },
   created() {
@@ -81,7 +78,6 @@ export default {
     } else {
       defaultEquipmentDetail.deviceTypeId = this.$route.query.deviceTypeId;
       this.equipmentDetail = Object.assign({}, defaultEquipmentDetail);
-      
     }
   },
   methods: {
@@ -104,7 +100,13 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.back();
+                this.$router.push({
+                  path: "/equipment/equipmentDetail",
+                  query: {
+                    deviceTypeId: this.$route.query.deviceTypeId,
+                    listQuery: this.$route.query.listQuery
+                  }
+                });
               });
             } else {
               createEquipmentDetail(this.equipmentDetail).then(response => {
@@ -136,7 +138,14 @@ export default {
       this.equipmentDetail = Object.assign({}, defaultEquipmentDetail);
     },
     returnToEquipmentDetail() {
-      this.$router.back();
+      //this.$router.back();
+      this.$router.push({
+        path: "/equipment/equipmentDetail",
+        query: {
+          deviceTypeId: this.$route.query.deviceTypeId,
+          listQuery: this.$route.query.listQuery
+        }
+      });
     }
   }
 };
