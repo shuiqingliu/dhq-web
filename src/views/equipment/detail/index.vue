@@ -134,23 +134,21 @@ export default {
         1: [true, true], //已分配
         2: [true, true], //已报废
         3: [true, true] //维修中
-      }
+      },
     };
   },
   created() {
+  
     this.listQuery.deviceTypeId = this.$route.query.deviceTypeId;
-    // this.listQuery.name = this.$route.query.name;
+    this.deviceTypeId = this.$route.query.deviceTypeId
     this.getList();
-    //this.name = this.$route.query.name;
   },
   methods: {
     getList() {
-      //this.listLoading = true;
-      //this.listLoading = false;
+      this.listLoading = true;
       fetchList(this.listQuery).then(response => {
-        // this.listLoading = false;
+      this.listLoading = false;
         this.list = response.data.list;
-        this.deviceTypeId = response.data.list[0].deviceTypeId;
         this.total = response.data.total;
         this.totalPage = response.data.totalPage;
         this.pageSize = response.data.pageSize;
@@ -160,14 +158,14 @@ export default {
     addEquipmentDetail(index, row) {
       this.$router.push({
         path: "/equipment/addEquipmentDetail",
-        query: { deviceTypeId: this.deviceTypeId }
+        query: { deviceTypeId: this.deviceTypeId,listQuery:this.$route.query.listQuery}
       });
     },
     //更新
     handleUpdate(index, row) {
       this.$router.push({
         path: "/equipment/updateEquipmentDetail",
-        query: { id: row.id }
+        query: { id: row.id,deviceTypeId: this.deviceTypeId,listQuery:this.$route.query.listQuery}
       });
     },
     //删除
