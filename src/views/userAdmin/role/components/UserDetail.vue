@@ -7,20 +7,20 @@
       <el-form-item label="角色描述：">
         <el-input v-model="user.name"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="角色权限：" v-if="isEdit">
+      <el-form-item label="角色权限：" v-if="!isEdit">
            <el-tree
               :data="permisisonTree"
               show-checkbox
               node-key="id"
               :default-expanded-keys="[]"
               :default-checked-keys="[]"
-              :props="defaultProps"
-              v-model="permissionIDs"
+             
+       
               center=true
               ref="tree"
               >
           </el-tree>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
@@ -88,10 +88,15 @@
    
       
     },
+    watch:{
+      permissionIDs: function(n,o){
+        console.log(n)
+      }
+    },
    
     methods: {
       onSubmit(formName) {
-        console.log(this.user)
+       
         if(!isvalidUsername(this.user.description)){
           this.$message({
             message: '角色名有错误！',
@@ -119,7 +124,17 @@
                   this.$router.back();
                 });
               } else {
-                createRole(this.user).then(response => {
+                this.permissionIDs = this.$refs.tree.getCheckedKeys()
+                if(this.permissionIDs.length < 1){
+                   this.$message({
+                    message: '请至少添加一个权限！',
+                    type: 'error',
+                    duration:1000
+                  });
+                  return 
+                }
+                console.log(this.permissionIDs)
+                createRole({permissionIds:this.permissionIDs, role:this.user}).then(response => {
                   this.$refs[formName].resetFields();
                   this.user = Object.assign({},defaultuser);
                   this.$message({
