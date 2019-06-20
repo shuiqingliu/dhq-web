@@ -14,7 +14,7 @@
         :action="actionUrl"
         name="file"
         class="editor-slide-upload"
-        list-type="picture-card">
+        list-type="picture">
         <el-button size="small" type="primary">
           点击上传
         </el-button>

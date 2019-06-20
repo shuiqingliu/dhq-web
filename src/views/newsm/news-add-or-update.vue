@@ -33,7 +33,7 @@
           :file-list="fileList"
           name="test"
           class="upload-demo"
-          action="http://10.103.241.66:8085/upload/pic"
+          action="/upload/pic"
           list-type="picture">
           <el-button size="small" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
