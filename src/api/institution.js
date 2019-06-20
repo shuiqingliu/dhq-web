@@ -16,6 +16,14 @@ export function addInstitution(data){
         data: data
     })
 }
+// 修改机构
+export function changeInstitution(data){
+    return request({
+        url: '/HeadOrganization/update'+data.id,
+        method: 'post',
+        data: data.headOrganizationParam
+    })
+}
 //删除机构
 export function delInstitution(data){
     return request({

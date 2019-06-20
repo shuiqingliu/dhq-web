@@ -160,7 +160,7 @@
     line-height: normal;
   }
 
-  .tinymce-container > > > .mce-fullscreen {
+  .tinymce-container >>> .mce-fullscreen {
     z-index: 10000;
   }
 

@@ -267,6 +267,14 @@ import {getInstitutions, addInstitution, delInstitution} from '@/api/institution
         this.userRole.roleIds = this.roles.join(',');
         
         updateUserRole(this.userRole).then(response=>{
+          if(this.roles.length < 1){
+            this.$message({
+              message: '请至少选择一个角色',
+              type: 'error',
+              duration: 1000
+            });
+            return 
+          }
           this.$message({
             message: '角色修改成功',
             type: 'success',

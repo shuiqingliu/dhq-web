@@ -79,11 +79,11 @@
                         <el-input v-model="detail.description" name="description"></el-input>
                         </el-form-item>
                     </el-form>
-                    <!-- <span slot="footer" class="dialog-footer" >
-                        <el-button @click="addEventFormCancleBtn('detail')">取 消</el-button>
-                        <el-button type="primary" @click="addEventFormSubmitBtn('detail')">确 定</el-button>
+                    <span slot="footer" class="dialog-footer" >
+                        <el-button @click="changeInsCancel('detail')">取 消</el-button>
+                        <el-button type="primary" @click="changeIns('detail')">确 定</el-button>
                     </span>
-                     -->
+                    
                 </el-dialog>
 
         </el-card>
@@ -91,7 +91,7 @@
 </template>
 <script>
 import {fmtInsTree} from '@/utils/utils' 
-import {getInstitutions, addInstitution, delInstitution, show} from '@/api/institution'
+import {getInstitutions, addInstitution, delInstitution, show, changeInstitution} from '@/api/institution'
 import {isvalidUsername} from '@/utils/validate'
 export default {
     data(){
@@ -110,7 +110,17 @@ export default {
             }
         };
         return {
-            detail:{},
+            detail:{
+                createTime: "2019-06-20T03:19:34.318Z",
+                description: "string",
+                id: 0,
+                isLeaf: true,
+                leader: "string",
+                name: "string",
+                number: 0,
+                pid: 0
+            },
+            changeId:0,//要改变机构的id
             data: [],
             detailDialog: false,
             addEventNodeRules:{
@@ -148,6 +158,39 @@ export default {
             this.addEventdialogVisible = true
             this.addEventForm.pid  = data.id
             // console.log(data.pid)
+        },
+        changeInsCancel(form){
+            this.detailDialog = false
+        },
+        changeIns(form){
+             if(this.detail.name && this.detail.leader){
+                if(!isvalidUsername(this.detail.name) || !isvalidUsername(this.detail.leader)){
+                    this.$message({
+                        message: '机构名或者机构领导格式不正确',
+                        type: 'error',
+                        duration: 1000
+                    });
+                    return ;
+                }
+                changeInstitution({id:this.changeId,headOrganizationParam:this.detail}).then(()=>{
+                    console.log({id:this.changeId,headOrganizationParam:this.detail})
+                    // console.log(this.changeId)
+                    this.detailDialog = false
+                    this.$message({
+                            message: '修改成功',
+                            type: 'success',
+                            duration: 1000
+                        });
+                    // this.addEventForm = {}
+                    this.getIns()
+                })
+            }else{
+                this.$message({
+                        message: '机构名称或者机构领导不能为空！',
+                        type: 'error',
+                        duration: 1000
+                    });
+            }
         },
         addEventFormSubmitBtn(form){
             // console.log(this.addEventForm)
@@ -189,10 +232,11 @@ export default {
         },
         showDetail(data){
             // alert(1)
-            
+            this.changeId = data.id
             show(data.id).then(resp=>{
                 this.detail = resp.data.list[0]
             })
+            
             this.detailDialog = true;
         },
         remove(node, data){
