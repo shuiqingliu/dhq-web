@@ -2,11 +2,25 @@
   <el-card class="form-container" shadow="never">
     <el-form :model="user" :rules="rules" ref="userform" label-width="150px">
       <el-form-item label="角色名：" prop="description">
-        <el-input v-model="user.description" placeholder="支持中文、字母、数字、下划线,4-20个字符"></el-input>
+        <el-input v-model="user.description" placeholder="支持中文、字母、数字、下划线,2-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="角色描述：">
         <el-input v-model="user.name"></el-input>
       </el-form-item>
+      <!-- <el-form-item label="角色权限：" v-if="isEdit">
+           <el-tree
+              :data="permisisonTree"
+              show-checkbox
+              node-key="id"
+              :default-expanded-keys="[]"
+              :default-checked-keys="[]"
+              :props="defaultProps"
+              v-model="permissionIDs"
+              center=true
+              ref="tree"
+              >
+          </el-tree>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="onSubmit('userform')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('userform')">重置</el-button>
@@ -16,9 +30,9 @@
   </el-card>
 </template>
 <script>
-  import {createRole, updateRole,getRole} from '@/api/role'
+  import {createRole, updateRole,getRole, getPermisisonTree} from '@/api/role'
   import {isvalidUsername} from '@/utils/validate'
-
+ import {fmtTree} from '@/utils/utils' 
   const defaultuser={    
     name: '',
     pwd: '',
@@ -34,6 +48,14 @@
     },
     data() {
       return {
+        permisisonTree: [
+          {
+            id:0,
+            label: 1,
+            children: []
+          }
+        ],
+        permissionIDs:[],
         user: {
           name:'',
           description:'',
@@ -50,7 +72,14 @@
     },
     
     created() {
+       getPermisisonTree().then((resp)=>{
+          var data = resp.data
+          //console.log(resp.data)
+          this.permisisonTree = fmtTree(data);
+          // alert(1)
+          // console.log( this.permisisonTree)
 
+      })
       if(this.$route.query.id != undefined){
         getRole(this.$route.query.id).then(resp=>{
                 this.user = resp.data
@@ -63,7 +92,7 @@
     methods: {
       onSubmit(formName) {
         console.log(this.user)
-        if(!isvalidUsername(this.user.name)){
+        if(!isvalidUsername(this.user.description)){
           this.$message({
             message: '角色名有错误！',
             type: 'error',
