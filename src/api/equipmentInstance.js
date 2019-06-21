@@ -41,7 +41,7 @@ export function batchDeleteEquipmentInstance(ids) {
 export function getEquipmentInstance(id) {
   return request({
     url:'/deviceType/get?id='+id,
-    method:'get'
+    method:'get'    
   })
 }
 

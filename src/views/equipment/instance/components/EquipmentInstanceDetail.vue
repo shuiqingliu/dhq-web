@@ -25,6 +25,7 @@
         <single-upload v-model="equipmentInstance.picture"></single-upload>
       </el-form-item>-->
       <el-form-item label="图片">
+      <!-- <img style="height: 70px" :src="'http://10.103.250.120:2140/deviceType/showImage?id='+equipmentInstance.id"> -->
         <el-upload
           ref="upload"
           action
@@ -33,6 +34,7 @@
           :multiple="false"
           :limit="1"
           :file-list="img_path"
+          list-type="picture"
           accept=".jpg"
         >
           <el-button size="small" type="primary" @click="clearUploadedImage('upload')">点击上传</el-button>
@@ -159,7 +161,7 @@ export default {
         pageNum: 1,
         pageSize: 100
       },
-      img_path: [],
+      img_path: []
     };
   },
   created() {
@@ -175,6 +177,27 @@ export default {
         this.listQuery.keyword2 = response.data.deviceClass.secondCategory;
         this.selectSecondCategory();
         this.listQuery.keyword3 = response.data.deviceClass.thirdCategory;
+
+        // let urlCreator = this.window.URL || this.window.webkitURL;
+
+        // let imageUrl = urlCreator.createObjectURL(response.data.picture);
+        // alert(imageUrl+"adfasdf")
+        // let blob = new Blob([response.data.picture], {type: "application/vnd.ms-excel"});
+        // let objectUrl = URL.createObjectURL(blob);
+        // this.img_path = objectUrl;
+        // let url = window.URL.createObjectURL(response.data.picture)
+        var binaryData = [];
+        binaryData.push(response.data.picture);
+       let urlImg =  window.URL.createObjectURL(
+          new Blob(binaryData, { type: "blob" })
+        );
+       // this.fileList[0].url = urlImg
+        //alert(new Blob(binaryData, { type: "blob" }));
+        this.img_path = [{
+          "url":"http://10.103.250.120:2140/deviceType/showImage?id="+response.data.id
+          }]
+        this.fileList =this.img_path
+
       });
     } else {
       this.equipmentInstance = Object.assign({}, defaultEquipmentInstance);
@@ -182,58 +205,40 @@ export default {
   },
   methods: {
     onSubmit(formName) {
-       let form  = this.$refs[formName]; 
-        // 创建 FormData 对象
-        let formData = new FormData();
-        // 创建了 FormData 对象的时候传入了表单但是读不出来表单数据，不知道哪里的问题。所以下面用 append 方法添加参数，想打印出来看看的话可以 formData.get('id')
-        // 这里文件上传的字段一定要设置文件列表中的 raw 参数 this.img_path[0].raw
-       // formData.append('img_path', this.img_path[0] ? this.img_path[0].raw : '');
-        // let config = {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // };
-        //form.append('img_path', this.img_path[0] ? this.img_path[0].raw : '')
-        //alert(form)
-        form.validate(valid => {
+      let form = this.$refs[formName];
+      // 创建 FormData 对象
+      let formData = new FormData();
+      form.validate(valid => {
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            // formData.append('id',this.equipmentInstance.id)
-            //   formData.append('modelNumber',this.equipmentInstance.modelNumber)
-            //   formData.append('name',this.equipmentInstance.name);
-            //   formData.append('price',this.equipmentInstance.price)
-            //   formData.append('useYear',this.equipmentInstance.useYear)
-            //   formData.append('description',this.equipmentInstance.description)
-            //   formData.append('deviceClassId',this.equipmentInstance.deviceClassId)
-              formData.append("deviceTypeParam",JSON.stringify(this.equipmentInstance))
-              formData.append('image', this.img_path[0] ? this.img_path[0].raw : '');
+            formData.append(
+              "deviceTypeParam",
+              JSON.stringify(this.equipmentInstance)
+            );
+            formData.append(
+              "image",
+              this.img_path[0] ? this.img_path[0].raw : ""
+            );
             if (this.isEdit) {
-              updateEquipmentInstance(
-                this.$route.query.id,
-                formData
-              ).then(response => {
-                this.$refs[formName].resetFields();
-                this.$message({
-                  message: "修改成功",
-                  type: "success",
-                  duration: 1000
-                });
-                this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
-
-              });
+              updateEquipmentInstance(this.$route.query.id, formData).then(
+                response => {
+                  this.$refs[formName].resetFields();
+                  this.$message({
+                    message: "修改成功",
+                    type: "success",
+                    duration: 1000
+                  });
+                  this.$router.push({
+                    path: "/equipment/instance",
+                    query: { listQuery: this.$route.query.listQuery }
+                  });
+                }
+              );
             } else {
-              // formData.append('id',this.equipmentInstance.id)
-              // formData.append('modelNumber',this.equipmentInstance.modelNumber)
-              // formData.append('name',this.equipmentInstance.name);
-              // formData.append('price',this.equipmentInstance.price)
-              // formData.append('useYear',this.equipmentInstance.useYear)
-              // formData.append('description',this.equipmentInstance.description)
-              // formData.append('deviceClassId',this.equipmentInstance.deviceClassId)
-              // formData.append('image', this.img_path[0] ? this.img_path[0].raw : '');
               createEquipmentInstance(formData).then(response => {
                 this.$refs[formName].resetFields();
                 this.equipmentInstance = Object.assign(
@@ -245,7 +250,10 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
+                this.$router.push({
+                  path: "/equipment/instance",
+                  query: { listQuery: this.$route.query.listQuery }
+                });
               });
             }
           });
@@ -337,25 +345,28 @@ export default {
     },
     returnToEquipmentInstance() {
       //this.$router.push({ path: "/equipment/instance" });
-     // this.$router.back();
-     this.$router.push({path: '/equipment/instance',  query: { listQuery: this.$route.query.listQuery}})
-
+      // this.$router.back();
+      this.$router.push({
+        path: "/equipment/instance",
+        query: { listQuery: this.$route.query.listQuery }
+      });
     },
-    handleFile () { },
-    img_path_file (file, fileList) {
+    handleFile() {},
+    img_path_file(file, fileList) {
+       //alert(fileList);
       // 证书上传组件 on-change 事件
       this.img_path = fileList;
     },
-    clearUploadedImage (type) {
+    clearUploadedImage(type) {
       // 重新选择文件时清空文件列表
-      if (type === 'upload') {
+      if (type === "upload") {
         this.$refs.upload.clearFiles();
         this.img_path = [];
-      } else if (type === 'upload1') {
+      } else if (type === "upload1") {
         this.$refs.upload1.clearFiles();
         this.key_path = [];
       }
-    },
+    }
   }
 };
 </script>
