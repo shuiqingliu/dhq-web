@@ -113,14 +113,14 @@ import { fetchList as getListByCategory } from "@/api/equipmentType";
 import SingleUpload from "@/components/Upload/singleUpload";
 //默认信息
 const defaultEquipmentInstance = {
-  id: 123,
-  modelNumber: "note3",
-  name: "小米",
-  price: 8888,
-  useYear: 10,
-  //picture: "http:",
-  description: "hahah",
-  deviceClassId: 16
+  // id: 123,
+  // modelNumber: "note3",
+  // name: "小米",
+  // price: 8888,
+  // useYear: 10,
+  // picture: "http:",
+  // description: "hahah",
+  // deviceClassId: 16
 };
 
 export default {
