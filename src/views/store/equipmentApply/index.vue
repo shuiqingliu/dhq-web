@@ -70,7 +70,7 @@
           </template>
         </el-table-column>
         <el-table-column label="申请时间" align="center" width="160">
-          <template slot-scope="scope">{{scope.row.applyTimes}}</template>
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
         <el-table-column label="处理结果" align="center">
           <template slot-scope="scope">{{scope.row.resultDes}}</template>
