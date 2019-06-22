@@ -34,8 +34,11 @@
       <el-form-item label="电话" prop="shopPhone">
         <el-input v-model.number="storeInfo.shopPhone"></el-input>
       </el-form-item>
-      <el-form-item label="门店大小：" prop="shopSize">
+      <el-form-item label="门店面积：" prop="shopSize">
         <el-input v-model.number="storeInfo.shopSize"></el-input>
+      </el-form-item>
+      <el-form-item label="教室数量:" prop="classroomNum">
+        <el-input v-model.number="storeInfo.classroomNum"></el-input>
       </el-form-item>
       <el-form-item label="员工数量：" prop="employeeNum">
         <el-input v-model.number="storeInfo.employeeNum"></el-input>
@@ -85,6 +88,7 @@ const defaultStoreInfo = {
   shopLocationDetail: "学院路10号院",
   shopPhone: "13340248013",
   shopSize: 1233,
+  classroomNum:10,
   employeeNum: 20
 };
 export default {
@@ -118,6 +122,10 @@ export default {
           { type: "number", message: "员工数量必须为数字值" }
         ],
         shopSize: [
+          { required: true, message: "门店大小不能为空" },
+          { type: "number", message: "门店大小必须为数字值" }
+        ],
+        classroomNum:[
           { required: true, message: "门店大小不能为空" },
           { type: "number", message: "门店大小必须为数字值" }
         ],

@@ -63,8 +63,11 @@
         <!-- <el-table-column label="门店描述" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopDesc}}</template>
         </el-table-column>-->
-        <el-table-column label="门店大小" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.shopSize}}</template>
+        <el-table-column label="门店面积" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.shopSize}}平</template>
+        </el-table-column>
+        <el-table-column label="教室面积" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.classroomNum}}</template>
         </el-table-column>
         <el-table-column label="员工数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.employeeNum}}</template>
@@ -149,7 +152,6 @@ import {
   getShopNameByLocation
 } from "@/api/storeInformation";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
-import {isvalidUsername} from '@/utils/validate'
 export default {
   name: "storeInfoList",
   data() {
