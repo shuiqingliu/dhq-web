@@ -14,7 +14,7 @@
   import editorImage from './components/editorImage'
   import plugins from './plugins'
   import toolbar from './toolbar'
-
+  import zh_CN from './zh_CN'
   export default {
     name: 'Tinymce',
     components: {editorImage},
@@ -60,7 +60,7 @@
     },
     computed: {
       language() {
-        return this.languageTypeList[this.$store.getters.language]
+        return this.languageTypeList[1]
       }
     },
     watch: {

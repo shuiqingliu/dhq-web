@@ -8,21 +8,24 @@
         <div style="margin-top:15px">
             <el-button
               type="primary"
-              class="btn-add"
+       
+              :class="state == 1? 'active':'btn-add'"
               @click="state = 1;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               选择题
             </el-button>
             <el-button
               type="primary"
-              class="btn-add"
+            
+              :class="state == 2? 'active':'btn-add'"
               @click="state = 2;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               填空题
             </el-button>
             <el-button
               type="primary"
-              class="btn-add"
+        
+               :class="state == 3? 'active':'btn-add'"
               @click="state = 3;listQuery.pageNum = 1;listQuery.pageSize = 10;getList()"
               size="mini">
               简答题
@@ -140,7 +143,7 @@
             <el-form-item label="试题标题：" >
               <el-input v-model="selectForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="答案：">
+            <el-form-item label="答案：" prop="answer">
               <el-input v-model="selectForm.choiceAnswer"></el-input>
             </el-form-item>
             <el-form-item label="选项一：" prop="firstchoice">
@@ -372,6 +375,9 @@
           knowledgePoint:[
             {required: true, message: '请输入该题的知识点', trigger: 'blur' },
             
+          ],
+          answer:[
+            {required: true, message: '请输入该题的答案', trigger: 'blur' },
           ]
 
         },
@@ -891,6 +897,12 @@
 .br{
   border: none;
   
+}
+.active{
+  background-color:#00CC33
+}
+.btd-add{
+  background-color:#006666
 }
 .custom-tree-node {
     flex: 1;
