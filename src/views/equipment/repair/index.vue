@@ -105,6 +105,9 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column label="申请时间" align="center" width="155">
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
+        </el-table-column>
         <el-table-column label="联系人" align="center">
           <template slot-scope="scope">{{scope.row.linkman}}</template>
         </el-table-column>
