@@ -25,7 +25,7 @@
         <single-upload v-model="equipmentInstance.picture"></single-upload>
       </el-form-item>-->
       <el-form-item label="图片">
-      <!-- <img style="height: 70px" :src="'http://10.103.250.120:2140/deviceType/showImage?id='+equipmentInstance.id"> -->
+        <!-- <img style="height: 70px" :src="'http://10.103.250.120:2140/deviceType/showImage?id='+equipmentInstance.id"> -->
         <el-upload
           ref="upload"
           action
@@ -177,18 +177,31 @@ export default {
         this.listQuery.keyword2 = response.data.deviceClass.secondCategory;
         this.selectSecondCategory();
         this.listQuery.keyword3 = response.data.deviceClass.thirdCategory;
-      //   var binaryData = [];
-      //   binaryData.push(response.data.picture);
-      //  let urlImg =  window.URL.createObjectURL(
-      //     new Blob(binaryData, { type: "blob" })
-      //   );
-       // this.fileList[0].url = urlImg
-        //alert(new Blob(binaryData, { type: "blob" }));
-        this.img_path = [{
-          "url":"http://10.103.250.120:2140/deviceType/showImage?id="+response.data.id
-          }]
-        this.fileList =this.img_path
+        // let base64="hello world"
+        // let arr = base64.split(","),
+        //   mime = arr[0].match(/:(.*?);/)[1],
+        //   bstr = atob(arr[1]),
+        //   n = bstr.length,
+        //   u8arr = new Uint8Array(n);
+        // while (n--) {
+        //   u8arr[n] = bstr.charCodeAt(n);
+        // }
+        // let a= new Blob([u8arr], {
+        //   type: mime
+        // })
+        // var binaryData = [];
+        // binaryData.push(response.data.picture);
+        // let urlImg = window.URL.createObjectURL(
+        //   a
+        // );
+        // alert(urlImg);
+        this.img_path = [
+          {
+            url:"http://10.103.250.120:2140/deviceType/showImage?id="+response.data.id
 
+          }
+        ];
+        // this.fileList =this.img_path
       });
     } else {
       this.equipmentInstance = Object.assign({}, defaultEquipmentInstance);
@@ -344,7 +357,7 @@ export default {
     },
     handleFile() {},
     img_path_file(file, fileList) {
-       //alert(fileList);
+      //alert(fileList);
       // 证书上传组件 on-change 事件
       this.img_path = fileList;
     },
