@@ -279,7 +279,10 @@
         },
         lists:[],
         listQuery: {
-      
+          grade:null,
+          difficulty_level: null,
+          subject:null,
+          knowledgePoint:null,
           pageNum: 1,
           pageSize: 10
         },

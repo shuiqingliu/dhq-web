@@ -63,7 +63,7 @@
       };
       const validatePass = (rule, value, callback) => {
         if (value.length < 3) {
-          callback(new Error('密码不能小于6位'))
+          callback(new Error('密码不能小于3位'))
         } else {
           callback()
         }
