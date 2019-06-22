@@ -309,7 +309,9 @@ export default {
         let secondCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < secondCategoryList.length; i++) {
-          arr.push(secondCategoryList[i].secondCategory);
+          if(secondCategoryList[i].secondCategory != null){
+            arr.push(secondCategoryList[i].secondCategory);
+          }
         }
         //去重
         arr = [...new Set(arr)];
@@ -335,7 +337,9 @@ export default {
         let thirdCategoryList = response.data.list;
         let arr = [];
         for (let i = 0; i < thirdCategoryList.length; i++) {
-          arr.push(thirdCategoryList[i].thirdCategory);
+          if(thirdCategoryList[i].thirdCategory != null){
+            arr.push(thirdCategoryList[i].thirdCategory);
+          }
         }
         //去重
         arr = [...new Set(arr)];
