@@ -177,20 +177,11 @@ export default {
         this.listQuery.keyword2 = response.data.deviceClass.secondCategory;
         this.selectSecondCategory();
         this.listQuery.keyword3 = response.data.deviceClass.thirdCategory;
-
-        // let urlCreator = this.window.URL || this.window.webkitURL;
-
-        // let imageUrl = urlCreator.createObjectURL(response.data.picture);
-        // alert(imageUrl+"adfasdf")
-        // let blob = new Blob([response.data.picture], {type: "application/vnd.ms-excel"});
-        // let objectUrl = URL.createObjectURL(blob);
-        // this.img_path = objectUrl;
-        // let url = window.URL.createObjectURL(response.data.picture)
-        var binaryData = [];
-        binaryData.push(response.data.picture);
-       let urlImg =  window.URL.createObjectURL(
-          new Blob(binaryData, { type: "blob" })
-        );
+      //   var binaryData = [];
+      //   binaryData.push(response.data.picture);
+      //  let urlImg =  window.URL.createObjectURL(
+      //     new Blob(binaryData, { type: "blob" })
+      //   );
        // this.fileList[0].url = urlImg
         //alert(new Blob(binaryData, { type: "blob" }));
         this.img_path = [{
