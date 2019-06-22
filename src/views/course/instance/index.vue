@@ -90,6 +90,7 @@
           <template slot-scope="scope">
             <!-- <img style="height: 70px" :src="scope.row.picture"> -->
             <img
+            alt="暂无图片"
               style="height: 70px"
               :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.id"
             >

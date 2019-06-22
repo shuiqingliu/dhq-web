@@ -149,6 +149,7 @@ import {
   getShopNameByLocation
 } from "@/api/storeInformation";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
+import {isvalidUsername} from '@/utils/validate'
 export default {
   name: "storeInfoList",
   data() {

@@ -70,7 +70,8 @@ import {
   CodeToText,
   TextToCode
 } from "element-china-area-data";
-import { isvalidPhone } from "../../../../utils/validate";
+import { isvalidPhone,isvalidUsername} from "../../../../utils/validate";
+
 //默认信息
 const defaultStoreInfo = {
   id: 1,
@@ -141,8 +142,7 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      getStoreInfoById(this.$route.query.id).then(
-        response => {
+      getStoreInfoById(this.$route.query.id).then(response => {
         this.selectedOptions.push(
           TextToCode[response.data.shopLocationProvince].code,
           TextToCode[response.data.shopLocationProvince][
@@ -163,6 +163,14 @@ export default {
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
+        if (!isvalidUsername(this.storeInfo.managerId)) {
+          this.$message({
+            message: "请勿输入？！*&%……@等特殊符号",
+            type: "error",
+            duration: 1000
+          });
+          return false;
+        }
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
@@ -184,7 +192,10 @@ export default {
                     type: "success",
                     duration: 1000
                   });
-                  this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
+                  this.$router.push({
+                    path: "/store/storeInformation",
+                    query: { listQuery: this.$route.query.listQuery }
+                  });
                 }
               );
             } else {
@@ -202,7 +213,10 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
+                this.$router.push({
+                  path: "/store/storeInformation",
+                  query: { listQuery: this.$route.query.listQuery }
+                });
               });
             }
           });
@@ -222,8 +236,10 @@ export default {
     },
     returnToStoreInformation() {
       //this.$router.push({ path: "/store/storeInformation" });
-      this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
-
+      this.$router.push({
+        path: "/store/storeInformation",
+        query: { listQuery: this.$route.query.listQuery }
+      });
     }
   }
 };
