@@ -137,7 +137,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,15,20]"
         :current-page.sync="listQuery.pageNum"
         :total="total"
       ></el-pagination>
@@ -165,7 +165,7 @@ export default {
         keyword3: null,
         modelNumber: null,
         pageNum: 1,
-        pageSize: 5
+        pageSize: 10
       },
       list: [
         // {
