@@ -34,8 +34,11 @@
       <el-form-item label="电话" prop="shopPhone">
         <el-input v-model.number="storeInfo.shopPhone"></el-input>
       </el-form-item>
-      <el-form-item label="门店大小：" prop="shopSize">
+      <el-form-item label="门店面积：" prop="shopSize">
         <el-input v-model.number="storeInfo.shopSize"></el-input>
+      </el-form-item>
+      <el-form-item label="教室数量:" prop="classroomNum">
+        <el-input v-model.number="storeInfo.classroomNum"></el-input>
       </el-form-item>
       <el-form-item label="员工数量：" prop="employeeNum">
         <el-input v-model.number="storeInfo.employeeNum"></el-input>
@@ -70,7 +73,8 @@ import {
   CodeToText,
   TextToCode
 } from "element-china-area-data";
-import { isvalidPhone } from "../../../../utils/validate";
+import { isvalidPhone,isvalidUsername} from "../../../../utils/validate";
+
 //默认信息
 const defaultStoreInfo = {
   id: 1,
@@ -84,6 +88,7 @@ const defaultStoreInfo = {
   shopLocationDetail: "学院路10号院",
   shopPhone: "13340248013",
   shopSize: 1233,
+  classroomNum:10,
   employeeNum: 20
 };
 export default {
@@ -120,6 +125,10 @@ export default {
           { required: true, message: "门店大小不能为空" },
           { type: "number", message: "门店大小必须为数字值" }
         ],
+        classroomNum:[
+          { required: true, message: "门店大小不能为空" },
+          { type: "number", message: "门店大小必须为数字值" }
+        ],
         shopPhone: [
           { required: true, trigger: "blur", validator: validPhone } //这里需要用到全局变量
         ]
@@ -141,8 +150,7 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      getStoreInfoById(this.$route.query.id).then(
-        response => {
+      getStoreInfoById(this.$route.query.id).then(response => {
         this.selectedOptions.push(
           TextToCode[response.data.shopLocationProvince].code,
           TextToCode[response.data.shopLocationProvince][
@@ -163,6 +171,14 @@ export default {
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
+        if (!isvalidUsername(this.storeInfo.managerId)) {
+          this.$message({
+            message: "请勿输入？！*&%……@等特殊符号",
+            type: "error",
+            duration: 1000
+          });
+          return false;
+        }
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
@@ -184,7 +200,10 @@ export default {
                     type: "success",
                     duration: 1000
                   });
-                  this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
+                  this.$router.push({
+                    path: "/store/storeInformation",
+                    query: { listQuery: this.$route.query.listQuery }
+                  });
                 }
               );
             } else {
@@ -202,7 +221,10 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
+                this.$router.push({
+                  path: "/store/storeInformation",
+                  query: { listQuery: this.$route.query.listQuery }
+                });
               });
             }
           });
@@ -222,8 +244,10 @@ export default {
     },
     returnToStoreInformation() {
       //this.$router.push({ path: "/store/storeInformation" });
-      this.$router.push({path: '/store/storeInformation',  query: { listQuery: this.$route.query.listQuery}})
-
+      this.$router.push({
+        path: "/store/storeInformation",
+        query: { listQuery: this.$route.query.listQuery }
+      });
     }
   }
 };

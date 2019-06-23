@@ -3,7 +3,7 @@
     <el-form :model="courseInstance" :rules="rules" ref="courseInstanceForm" label-width="150px">
       <!-- <el-form-item label="课程编号：" prop="courseTypeNumber">
         <el-input v-model="courseInstance.courseTypeNumber"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="课程名：" prop="name">
         <el-input v-model="courseInstance.name"></el-input>
       </el-form-item>
@@ -20,6 +20,7 @@
           :limit="1"
           :file-list="img_path"
           accept=".jpg"
+          list-type="picture"
         >
           <el-button size="small" type="primary" @click="clearUploadedImage('upload')">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传.jpg文件</div>
@@ -218,7 +219,7 @@ export default {
       dialogVisible: false,
       onlineCourseList: [],
       listSize: null,
-      img_path: [],
+      img_path: []
     };
   },
   created() {
@@ -244,37 +245,54 @@ export default {
       let formData = new FormData();
       let formDataForEdit = new FormData();
       this.$refs[formName].validate(valid => {
+        // if (this.img_path[0] == null || this.img_path[0] == "") {
+        //   alert("请必须添加图片!");
+        //   this.$message({
+        //     message: "验证失败",
+        //     type: "error",
+        //     duration: 1000
+        //   });
+        //   return false;
+        // }
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            let obj = {"courseOnlineContentList":this.onlineCourseList,"courseParam":this.courseInstance}
-              formData.append("courseTypeOnlineItem",JSON.stringify(obj))
-              formData.append(
-                "image",
-                this.img_path[0] ? this.img_path[0].raw : ""
-              );
+            let obj = {
+              courseOnlineContentList: this.onlineCourseList,
+              courseParam: this.courseInstance
+            };
+            formData.append("courseTypeOnlineItem", JSON.stringify(obj));
+            formData.append(
+              "image",
+              this.img_path[0] ? this.img_path[0].raw : ""
+            );
             if (this.isEdit) {
-              formDataForEdit.append("courseParam",JSON.stringify(this.courseInstance))
+              formDataForEdit.append(
+                "courseParam",
+                JSON.stringify(this.courseInstance)
+              );
               formDataForEdit.append(
                 "image",
                 this.img_path[0] ? this.img_path[0].raw : ""
               );
-              updateCourseInstance(
-                this.$route.query.id,
-                formDataForEdit
-              ).then(response => {
-                this.$refs[formName].resetFields();
-                this.$message({
-                  message: "修改成功",
-                  type: "success",
-                  duration: 1000
-                });
-                this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
-              });
-            } else {  
+              updateCourseInstance(this.$route.query.id, formDataForEdit).then(
+                response => {
+                  this.$refs[formName].resetFields();
+                  this.$message({
+                    message: "修改成功",
+                    type: "success",
+                    duration: 1000
+                  });
+                  this.$router.push({
+                    path: "/course/instance",
+                    query: { listQuery: this.$route.query.listQuery }
+                  });
+                }
+              );
+            } else {
               createCourseInstance(formData).then(response => {
                 this.$refs[formName].resetFields();
                 this.courseInstance = Object.assign({}, defaultCourseInstance);
@@ -283,7 +301,10 @@ export default {
                   type: "success",
                   duration: 1000
                 });
-                this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
+                this.$router.push({
+                  path: "/course/instance",
+                  query: { listQuery: this.$route.query.listQuery }
+                });
               });
             }
           });
@@ -392,8 +413,11 @@ export default {
       });
     },
     returnToStoreInformation() {
-     // this.$router.push({ path: "/course/instance" });
-      this.$router.push({path: '/course/instance',  query: { listQuery: this.$route.query.listQuery}})
+      // this.$router.push({ path: "/course/instance" });
+      this.$router.push({
+        path: "/course/instance",
+        query: { listQuery: this.$route.query.listQuery }
+      });
     },
     falseSubmit() {
       this.onlineCourseList.push({
@@ -472,8 +496,7 @@ export default {
         this.key_path = [];
       }
     },
-    objectToFormData(obj, form,namespace) {
-      
+    objectToFormData(obj, form, namespace) {
       const fd = form || new FormData();
       let formKey;
 
@@ -491,8 +514,8 @@ export default {
             typeof obj[property] === "object" &&
             !(obj[property] instanceof File)
           ) {
-            alert("afadfa")
-            this.objectToFormData(obj[property], fd, formKey)
+            alert("afadfa");
+            this.objectToFormData(obj[property], fd, formKey);
             //objectToFormData();
           } else {
             // if it's a string or a File object

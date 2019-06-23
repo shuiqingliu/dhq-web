@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column label="设备编号" align="center">
           <template slot-scope="scope">{{ scope.row.oldDeviceNumber }}</template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column label="维修编号" align="center">
           <template slot-scope="scope">
             <el-button
@@ -67,7 +67,13 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column label="申请时间" align="center" width="170">
+          <template slot-scope="scope">{{scope.row.applyTime}}</template>
+        </el-table-column>
+        <el-table-column label="维修截止日期" align="center" width="150">
+          <template slot-scope="scope">{{getTime(scope.row.applyTime)}}</template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" width="100">
           <template slot-scope="scope">{{dealStatusList[scope.row.dealStatus]}}</template>
         </el-table-column>
         <el-table-column label="故障类型" align="center">
@@ -99,10 +105,10 @@
     </div>
     <el-dialog title="维修信息" :visible.sync="dialogMaintainVisible">
       <el-form :model="repairForm">
-        <el-form-item label="更换配件名称" :label-width="formLabelWidth">
+        <el-form-item label="更换配件名称">
           <el-input v-model="repairForm.exchangeDeviceName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="更换配件数目" :label-width="formLabelWidth">
+        <el-form-item label="更换配件数目">
           <el-input v-model="repairForm.countNumber" auto-complete="off"></el-input>
         </el-form-item>
         <div class="block">
@@ -121,13 +127,13 @@
             value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </div>
-        <el-form-item label="故障原因分析与结果评定" :label-width="formLabelWidth">
+        <el-form-item label="故障原因分析与结果评定">
           <el-input v-model="repairForm.failureAnalysisResultEvaluation" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="改善措施" :label-width="formLabelWidth">
+        <el-form-item label="改善措施">
           <el-input v-model="repairForm.preventiveMeasure" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="维修人员处理方法" :label-width="formLabelWidth">
+        <el-form-item label="维修人员处理方法">
           <el-input v-model="repairForm.maintainDealFunction" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -150,7 +156,7 @@ import {
   maintainFailure
 } from "@/api/equipmentRepair";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
-
+import { getUserRole } from "@/api/role";
 export default {
   name: "equipmentTypeList",
   data() {
@@ -217,10 +223,10 @@ export default {
         "维修失败"
       ],
       // a:[true,false,false],
-      a:{
-        1:false,//维修中
-        2:true,//已维修
-        8:true,//维修失败
+      a: {
+        1: false, //维修中
+        2: true, //已维修
+        8: true //维修失败
       },
       list: [],
       applyReasonList: [
@@ -254,16 +260,27 @@ export default {
       options: regionDataPlus, //全国的地理信息
       listLoading: false, //临时修改了一下
       value1: "",
-      value2: ""
+      value2: "",
+      adminDesc: null
     };
   },
   created() {
-    //alert("hahah")
-    this.listQuery.maintainManagerId = this.$store.state.user.id
-  //  alert(this.$store.state.user.id)
-    this.getList();
+    
+    this.getRole(this.$store.state.user.id)
+   // this.getList();
   },
   methods: {
+    getRole(id){
+      getUserRole(id).then(response => {
+      this.adminDesc = response.data[0].description;
+      if (this.adminDesc === "系统管理员") {
+        this.getList()
+      }else{
+        this.listQuery.maintainManagerId = this.$store.state.user.id;
+        this.getList()
+      }
+    });
+    },
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
@@ -334,7 +351,7 @@ export default {
         type: "warning"
       }).then(() => {
         maintainDevice(this.repairForm).then(response => {
-          this.dialogMaintainVisible = false
+          this.dialogMaintainVisible = false;
           this.$message({
             message: "提交成功",
             type: "success",
@@ -345,7 +362,7 @@ export default {
       });
     },
     //维修失败
-    repairFaild(){
+    repairFaild() {
       this.repairForm.maintainStartTime = this.value1;
       this.repairForm.maintainEndTime = this.value2;
       this.repairForm.id = this.maintainId;
@@ -356,7 +373,7 @@ export default {
         type: "warning"
       }).then(() => {
         maintainFailure(this.repairForm).then(response => {
-          this.dialogMaintainVisible = false
+          this.dialogMaintainVisible = false;
           this.$message({
             message: "提交成功",
             type: "success",
@@ -365,6 +382,24 @@ export default {
           this.getList();
         });
       });
+    },
+    getTime(date) {
+      var d = new Date(date);
+      d.setDate(d.getDate() + 5);
+      var m = d.getMonth() + 1;
+      return (
+        d.getFullYear() +
+        "-" +
+        m +
+        "-" +
+        d.getDate() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds()
+      );
     }
   }
 };

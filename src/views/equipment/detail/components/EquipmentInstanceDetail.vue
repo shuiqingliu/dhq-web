@@ -38,11 +38,11 @@ import {
 } from "@/api/equipmentDetail";
 //默认信息
 const defaultEquipmentDetail = {
-  deviceNumber: "1231231231",
+  //deviceNumber: "1231231231",
   deviceTypeId: 1,
   deviceUseState: 0,
   id: 0,
-  produceDate: "2019-05-19"
+  //produceDate: "2019-05-19"
 };
 export default {
   name: "EquipmentDetail",
