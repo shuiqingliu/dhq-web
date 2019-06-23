@@ -67,6 +67,12 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column label="设备名-型号" align="center" width="170">
+          <template slot-scope="scope">{{scope.row.deviceTypeName}}-{{scope.row.modelNumber}}</template>
+        </el-table-column>
+        <el-table-column label="维修人员" align="center" width="80">
+          <template slot-scope="scope">{{scope.row.name}}</template>
+        </el-table-column>
         <el-table-column label="申请时间" align="center" width="170">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>

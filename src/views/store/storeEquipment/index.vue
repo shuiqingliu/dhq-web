@@ -35,6 +35,20 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="设备名：">
+            <el-select
+              v-model="listQuery.shopName"
+              placeholder="请选择设备名"
+              clearable
+            >
+              <el-option
+                v-for="item in shopNameList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
