@@ -5,7 +5,7 @@
         <el-input v-model="user.username" placeholder="支持中文、字母、数字、下划线，4-20个字符"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="password" v-if='!isEdit'>
-        <el-input v-model="user.password" type="password"></el-input>
+        <el-input v-model="user.password" type="password" placeholder="密码长度不小于6位"></el-input>
       </el-form-item>
       <el-form-item label="手机号：">
         <el-input v-model="user.phone"></el-input>
@@ -116,7 +116,8 @@
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
           password:[
-            {required: true, message: '请输密码', trigger: 'blur'},
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {min: 6, message: '长度在不小于6位！', trigger: 'blur'}
           ]
 
         },
