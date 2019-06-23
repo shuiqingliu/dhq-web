@@ -70,7 +70,7 @@
         <el-table-column label="申请时间" align="center" width="170">
           <template slot-scope="scope">{{scope.row.applyTime}}</template>
         </el-table-column>
-        <el-table-column label="维修截止日期" align="center" width="150">
+        <el-table-column label="预计截止日期" align="center" width="150">
           <template slot-scope="scope">{{getTime(scope.row.applyTime)}}</template>
         </el-table-column>
         <el-table-column label="状态" align="center" width="100">
