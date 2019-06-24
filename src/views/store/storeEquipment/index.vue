@@ -263,9 +263,6 @@ export default {
     },
     //查询
     searchEquipmentInstanceList() {
-      alert(this.listQuery.keyword1);
-      alert(this.listQuery.keyword2);
-      alert(this.listQuery.keyword3);
       this.listQuery.pageNum = 1;
       this.getList();
     },
@@ -373,6 +370,7 @@ export default {
       this.listQuery.city = null;
       this.listQuery.district = null;
       this.listQuery.shopName = null;
+      this.listQuery.deviceName = null;
     },
     getShopName(){
       this.listQuery.shopName=null
