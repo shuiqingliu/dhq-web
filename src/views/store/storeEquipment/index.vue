@@ -37,12 +37,12 @@
           </el-form-item>
           <el-form-item label="设备名：">
             <el-select
-              v-model="listQuery.shopName"
+              v-model="listQuery.deviceName"
               placeholder="请选择设备名"
               clearable
             >
               <el-option
-                v-for="item in shopNameList"
+                v-for="item in deviceNameList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -153,7 +153,8 @@ import {
   fetchList,
   getStoreEquipmentById,
   deleteStoreEquipment,
-  getShopNameByLocation
+  getShopNameByLocation,
+  getDeviceName
   // deleteEquipmentInstance,
   // batchDeleteEquipmentInstance,
   // getFirstCategory,
@@ -178,6 +179,7 @@ export default {
         city: null,
         district: null,
         shopName: null,
+        deviceName:null,
         pageNum: 1,
         pageSize: 20
       },
@@ -196,13 +198,15 @@ export default {
       options: regionDataPlus, //全国的地理信息
       selectedOptions: [],
       dialogVisible:false,
-      shopNameList:[]
+      shopNameList:[],
+      deviceNameList:[],
     };
   },
   created() {
     this.getList();
     //this.getFirstCategoryList();
     // this.getSecondCategoryList();
+    this.getDeviceNameList()
   },
   methods: {
     getList() {
@@ -406,6 +410,16 @@ export default {
             }
           }
         );
+    },
+    getDeviceNameList(){
+      getDeviceName().then(
+        response =>{
+          let list = response.data.list
+          for(let i = 0;i < list.length; i++){
+            this.deviceNameList.push({label:list[i],value:list[i]})
+          }
+        }
+      )
     }
   }
 };

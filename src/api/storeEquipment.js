@@ -33,3 +33,12 @@ export function getShopNameByLocation(params) {
     params:params
   })
 }
+//返回所有的设备名
+
+
+export function getDeviceName() {
+  return request({
+    url:'/device/showDeviceNames',
+    method:'get',
+  })
+}
