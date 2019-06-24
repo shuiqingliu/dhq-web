@@ -66,7 +66,7 @@
         <el-table-column label="门店面积" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopSize}}平</template>
         </el-table-column>
-        <el-table-column label="教室面积" width="100" align="center">
+        <el-table-column label="教室数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.classroomNum}}</template>
         </el-table-column>
         <el-table-column label="员工数量" width="100" align="center">
