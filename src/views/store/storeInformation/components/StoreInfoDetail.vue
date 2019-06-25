@@ -25,6 +25,23 @@
       <el-form-item label="门店描述：">
         <el-input v-model="storeInfo.shopDesc" type="textarea" placeholder="请输入内容"></el-input>
       </el-form-item>
+      <el-form-item label="图片">
+        <!-- <img style="height: 70px" :src="'http://10.103.250.120:2140/deviceType/showImage?id='+equipmentInstance.id"> -->
+        <el-upload
+          ref="upload"
+          action
+          :http-request="handleFile"
+          :on-change="img_path_file"
+          :multiple="false"
+          :limit="1"
+          :file-list="img_path"
+          list-type="picture"
+          accept=".jpg"
+        >
+          <el-button size="small" type="primary" @click="clearUploadedImage('upload')">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传.jpg文件</div>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="省市区">
         <el-cascader size="large" :options="options" v-model="selectedOptions"></el-cascader>
       </el-form-item>
@@ -73,7 +90,7 @@ import {
   CodeToText,
   TextToCode
 } from "element-china-area-data";
-import { isvalidPhone,isvalidUsername} from "../../../../utils/validate";
+import { isvalidPhone, isvalidUsername } from "../../../../utils/validate";
 
 //默认信息
 const defaultStoreInfo = {
@@ -88,7 +105,7 @@ const defaultStoreInfo = {
   shopLocationDetail: "学院路10号院",
   shopPhone: "13340248013",
   shopSize: 1233,
-  classroomNum:10,
+  classroomNum: 10,
   employeeNum: 20
 };
 export default {
@@ -125,7 +142,7 @@ export default {
           { required: true, message: "门店大小不能为空" },
           { type: "number", message: "门店大小必须为数字值" }
         ],
-        classroomNum:[
+        classroomNum: [
           { required: true, message: "门店大小不能为空" },
           { type: "number", message: "门店大小必须为数字值" }
         ],
@@ -145,7 +162,8 @@ export default {
           value: "门店",
           label: "门店"
         }
-      ]
+      ],
+      img_path:[]
     };
   },
   created() {
@@ -163,6 +181,13 @@ export default {
         // alert(TextToCode["山东省"].code);
         // alert(TextToCode["菏泽市"].code);
         this.storeInfo = response.data;
+        this.img_path = [
+          {
+            url:
+              "http://10.103.250.120:2140/shopInfo/showImage?id=" +
+              response.data.id
+          }
+        ];
       });
     } else {
       this.storeInfo = Object.assign({}, defaultStoreInfo);
@@ -170,7 +195,10 @@ export default {
   },
   methods: {
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      let form = this.$refs[formName];
+      // 创建 FormData 对象
+      let formData = new FormData();
+      form.validate(valid => {
         if (!isvalidUsername(this.storeInfo.managerId)) {
           this.$message({
             message: "请勿输入？！*&%……@等特殊符号",
@@ -192,7 +220,12 @@ export default {
                 CodeToText[this.selectedOptions[1]];
               this.storeInfo.shopLocationDistrict =
                 CodeToText[this.selectedOptions[2]];
-              updateStoreInfo(this.$route.query.id, this.storeInfo).then(
+              formData.append("shopInfoParam", JSON.stringify(this.storeInfo));
+              formData.append(
+                "image",
+                this.img_path[0] ? this.img_path[0].raw : ""
+              );
+              updateStoreInfo(this.$route.query.id,formData).then(
                 response => {
                   this.$refs[formName].resetFields();
                   this.$message({
@@ -213,7 +246,12 @@ export default {
                 CodeToText[this.selectedOptions[1]];
               this.storeInfo.shopLocationDistrict =
                 CodeToText[this.selectedOptions[2]];
-              createStoreInfo(this.storeInfo).then(response => {
+              formData.append("shopInfo", JSON.stringify(this.storeInfo));
+              formData.append(
+                "image",
+                this.img_path[0] ? this.img_path[0].raw : ""
+              );
+              createStoreInfo(formData).then(response => {
                 this.$refs[formName].resetFields();
                 this.storeInfo = Object.assign({}, defaultStoreInfo);
                 this.$message({
@@ -248,6 +286,22 @@ export default {
         path: "/store/storeInformation",
         query: { listQuery: this.$route.query.listQuery }
       });
+    },
+    handleFile() {},
+    img_path_file(file, fileList) {
+      //alert(fileList);
+      // 证书上传组件 on-change 事件
+      this.img_path = fileList;
+    },
+    clearUploadedImage(type) {
+      // 重新选择文件时清空文件列表
+      if (type === "upload") {
+        this.$refs.upload.clearFiles();
+        this.img_path = [];
+      } else if (type === "upload1") {
+        this.$refs.upload1.clearFiles();
+        this.key_path = [];
+      }
     }
   }
 };

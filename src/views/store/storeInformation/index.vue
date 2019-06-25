@@ -60,6 +60,12 @@
         <el-table-column label="门店类型" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopType}}</template>
         </el-table-column>
+        <el-table-column label="图片" align="center" width="120">
+          <template slot-scope="scope">
+            <!-- <img style="height: 70px" :src="scope.row.picture"> -->
+            <img alt= "暂无图片" style="height: 70px" :src="'http://10.103.250.120:2140/shopInfo/showImage?id='+scope.row.id">
+          </template>
+        </el-table-column>
         <!-- <el-table-column label="门店描述" width="100" align="center">
           <template slot-scope="scope">{{scope.row.shopDesc}}</template>
         </el-table-column>-->
@@ -149,7 +155,8 @@ import {
   fetchList,
   deleteStoreInfo,
   batchDeleteStoreInfo,
-  getShopNameByLocation
+  getShopNameByLocation,
+  getImg
 } from "@/api/storeInformation";
 import { regionDataPlus, CodeToText } from "element-china-area-data";
 export default {
