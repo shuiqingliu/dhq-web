@@ -184,7 +184,7 @@ export default {
         this.img_path = [
           {
             url:
-              "http://10.103.250.120:2140/shopInfo/showImage?id=" +
+              "http://60.205.167.19:8075/shopInfo/showImage?id=" +
               response.data.id
           }
         ];

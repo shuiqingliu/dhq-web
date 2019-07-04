@@ -92,7 +92,7 @@
             <img
             alt="暂无图片"
               style="height: 70px"
-              :src="'http://10.103.250.120:2140/courseType/showImage?id='+scope.row.id"
+              :src="'http://60.205.167.19:8075/courseType/showImage?id='+scope.row.id"
             >
           </template>
         </el-table-column>

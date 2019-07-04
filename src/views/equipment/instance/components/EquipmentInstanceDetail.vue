@@ -197,7 +197,7 @@ export default {
         // alert(urlImg);
         this.img_path = [
           {
-            url:"http://10.103.250.120:2140/deviceType/showImage?id="+response.data.id
+            url:"http://60.205.167.19:8075/deviceType/showImage?id="+response.data.id
 
           }
         ];
