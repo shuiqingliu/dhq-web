@@ -71,7 +71,7 @@
             </el-col>
             <el-col :span="18">
               <el-row style="margin-bottom:5px">财务统计</el-row>
-              <el-row>总利润：{{cwn}}</el-row>
+              <el-row>总收入：{{cwn}}</el-row>
             </el-col>
           </el-row>
         </el-card>
@@ -645,20 +645,20 @@ export default {
 
       //财务统计数据
       var dtcw = {
-          columns: ['位置', '利润'],
+          columns: ['位置', '收入'],
             rows: [
             
             ]
           }
 
       var mdcw  = {
-          columns: ['门店名', '利润'],
+          columns: ['门店名', '收入'],
           rows: [
           
           ]
         }
       var ycw = {
-        columns: ['月份', '利润'],
+        columns: ['月份', '收入'],
         rows: [
         
         ]
@@ -669,7 +669,7 @@ export default {
               var v = response.data[i]
             // console.log(v)
               if(v.total_order_offline_profit != 0){
-              dtcw.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '利润': v.total_order_offline_profit})
+              dtcw.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '收入': v.total_order_offline_income})
 
               }
             }
@@ -680,7 +680,7 @@ export default {
         // console.log(response.data)
           for(var i = 0; i < 10 && i < response.data.length; i++){
             var v = response.data[i]
-            mdcw.rows.push({ '门店名': v.shopName, '利润': v.total_order_offline_profit})
+            mdcw.rows.push({ '门店名': v.shopName, '收入': v.total_order_offline_income})
           }
           
           mdcw.rows.reverse()
@@ -689,7 +689,7 @@ export default {
         CWY({year:this.year}).then(response =>{
           for(var i = 0; i < 12 && i < response.data.length; i++){
             var v = response.data[i]
-            ycw.rows.push({ '月份': i+1+'月', '利润': v.profit})
+            ycw.rows.push({ '月份': i+1+'月', '收入': v.income})
           }
           this.cwy = ycw
         })
