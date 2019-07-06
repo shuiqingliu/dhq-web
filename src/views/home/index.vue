@@ -246,19 +246,19 @@
          </div>
       </div>
       <div class="un-handle-layout">
-         <div class="layout-title">利润统计</div>
+         <div class="layout-title">收入统计</div>
          <div class="un-handle-content">
            <el-row :gutter="20">
             <el-col :span="12">
               <el-card shadow="hover">
-                <span>地区利润统计</span>
+                <span>地区收入统计</span>
                 
                 <ve-pie :data="cwdq" style="margin-top:10px"></ve-pie>         
               </el-card>
             </el-col>         
             <el-col :span="12">
               <el-card shadow="hover">
-                <span>门店利润排名</span>
+                <span>门店收入排名</span>
                 <ve-bar :data="cwmd" ></ve-bar>
               </el-card>
             </el-col>
@@ -268,7 +268,7 @@
       </div>
 
      <div class="un-handle-layout">
-         <div class="layout-title">每月利润图
+         <div class="layout-title">每月收入图
            <div style="float:right;margin-top:-10px">
             <el-date-picker
               v-model="y"
@@ -668,7 +668,7 @@ export default {
         for(var i = 0; i < response.data.length; i++){
               var v = response.data[i]
             // console.log(v)
-              if(v.total_order_offline_profit != 0){
+              if(v.total_order_offline_income != 0){
               dtcw.rows.push({ '位置': v.provinceName.substring(0,v.provinceName.length-1), '收入': v.total_order_offline_income})
 
               }
