@@ -60,9 +60,9 @@ export function getShopNameByLocation(params) {
 }
 
 //获取图片
-export function getImg(id) {
+export function getImg(picture) {
   return request({
-    url:'/shopInfo/showImage?id='+id,
+    url:'/shopInfo/showImage?objectName='+picture,
     method:'get',
   })
 }

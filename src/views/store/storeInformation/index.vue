@@ -14,14 +14,16 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="请输入地区信息">
-            <el-cascader size="medium" :options="options" v-model="selectedOptions" placeholder="请选择地区" @change="getShopName()"></el-cascader>
+            <el-cascader
+              size="medium"
+              :options="options"
+              v-model="selectedOptions"
+              placeholder="请选择地区"
+              @change="getShopName()"
+            ></el-cascader>
           </el-form-item>
           <el-form-item label="输入门店名：">
-            <el-select
-              v-model="listQuery.shopName"
-              placeholder="请选择类别"
-              clearable
-            >
+            <el-select v-model="listQuery.shopName" placeholder="请选择类别" clearable>
               <el-option
                 v-for="item in shopNameList"
                 :key="item.value"
@@ -62,8 +64,11 @@
         </el-table-column>
         <el-table-column label="图片" align="center" width="120">
           <template slot-scope="scope">
-            <!-- <img style="height: 70px" :src="scope.row.picture"> -->
-            <img alt= "暂无图片" style="height: 70px" :src="'http://60.205.167.19:8075/shopInfo/showImage?id='+scope.row.id">
+            <img
+              alt="暂无图片"
+              style="height: 70px"
+              :src="scope.row.url"
+            />
           </template>
         </el-table-column>
         <!-- <el-table-column label="门店描述" width="100" align="center">
@@ -135,7 +140,7 @@
         type="primary"
         size="small"
       >确定</el-button>
-    </div> -->
+    </div>-->
     <div class="pagination-container">
       <el-pagination
         background
@@ -196,12 +201,16 @@ export default {
       ],
       total: null,
       listLoading: false, //临时修改了一下
-     // multipleSelection: [],
+      // multipleSelection: [],
       options: regionDataPlus, //全国的地理信息
       selectedOptions: [],
       dialogVisible: false,
       description: null,
-      shopNameList:[]
+      shopNameList: [],
+      pictureList: {},
+      pictureObjectName: null,
+      tempList: [],
+      tempId: null
     };
   },
   created() {
@@ -211,12 +220,13 @@ export default {
     getList() {
       this.listLoading = true;
       //this.listLoading = false;
-      if(this.$route.query.listQuery){
-        this.listQuery = this.$route.query.listQuery
+      if (this.$route.query.listQuery) {
+        this.listQuery = this.$route.query.listQuery;
       }
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
+        //this.getPicture();
         this.total = response.data.total;
         this.totalPage = response.data.totalPage;
         this.pageSize = response.data.pageSize;
@@ -236,7 +246,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path: "/store/updateStoreInfo",
-        query: { id: row.id,listQuery:this.listQuery}
+        query: { id: row.id, listQuery: this.listQuery }
       }); //!!!!!!!!注意（row.  后面跟具体的id）
     },
     //删除
@@ -269,16 +279,15 @@ export default {
     },
     //查询
     searchStoreInfoList() {
-      if(this.listQuery.shopName == ""){
-        this.listQuery.shopName = null
+      if (this.listQuery.shopName == "") {
+        this.listQuery.shopName = null;
       }
       let length = this.selectedOptions.length;
       // alert(length);
       // alert(CodeToText[this.selectedOptions[0]]);
       if (CodeToText[this.selectedOptions[0]] == "全部") {
         this.listQuery.pageNum = 1;
-        this.listQuery.province=null,
-        this.getList();
+        (this.listQuery.province = null), this.getList();
       } else {
         this.listQuery.province = CodeToText[this.selectedOptions[0]];
         //alert(this.listQuery.province)
@@ -350,21 +359,22 @@ export default {
       });
     },
     addStoreInfo() {
-      this.$router.push({ path: "/store/addStoreInfo",query: {listQuery:this.listQuery}});
+      this.$router.push({
+        path: "/store/addStoreInfo",
+        query: { listQuery: this.listQuery }
+      });
       //this.$router.push({ path: "/store/addStoreInfo"});
-
     },
     open() {
       this.$alert(this.description, "备注详情");
     },
-    getShopName(){
-      this.listQuery.shopName=null
-      this.shopNameList = []
+    getShopName() {
+      this.listQuery.shopName = null;
+      this.shopNameList = [];
       let length = this.selectedOptions.length;
       if (CodeToText[this.selectedOptions[0]] == "全部") {
         this.listQuery.pageNum = 1;
-        this.listQuery.province=null,
-        this.getShopNameList()
+        (this.listQuery.province = null), this.getShopNameList();
       } else {
         this.listQuery.province = CodeToText[this.selectedOptions[0]];
         if (length === 2) {
@@ -380,19 +390,29 @@ export default {
           }
         }
         this.listQuery.pageNum = 1;
-        this.getShopNameList()
+        this.getShopNameList();
       }
-
     },
-    getShopNameList(){
-      getShopNameByLocation(this.listQuery).then(
-          response => {
-            let list = response.data.list
-            for(let i = 0;i<list.length;i++){
-              this.shopNameList.push({label:list[i].shopName,value:list[i].shopName})
-            }
-          }
-        );
+    getShopNameList() {
+      getShopNameByLocation(this.listQuery).then(response => {
+        let list = response.data.list;
+        for (let i = 0; i < list.length; i++) {
+          this.shopNameList.push({
+            label: list[i].shopName,
+            value: list[i].shopName
+          });
+        }
+      });
+    },
+    getPicture(picture) {
+      //this.pictureList={}
+
+      // let id = this.list[i].id;
+      // this.getPicture(this.list[i].shopPicture);
+      getImg(picture).then(response => {
+        return response.data;
+        //alert(this.list[i].id);
+      });
     }
   }
 };
