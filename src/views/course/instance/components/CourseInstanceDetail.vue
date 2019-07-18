@@ -233,6 +233,12 @@ export default {
         this.listQuery.secondType = response.data.courseClass.secondClass;
         this.selectSecondCategory();
         this.listQuery.thirdType = response.data.courseClass.thirdClass;
+        this.img_path = [
+          {
+            url:response.data.picture
+
+          }
+        ];
       });
     } else {
       this.courseInstance = Object.assign({}, defaultCourseInstance);

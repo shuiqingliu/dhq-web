@@ -183,9 +183,7 @@ export default {
         this.storeInfo = response.data;
         this.img_path = [
           {
-            url:
-              "http://60.205.167.19:8075/shopInfo/showImage?id=" +
-              response.data.id
+            url:response.data.url
           }
         ];
       });
