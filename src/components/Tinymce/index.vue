@@ -147,7 +147,7 @@
         console.log("zhangjie");
         arr.forEach(v => {
           
-          window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="data:image/${v.postfix};base64,${v.url}" >`)
+          window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
         })
       }
     }

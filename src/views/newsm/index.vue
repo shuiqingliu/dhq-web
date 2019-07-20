@@ -52,7 +52,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="dialogView=true;getContent(scope.row.resource,scope.row.title, scope.row.message)"
+              @click="dialogView=true;getContent(scope.row.coverId,scope.row.title, scope.row.message)"
             >
             预览
             </el-button>
@@ -74,9 +74,9 @@
       >
         <h1>内容封面</h1>
         <p>
-         <img :src="'data:image'+content.resource.postfix+';base64,'+content.resource.resource"/>
+         <span v-if="content.coverId == undefined">无封面</span>
+         <img v-if="content.coverId != undefined" :src="content.coverId"/>
         </p>
-
         <h1>内容标题：{{content.title}}</h1>
         <br>
         <div v-html="content.message"></div>
@@ -136,7 +136,7 @@
     methods: {
       getContent(resource,title, message){
         console.log(resource)
-        this.content.resource = resource
+        this.content.coverId = resource
         this.content.title = title
         this.content.message = message
       },

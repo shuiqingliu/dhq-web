@@ -45,7 +45,7 @@ export default {
       dialogVisible: false,
       listObj: {},
       fileList: [],
-      actionUrl: 'http://10.103.250.120:2140/upload/pic'
+      actionUrl: 'http://60.205.167.19:8075/upload/pic2'
     }
   },
   mounted() {
@@ -71,8 +71,8 @@ export default {
         console.log(response);
       Object.keys(this.listObj).every(item => {
           this.listObj[item].hasSuccess = true;
-          this.listObj[item].url = response.data.imgStr;
-          this.listObj[item].postfix = response.data.resource.postfix;
+          this.listObj[item].url = response.data;
+          
       });
       return response.data
     },
