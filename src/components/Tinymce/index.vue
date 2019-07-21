@@ -9,12 +9,14 @@
 
 <script>
 
-  import '../../../static/tinymce4.7.5/tinymce.min.js'
-  import '../../../static/tinymce4.7.5/skins/lightgray/skin.min.css'
+  // import '../../../static/tinymce4.7.5/tinymce.min.js'
+  // import '../../../static/tinymce4.7.5/skins/lightgray/skin.min.css'
   import editorImage from './components/editorImage'
   import plugins from './plugins'
   import toolbar from './toolbar'
-  import zh_CN from './zh_CN'
+  // import zh_CN from './zh_CN'
+  import load from './dynamicLoadScript'
+  const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
   export default {
     name: 'Tinymce',
     components: {editorImage},
@@ -53,14 +55,13 @@
         tinymceId: this.id,
         fullscreen: false,
         languageTypeList: {
-          'en': 'en',
           'zh': 'zh_CN'
         }
       }
     },
     computed: {
       language() {
-        return this.languageTypeList[1]
+        return this.languageTypeList[0]
       }
     },
     watch: {
@@ -76,10 +77,12 @@
       }
     },
     mounted() {
-      this.initTinymce()
+      this.init()
     },
     activated() {
-      this.initTinymce()
+      if(window.tinymce){
+        this.initTinymce()
+      }
     },
     deactivated() {
       this.destroyTinymce()
@@ -88,10 +91,18 @@
       this.destroyTinymce()
     },
     methods: {
+      init(){
+        load(tinymceCDN,(err) => {
+          if(err){
+            return
+          }
+          this.initTinymce()
+        })
+      },
       initTinymce() {
         const _this = this;
         window.tinymce.init({
-          language: this.language,
+          language: 'zh_CN',
           selector: `#${this.tinymceId}`,
           height: this.height,
           body_class: 'panel-body ',
