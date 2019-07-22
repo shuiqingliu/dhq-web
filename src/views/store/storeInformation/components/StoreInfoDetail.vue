@@ -42,7 +42,7 @@
           <div slot="tip" class="el-upload__tip">只能上传.jpg文件</div>
         </el-upload>
       </el-form-item>
-      <el-form-item label="省市区">
+      <el-form-item label="省市区" >
         <el-cascader size="large" :options="options" v-model="selectedOptions"></el-cascader>
       </el-form-item>
       <el-form-item label="详细地址：">
@@ -163,7 +163,7 @@ export default {
           label: "门店"
         }
       ],
-      img_path:[]
+      img_path: []
     };
   },
   created() {
@@ -183,7 +183,7 @@ export default {
         this.storeInfo = response.data;
         this.img_path = [
           {
-            url:response.data.url
+            url: response.data.url
           }
         ];
       });
@@ -205,6 +205,14 @@ export default {
           });
           return false;
         }
+        if (this.selectedOptions == null || this.selectedOptions.length < 3) {
+                this.$message({
+                  message: "请填写完整的省市区信息",
+                  type: "error",
+                  duration: 1000
+                });
+                return false;
+              }
         if (valid) {
           this.$confirm("是否提交数据", "提示", {
             confirmButtonText: "确定",
@@ -223,21 +231,20 @@ export default {
                 "image",
                 this.img_path[0] ? this.img_path[0].raw : ""
               );
-              updateStoreInfo(this.$route.query.id,formData).then(
-                response => {
-                  this.$refs[formName].resetFields();
-                  this.$message({
-                    message: "修改成功",
-                    type: "success",
-                    duration: 1000
-                  });
-                  this.$router.push({
-                    path: "/store/storeInformation",
-                    query: { listQuery: this.$route.query.listQuery }
-                  });
-                }
-              );
+              updateStoreInfo(this.$route.query.id, formData).then(response => {
+                this.$refs[formName].resetFields();
+                this.$message({
+                  message: "修改成功",
+                  type: "success",
+                  duration: 1000
+                });
+                this.$router.push({
+                  path: "/store/storeInformation",
+                  query: { listQuery: this.$route.query.listQuery }
+                });
+              });
             } else {
+              
               this.storeInfo.shopLocationProvince =
                 CodeToText[this.selectedOptions[0]];
               this.storeInfo.shopLocationCity =
