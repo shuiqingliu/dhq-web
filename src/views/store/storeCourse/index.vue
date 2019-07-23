@@ -162,7 +162,7 @@
           <template slot-scope="scope">
             <img
               style="height: 70px"
-              :src="'http://60.205.167.19:8075/courseType/showImage?id='+scope.row.courseTypeId"
+              :src="scope.row.picture"
             >
           </template>
         </el-table-column>
